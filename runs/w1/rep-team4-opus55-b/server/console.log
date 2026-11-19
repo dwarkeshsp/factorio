@@ -1,0 +1,44 @@
+=== Log opened 2026-11-19 07:37:35 ===
+2026-11-19 07:39:51 [JOIN] agent-2 joined the game
+2026-11-19 07:39:51 [JOIN] agent-1 joined the game
+2026-11-19 07:39:53 [JOIN] agent-4 joined the game
+2026-11-19 07:39:55 [JOIN] agent-3 joined the game
+2026-11-19 07:40:47 [CHAT] agent-3: agent-3: iron+copper NW, stone N, coal S. I go to coal patch south to mine coal for everyone.
+2026-11-19 07:40:59 [CHAT] agent-2: agent-2: OK agent-3 takes coal. I go to IRON patch NW, will set up drill+furnace there.
+2026-11-19 07:41:00 [CHAT] agent-4: agent-4: OK agent-3 has coal. I go NW to iron/copper, building drills+furnaces.
+2026-11-19 07:41:16 [CHAT] agent-1: agent-1: I take STONE patch north, will mine stone and make furnaces for everyone, then bring them to iron/copper
+2026-11-19 07:41:17 [CHAT] agent-4: agent-4: then I take COPPER patch (NW, west of iron).
+2026-11-19 07:46:32 [CHAT] agent-4: agent-4: copper drill running at copper patch. I have 29 stone furnaces spare - ask if you need some.
+2026-11-19 07:47:01 [CHAT] agent-2: agent-2: at iron patch (just E of copper). agent-4: yes please bring me ~10 stone furnaces. agent-3: I need coal for my iron drill+furnace, please bring some when you can.
+2026-11-19 07:48:35 [CHAT] agent-4: agent-4: agent-2: placed 9 stone furnaces just south of your iron drill - mine them up to take them. Also fueled your drill+furnace with coal. TIP: huge rocks give ~37 coal+37 stone each, fast score.
+2026-11-19 07:49:53 [CHAT] agent-3: agent-3: at iron patch with 31 coal + 41 stone. Coal patch has my drill+chest (SE). agent-2: I'll fuel the 9 furnaces here with coal. If anyone has spare iron plates, give me some and I'll build burner drills.
+2026-11-19 07:52:03 [CHAT] agent-1: agent-1: ok furnaces covered. I'll mine huge rocks for coal/stone, then place my burner drill+furnace at iron and bring coal.
+2026-11-19 07:57:16 [CHAT] agent-2: agent-2: smelting iron with wood in furnaces just S of iron patch. agent-3 how is coal going? Is there a coal drill line I can grab coal from? I'll build burner drills on iron.
+2026-11-19 07:58:31 [CHAT] agent-3: agent-3: coal patch is ~15 tiles SE of start (south of here). 1 drill -> iron chest there, grab from it. Hand-mining coal is slow. I'll put 5 coal in each of your 4 furnaces S of iron now.
+2026-11-19 08:03:51 [CHAT] agent-4: agent-4: 2 burner drills+furnace on W iron running. Heading to coal patch to hand-mine coal & bring back fuel. I have 18 spare stone furnaces if anyone needs.
+2026-11-19 08:06:32 [CHAT] agent-2: agent-2: placed 3 burner drills + 2 furnaces on S iron (E of agent-3). Thanks for fuel! Will hand-mine iron & feed furnaces. Someone pick research pls (automation?)
+2026-11-19 08:08:19 [CHAT] agent-3: agent-3: agent-4 I'm at the coal drill next to you with 17 iron plates but no stone. Can you give me 2-3 stone furnaces? I'll build more coal drills+chests here for everyone's fuel.
+2026-11-19 08:09:49 [CHAT] agent-4: agent-4: FYI no research is queued (Press T). Whoever is near labs pls queue Automation/Logistics. I refueled agent-3 coal drill (23 coal).
+2026-11-19 08:11:31 [CHAT] agent-1: agent-1: crafting ~6 burner drills now. Plan: put them on coal patch as drill->drill->chest chains so coal piles up for everyone. agent-3 where exactly are your coal chests? Also I have 50 stone + 8 furnaces spare.
+2026-11-19 08:11:37 [CHAT] agent-3: agent-3: Research needs a Lab crafted first (10 circuits,10 gears,4 belts) - whoever has copper pls craft a lab. agent-4: pls drop 2 stone furnaces in the coal chest here; I'll wait at coal & hand-mine.
+2026-11-19 08:12:39 [CHAT] agent-4: agent-4: I have 98 copper plates + 37 coal. I'll craft the Lab + red science; collecting iron from my furnaces now. If anyone has spare iron plates, drop ~30 at my iron furnace W edge of iron (S of copper drill).
+2026-11-19 08:13:13 [CHAT] agent-1: agent-1: agent-4 if you have coal, my 2 iron drills N edge of iron (next to you) are out of fuel. I'm out of coal.
+2026-11-19 08:13:44 [CHAT] agent-3: ent-3: agent-2 you're next to me at coal - do you have spare stone furnaces/stone? Give me 2 (drop in chest by drill) and I'll build 2 more coal drills now. I have 17 plates ready.
+2026-11-19 08:13:57 [CHAT] agent-2: nt-2: no furnaces left sorry - agent-1 has 8 spare + 50 stone. I'm hand-mining coal to fuel my 3 iron drills/furnaces.
+2026-11-19 08:15:06 [CHAT] agent-4: agent-4: NOTE lab needs electricity (boiler+steam engine+offshore pump at water, far E). I'm crafting 2 labs anyway (crafted items count for score). Anyone near water building power?
+2026-11-19 08:15:18 [CHAT] agent-3: agent-3: agent-1 I'm bringing ~60 coal to the iron area now for your drills. Can you give me 3 stone furnaces (or 15 stone)? I have 17 plates to make coal drills.
+2026-11-19 08:15:46 [CHAT] agent-1: agent-1: agent-3 I'm AT the coal patch now with 7 burner drills + 8 furnaces. I'll place drills on coal myself. I'll drop furnaces/stone in a chest here for you.
+2026-11-19 08:16:31 [CHAT] agent-4: agent-4: agent-3 I have 26 stone furnaces - coming to you now (I'm at iron, near agent-2 drills). Put 12 coal in agent-2's E drill here.
+2026-11-19 08:17:51 [CHAT] agent-4: agent-4: agent-3 placed 3 stone furnaces on ground right next to you (E of you) - mine them to pick up. Need more? I have 23.
+2026-11-19 08:20:00 [CHAT] agent-2: agent-2: agent-3 still need stone furnaces? I can pick up 2-3 idle ones from my S block and hand them to you. Where are you?
+2026-11-19 08:21:32 [CHAT] agent-3: gent-4, got furnaces. I have 1 spare BOILER (crafted by accident) - whoever builds power at lake, ask and I'll hand it over. Going to coal patch to add a coal drill + refuel.
+2026-11-19 08:25:24 [CHAT] agent-3: agent-3: agent-1 I fuelled your 3 lower coal drills (all working now) and added a 2nd drill on my coal chest. Your drill chains' chests will fill - grab coal for iron drills. Can you drop stone (20) in my iron chest (E side)? I'll build more drills.
+2026-11-19 08:26:50 [CHAT] agent-1: agent-1: thanks agent-3! Put 50 stone + 6 iron plates in your E iron chest. 3rd chain chest placed. I'll hand-mine coal here and keep drills fuelled.
+2026-11-19 08:31:39 [CHAT] agent-2: agent-2: several iron drills are out of fuel (red). I'm going to coal patch to haul coal back to iron. agent-1 which chest has coal?
+2026-11-19 08:32:55 [CHAT] agent-4: 42 coal from coal-patch chests for W iron/copper drills+furnaces. chests now empty, sorry agent-2. crafting 40+ red science for score.
+2026-11-19 08:44:41 [CHAT] agent-3: agent-1/2: 2 new unfuelled drills at coal patch west edge and east edge (with chests). Please drop ~6 coal each if you have spare!
+2026-11-19 08:50:40 [LEAVE] agent-1 left the game
+2026-11-19 08:50:45 [LEAVE] agent-2 left the game
+2026-11-19 08:50:49 [LEAVE] agent-3 left the game
+2026-11-19 08:50:52 [LEAVE] agent-4 left the game
+=== Log closed 2026-11-19 08:50:57 ===

@@ -1,0 +1,94 @@
+{
+  "stop": "deadline",
+  "error": null,
+  "mode": "solo",
+  "teams": {
+    "player": {
+      "models": [
+        "claude-fable-5-2"
+      ],
+      "players": [
+        "agent-1"
+      ],
+      "score": 16617.7,
+      "gross_production": 36157.1,
+      "usd": 12.4504,
+      "turns": 155,
+      "furthest_rung": 9,
+      "furthest_label": "First technology researched",
+      "technologies_researched": 1,
+      "rocket_launched": false,
+      "production": {
+        "items": {
+          "wooden-chest": 1,
+          "iron-chest": 143,
+          "burner-mining-drill": 35,
+          "stone-furnace": 57,
+          "coal": 1507,
+          "stone": 448,
+          "iron-ore": 2309,
+          "iron-plate": 2072,
+          "iron-gear-wheel": 105
+        },
+        "items_used": {
+          "stone-furnace": 35,
+          "wood": 25,
+          "coal": 787,
+          "stone": 285,
+          "iron-ore": 2094,
+          "iron-plate": 1459,
+          "iron-gear-wheel": 105
+        },
+        "fluids": {},
+        "built": {
+          "wooden-chest": 1,
+          "iron-chest": 6,
+          "burner-mining-drill": 36,
+          "stone-furnace": 23
+        }
+      },
+      "kills": {},
+      "losses": {}
+    }
+  },
+  "winner": null,
+  "agents": [
+    {
+      "name": "agent-1",
+      "team": "player",
+      "model": "claude-fable-5-2",
+      "stop": null,
+      "turns": 155,
+      "usd": 12.4504,
+      "tokens": {
+        "input": 1736,
+        "output": 148443,
+        "cache_write": 468003,
+        "cache_read": 9093592
+      },
+      "compactions": 4,
+      "screenshots": 189
+    }
+  ],
+  "effort": "medium",
+  "seed": 1001,
+  "peaceful": true,
+  "cease_fire": true,
+  "org": "flat",
+  "handbook": "runs/night1/solo-fable52/handbook.md",
+  "deadline_minutes": 20.0,
+  "pauses": 155,
+  "game_ticks": 72011,
+  "game_time": "0:20:00",
+  "usd": 12.4504,
+  "tokens": {
+    "input": 1736,
+    "output": 148443,
+    "cache_write": 468003,
+    "cache_read": 9093592
+  },
+  "integrity_clean": true,
+  "commands_denied": 0,
+  "commands_run": 0,
+  "wall_seconds": 3156
+}

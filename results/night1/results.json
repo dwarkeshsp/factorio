@@ -6,7 +6,8 @@
     "team_scaling_per_agent": "results/night1/team-scaling-per-agent.png",
     "team_scaling_seed2": "results/night1/team-scaling-seed2-over-time.png",
     "handbook_chain": "results/night1/handbook-chain.png",
-    "vs2-opus55-astra62": "results/night1/vs2-opus55-astra62.png"
+    "vs2-opus55-astra62": "results/night1/vs2-opus55-astra62.png",
+    "ffa4-a": "results/night1/ffa4-a.png"
   },
   "groups": {
     "solo": {
@@ -40,11 +41,12 @@
         "scores": [
           6773.2,
           5386.6,
+          8822.6,
           5959.9
         ],
-        "mean": 6039.900000000001,
-        "usd": 5.2438,
-        "turns": 177.0,
+        "mean": 6735.575,
+        "usd": 5.642275,
+        "turns": 191.0,
         "built": {
           "wooden-chest": 1,
           "iron-chest": 2,
@@ -65,13 +67,40 @@
           "burner-mining-drill": 6,
           "stone-furnace": 2
         }
+      },
+      "gpt-6.2-sol": {
+        "scores": [
+          18785.2
+        ],
+        "mean": 18785.2,
+        "usd": 6.9273,
+        "turns": 609.0,
+        "built": {
+          "iron-chest": 3,
+          "burner-mining-drill": 43,
+          "stone-furnace": 30
+        }
+      },
+      "claude-haiku-5-5": {
+        "scores": [
+          931.6
+        ],
+        "mean": 931.6,
+        "usd": 0.2427,
+        "turns": 194.0,
+        "built": {
+          "iron-chest": 4,
+          "burner-mining-drill": 3,
+          "stone-furnace": 6
+        }
       }
     },
     "scaling": {
       "seed 1001": {
         "1": [
           6773.2,
-          5386.6
+          5386.6,
+          8822.6
         ],
         "2": [
           11962.4,
@@ -79,7 +108,8 @@
           7679.3
         ],
         "4": [
-          14960.1
+          14960.1,
+          14359.5
         ]
       },
       "seed 2002": {
@@ -94,19 +124,20 @@
         ]
       },
       "pooled_mean": {
-        "1": 6039.900000000001,
+        "1": 6735.575,
         "2": 12343.75,
-        "4": 13583.900000000001
+        "4": 13842.433333333334
       },
       "speedup": {
         "1": 1.0,
-        "2": 2.0437010546532224,
-        "4": 2.2490273017765197
+        "2": 1.832620080690958,
+        "4": 2.0551227376034467
       }
     },
     "org": {
       "No structure": [
-        14960.1
+        14960.1,
+        14359.5
       ],
       "A manager": [],
       "Assigned roles": []
@@ -123,11 +154,108 @@
       [
         "Generation 3",
         11727.6
+      ],
+      [
+        "Generation 4",
+        13807.4
       ]
     ],
-    "handbook_transfer": []
+    "handbook_transfer": [
+      {
+        "model": "Claude Opus 5.5",
+        "alone": 6735.575,
+        "with_notes": 7833.4
+      }
+    ]
   },
   "runs": [
+    {
+      "run": "night1/ffa4-a",
+      "mode": "versus",
+      "team": "red",
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "seed": 1001,
+      "org": "flat",
+      "handbook": null,
+      "stop": "deadline",
+      "game_time": "0:20:00",
+      "score": 3276.6,
+      "turns": 173,
+      "usd": 5.0758,
+      "built": {
+        "burner-mining-drill": 8,
+        "stone-furnace": 4
+      },
+      "won": false,
+      "technologies": 1
+    },
+    {
+      "run": "night1/ffa4-a",
+      "mode": "versus",
+      "team": "blue",
+      "models": [
+        "gpt-6.2-astra"
+      ],
+      "seed": 1001,
+      "org": "flat",
+      "handbook": null,
+      "stop": "deadline",
+      "game_time": "0:20:00",
+      "score": 26135.0,
+      "turns": 589,
+      "usd": 27.3348,
+      "built": {
+        "iron-chest": 2,
+        "burner-mining-drill": 61,
+        "stone-furnace": 23
+      },
+      "won": true,
+      "technologies": 2
+    },
+    {
+      "run": "night1/ffa4-a",
+      "mode": "versus",
+      "team": "green",
+      "models": [
+        "claude-fable-5-2"
+      ],
+      "seed": 1001,
+      "org": "flat",
+      "handbook": null,
+      "stop": "deadline",
+      "game_time": "0:20:00",
+      "score": 4294.4,
+      "turns": 119,
+      "usd": 7.8666,
+      "built": {
+        "iron-chest": 1,
+        "burner-mining-drill": 8,
+        "stone-furnace": 6
+      },
+      "won": false,
+      "technologies": 1
+    },
+    {
+      "run": "night1/ffa4-a",
+      "mode": "versus",
+      "team": "yellow",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "seed": 1001,
+      "org": "flat",
+      "handbook": null,
+      "stop": "deadline",
+      "game_time": "0:20:00",
+      "score": 543.0,
+      "turns": 10,
+      "usd": 0.2099,
+      "built": {},
+      "won": false,
+      "technologies": 0
+    },
     {
       "run": "night1/solo-astra62",
       "mode": "solo",
@@ -175,6 +303,29 @@
       "technologies": 1
     },
     {
+      "run": "night1/solo-haiku55",
+      "mode": "solo",
+      "team": "player",
+      "models": [
+        "claude-haiku-5-5"
+      ],
+      "seed": 1001,
+      "org": "flat",
+      "handbook": null,
+      "stop": "deadline",
+      "game_time": "0:20:00",
+      "score": 931.6,
+      "turns": 194,
+      "usd": 0.2427,
+      "built": {
+        "iron-chest": 4,
+        "burner-mining-drill": 3,
+        "stone-furnace": 6
+      },
+      "won": false,
+      "technologies": 1
+    },
+    {
       "run": "night1/solo-opus55",
       "mode": "solo",
       "team": "player",
@@ -198,6 +349,29 @@
       },
       "won": false,
       "technologies": 1
+    },
+    {
+      "run": "night1/solo-sol62",
+      "mode": "solo",
+      "team": "player",
+      "models": [
+        "gpt-6.2-sol"
+      ],
+      "seed": 1001,
+      "org": "flat",
+      "handbook": null,
+      "stop": "deadline",
+      "game_time": "0:20:00",
+      "score": 18785.2,
+      "turns": 609,
+      "usd": 6.9273,
+      "built": {
+        "iron-chest": 3,
+        "burner-mining-drill": 43,
+        "stone-furnace": 30
+      },
+      "won": false,
+      "technologies": 2
     },
     {
       "run": "night1/solo-sonnet55",
@@ -459,6 +633,81 @@
       "technologies": 1
     },
     {
+      "run": "w1/gen4-team2",
+      "mode": "team",
+      "team": "player",
+      "models": [
+        "claude-opus-5-5",
+        "claude-opus-5-5"
+      ],
+      "seed": 1001,
+      "org": "flat",
+      "handbook": "runs/w1/gen3-team2/handbook.md",
+      "stop": "deadline",
+      "game_time": "0:20:00",
+      "score": 13807.4,
+      "turns": 338,
+      "usd": 10.3681,
+      "built": {
+        "wooden-chest": 2,
+        "iron-chest": 1,
+        "burner-mining-drill": 23,
+        "stone-furnace": 18
+      },
+      "won": false,
+      "technologies": 1
+    },
+    {
+      "run": "w1/hb-opus55-from-fable52",
+      "mode": "solo",
+      "team": "player",
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "seed": 1001,
+      "org": "flat",
+      "handbook": "runs/night1/solo-fable52/handbook.md",
+      "stop": "deadline",
+      "game_time": "0:20:00",
+      "score": 7833.4,
+      "turns": 156,
+      "usd": 5.0273,
+      "built": {
+        "iron-chest": 2,
+        "burner-mining-drill": 15,
+        "stone-furnace": 8
+      },
+      "won": false,
+      "technologies": 1
+    },
+    {
+      "run": "w1/rep-team4-opus55-b",
+      "mode": "team",
+      "team": "player",
+      "models": [
+        "claude-opus-5-5",
+        "claude-opus-5-5",
+        "claude-opus-5-5",
+        "claude-opus-5-5"
+      ],
+      "seed": 1001,
+      "org": "flat",
+      "handbook": null,
+      "stop": "deadline",
+      "game_time": "0:20:00",
+      "score": 14359.5,
+      "turns": 669,
+      "usd": 18.7978,
+      "built": {
+        "wooden-chest": 2,
+        "iron-chest": 14,
+        "burner-mining-drill": 30,
+        "stone-furnace": 29
+      },
+      "won": false,
+      "technologies": 3
+    },
+    {
       "run": "w3/rep-solo-opus55-b",
       "mode": "solo",
       "team": "player",
@@ -476,6 +725,29 @@
       "built": {
         "burner-mining-drill": 10,
         "stone-furnace": 9
+      },
+      "won": false,
+      "technologies": 1
+    },
+    {
+      "run": "w3/rep-solo-opus55-c",
+      "mode": "solo",
+      "team": "player",
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "seed": 1001,
+      "org": "flat",
+      "handbook": null,
+      "stop": "deadline",
+      "game_time": "0:20:00",
+      "score": 8822.6,
+      "turns": 233,
+      "usd": 6.8377,
+      "built": {
+        "wooden-chest": 17,
+        "burner-mining-drill": 22,
+        "stone-furnace": 8
       },
       "won": false,
       "technologies": 1
@@ -579,11 +851,14 @@
       "technologies": 2
     }
   ],
-  "total_usd": 190.68,
+  "total_usd": 279.37,
   "videos": {
+    "night1/ffa4-a": "results/night1/video/night1-ffa4-a.mp4",
     "night1/solo-astra62": "results/night1/video/night1-solo-astra62.mp4",
     "night1/solo-fable52": "results/night1/video/night1-solo-fable52.mp4",
+    "night1/solo-haiku55": "results/night1/video/night1-solo-haiku55.mp4",
     "night1/solo-opus55": "results/night1/video/night1-solo-opus55.mp4",
+    "night1/solo-sol62": "results/night1/video/night1-solo-sol62.mp4",
     "night1/solo-sonnet55": "results/night1/video/night1-solo-sonnet55.mp4",
     "night1/team2-opus55": "results/night1/video/night1-team2-opus55.mp4",
     "night1/team4-opus55": "results/night1/video/night1-team4-opus55.mp4",
@@ -593,7 +868,11 @@
     "w1/gen1-team2": "results/night1/video/w1-gen1-team2.mp4",
     "w1/gen2-team2": "results/night1/video/w1-gen2-team2.mp4",
     "w1/gen3-team2": "results/night1/video/w1-gen3-team2.mp4",
+    "w1/gen4-team2": "results/night1/video/w1-gen4-team2.mp4",
+    "w1/hb-opus55-from-fable52": "results/night1/video/w1-hb-opus55-from-fable52.mp4",
+    "w1/rep-team4-opus55-b": "results/night1/video/w1-rep-team4-opus55-b.mp4",
     "w3/rep-solo-opus55-b": "results/night1/video/w3-rep-solo-opus55-b.mp4",
+    "w3/rep-solo-opus55-c": "results/night1/video/w3-rep-solo-opus55-c.mp4",
     "w3/rep-team2-opus55-c": "results/night1/video/w3-rep-team2-opus55-c.mp4",
     "w3/s2-solo-opus55": "results/night1/video/w3-s2-solo-opus55.mp4",
     "w3/s2-team2-opus55": "results/night1/video/w3-s2-team2-opus55.mp4",
