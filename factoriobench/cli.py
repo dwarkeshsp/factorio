@@ -50,7 +50,9 @@ def cmd_report(args: argparse.Namespace) -> None:
 
 
 def cmd_timelapse(args: argparse.Namespace) -> None:
-    if args.overview:
+    if args.screens:
+        print(report.grid_timelapse(Path(args.run), fps=args.fps))
+    elif args.overview:
         print(report.overview_timelapse(Path(args.run), fps=args.fps))
     else:
         print(report.timelapse(Path(args.run), agent=args.agent, fps=args.fps))
@@ -101,6 +103,7 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("--agent", default="agent-1")
     p.add_argument("--fps", type=int, default=6)
     p.add_argument("--overview", action="store_true", help="the whole base from above instead of one agent's screen")
+    p.add_argument("--screens", action="store_true", help="every agent's screen side by side, in step with the game clock")
     p.set_defaults(func=cmd_timelapse)
 
     args = parser.parse_args(argv)

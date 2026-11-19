@@ -17,6 +17,7 @@ runs/**
 !runs/**/console.log
 !runs/**/handbook*.md
 !runs/**/overview.mp4
+!runs/**/screens.mp4
 !runs/**/prices.json
 !runs/README.md
 !runs/ledger.jsonl

@@ -113,3 +113,85 @@ def overview_timelapse(run_dir: Path, fps: int = 12) -> Path:
         old.unlink()
     work.rmdir()
     return out
+
+
+def grid_timelapse(run_dir: Path, step_seconds: float = 5.0, fps: int = 12) -> Path:
+    """An mp4 of every agent's own screen side by side, one frame per `step_seconds` of game time,
+    each cell showing what that agent last saw, under a clock and the scores."""
+    from PIL import Image, ImageDraw, ImageFont
+
+    config = json.loads((run_dir / "config.json").read_text())
+    agents = config["agents"]
+    shots: dict[str, list[tuple[int, str]]] = {a["name"]: [(0, "00000.jpg")] for a in agents}
+    scores: list[tuple[int, dict]] = []
+    last_tick = 0
+    for line in (run_dir / "log.jsonl").read_text().splitlines():
+        try:
+            row = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if row.get("event") == "turn" and row.get("shot"):
+            shots[row["agent"]].append((row.get("game_ticks", 0), row["shot"]))
+        elif row.get("event") == "pause":
+            scores.append((row["game_ticks"], row.get("scores") or {}))
+            last_tick = row["game_ticks"]
+    colors = {"red": (227, 73, 72), "blue": (42, 120, 214), "green": (0, 131, 0), "yellow": (237, 161, 0), "player": (90, 90, 90)}
+    columns = 1 if len(agents) == 1 else 2
+    rows = -(-len(agents) // columns)
+    cell_w, cell_h, head = (1280, 720, 44) if len(agents) == 1 else (640, 360, 44)
+    try:
+        font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 20)
+        small = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 15)
+    except OSError:
+        font = small = ImageFont.load_default()
+    work = run_dir / "grid-frames"
+    work.mkdir(exist_ok=True)
+    for old in work.glob("*.jpg"):
+        old.unlink()
+    cache: dict[str, Image.Image] = {}
+    step = int(step_seconds * 60)
+    index = 0
+    for tick in range(0, last_tick + 1, step):
+        frame = Image.new("RGB", (cell_w * columns, head + cell_h * rows), (15, 15, 15))
+        draw = ImageDraw.Draw(frame)
+        at: dict = {}
+        for when, values in scores:
+            if when <= tick:
+                at = values
+        seconds = tick // 60
+        parts = [f"{seconds // 60}:{seconds % 60:02d}"] + [
+            (f"{team} {value:,.0f}" if len(at) > 1 else f"score {value:,.0f}") for team, value in at.items()]
+        draw.text((14, 10), "     ".join(parts), font=font, fill=(245, 245, 240))
+        for n, agent in enumerate(agents):
+            name = agent["name"]
+            current = shots[name][0][1]
+            for when, shot in shots[name]:
+                if when <= tick:
+                    current = shot
+            path = run_dir / "agents" / name / "shots" / current
+            key = str(path)
+            if key not in cache:
+                cache.clear()  # keep memory flat: an agent's shot changes rarely within a few frames
+                cache[key] = Image.open(path).convert("RGB").resize((cell_w, cell_h), Image.LANCZOS) if path.exists() \
+                    else Image.new("RGB", (cell_w, cell_h), (30, 30, 30))
+            x, y = (n % columns) * cell_w, head + (n // columns) * cell_h
+            frame.paste(cache[key], (x, y))
+            label = f"{name}  {agent['model'].replace('claude-', '')}"
+            box = draw.textbbox((0, 0), label, font=small)
+            draw.rectangle((x, y, x + box[2] + 22, y + box[3] + 12), fill=(15, 15, 15))
+            draw.rectangle((x, y, x + 6, y + box[3] + 12), fill=colors.get(agent["team"], (90, 90, 90)))
+            draw.text((x + 14, y + 4), label, font=small, fill=(245, 245, 240))
+        frame.save(work / f"{index:06d}.jpg", quality=85)
+        index += 1
+    out = run_dir / "screens.mp4"
+    result = subprocess.run(
+        ["ffmpeg", "-y", "-loglevel", "error", "-framerate", str(fps), "-i", str(work / "%06d.jpg"),
+         "-c:v", "libx264", "-crf", "27", "-pix_fmt", "yuv420p", "-vf", "pad=ceil(iw/2)*2:ceil(ih/2)*2", str(out)],
+        capture_output=True, text=True, check=False,
+    )
+    if result.returncode != 0:
+        raise SystemExit(f"ffmpeg failed: {result.stderr.strip()}")
+    for old in work.glob("*.jpg"):
+        old.unlink()
+    work.rmdir()
+    return out
