@@ -19,14 +19,14 @@ the coal field with mining drills; Claude Sonnet 5.5 (yellow) is standing next t
 
 ## What one night showed
 
-- **It is possible, and cheap enough to iterate on.** 24 of 28 games ran the full 20 game minutes, 9,760 model turns in all, for $311.83. No GPU, no game modding beyond a scenario file of under 100 lines, and no model touched the game's console.
+- **It is possible, and cheap enough to iterate on.** 25 of 29 games ran the full 20 game minutes, 9,887 model turns in all, for $312.01. No GPU, no game modding beyond a scenario file of under 100 lines, and no model touched the game's console.
 - **Models differ a lot at playing alone.** GPT-6.2 Astra scored 25,021, GPT-6.2 Sol 18,785, Claude Fable 5.2 18,617, Claude Opus 5.5 6,736 (mean of 4), Claude Sonnet 5.5 1,370 and Claude Haiku 5.5 932.
 - **Teams out-produce individuals, with sharply falling returns.** Two Claude Opus 5.5 agents averaged 1.8 times one agent's score; four averaged 2.1 times. Per agent, a team of four produced about half what an agent produces alone.
 - **Competition for land changed the outcome.** With four models on one map, Astra scored 26,135, about what it scores alone, while Fable fell from 18,617 alone to 4,294 and Opus from 6,736 to 3,277. Astra covered the coal field with drills early and the others ran short of fuel.
-- **Written notes helped a weak model and not a strong one.** Given the notes Fable wrote after its game, Sonnet went from 1,370 to 3,094. Opus, Fable itself, and four generations of Opus teams passing notes down did not improve beyond run-to-run noise.
+- **Written notes mostly did not help.** Models played alone starting from the notes Fable wrote after its own game: Opus 5.5 went from 6,736 to 7,833; Sonnet 5.5 went from 1,370 to 3,094; Haiku 5.5 went from 932 to 887; Fable 5.2 went from 18,617 to 16,618. Four generations of Opus teams passing notes down showed no upward trend either.
 - **The measurements are noisy.** Identical two-agent games scored between 7,679 and 21,163. Most conditions here were played once, so treat single comparisons as leads, not findings.
 
-The same results with every agent's screen on video are on the report page (link in the pull request or from the session that produced this). The videos are also in `results/night1/video/` and beside each run.
+Videos are in `results/night1/video/`: for each game, the bases from above (`...-overview.mp4`) and, for the games with several agents, every agent's screen side by side (`...-screens.mp4`).
 
 ### One agent alone
 
@@ -98,7 +98,7 @@ An earlier match, Claude Opus 5.5 against GPT-6.2 Astra, stood at 16,561 to 2,66
 
 ### Notes from one team to the next
 
-At the end of each game every agent was asked for the notes it would leave the next player. Two tests used them. In the first, four generations of two-agent Opus teams each started from the previous team's notes. Scores went 21,163, 12,384, 11,728, 13,807: no upward trend, and the first team, with no notes, happened to be the best. In the second, models played alone starting from the notes Fable wrote after its solo game.
+At the end of each game every agent was asked for the notes it would leave the next player. Two tests used them. In the first, four generations of two-agent Opus teams each started from the previous team's notes. Scores went 21,163, 12,384, 11,728, 13,807: no upward trend, and the first team, with no notes, happened to be the best. In the second, models played alone starting from the notes Fable wrote after its solo game. Only Sonnet did clearly better with them; Fable's notes are specific and correct, but most of what separates the models here seems to be execution through the screen, which notes do not transfer.
 
 ![Four generations of teams passing notes down](results/night1/handbook-chain.png)
 
@@ -106,6 +106,7 @@ At the end of each game every agent was asked for the notes it would leave the n
 |---|---|---|
 | Claude Opus 5.5 | 6,736 | 7,833 |
 | Claude Sonnet 5.5 | 1,370 | 3,094 |
+| Claude Haiku 5.5 | 932 | 887 |
 | Claude Fable 5.2 | 18,617 | 16,618 |
 
 > Hand-crafting in the last 3 minutes roughly doubled my score rate ... Keep the hand-craft queue busy THE WHOLE GAME, not just at the end. That was my biggest miss.

@@ -79,10 +79,10 @@ P["headlines"] = li(
     f"With four models on one map, Astra scored {n(ffa['blue']['score'])}, about what it scores alone, "
     f"while Fable fell from {n(fable['mean'])} alone to {n(ffa['green']['score'])} and Opus from {n(opus['mean'])} to {n(ffa['red']['score'])}. "
     "Astra covered the coal field with drills early and the others ran short of fuel." + fa_line,
-    "<strong>Written notes helped a weak model and not a strong one.</strong> "
-    + (f"Given the notes Fable wrote after its game, Sonnet went from {n(transfer['Claude Sonnet 5.5']['alone'])} to {n(transfer['Claude Sonnet 5.5']['with_notes'])}. "
-       if "Claude Sonnet 5.5" in transfer else "")
-    + (f"Opus, Fable itself, and four generations of Opus teams passing notes down did not improve beyond run-to-run noise."),
+    "<strong>Written notes mostly did not help.</strong> "
+    + "Models played alone starting from the notes Fable wrote after its own game: "
+    + "; ".join(f"{row['model'].replace('Claude ', '')} went from {n(row['alone'])} to {n(row['with_notes'])}" for row in G["handbook_transfer"])
+    + ". Four generations of Opus teams passing notes down showed no upward trend either.",
     "<strong>The measurements are noisy.</strong> "
     f"Identical two-agent games scored between {n(min(pairs))} and {n(max(pairs))}. Most conditions here were played once, "
     "so treat single comparisons as leads, not findings.",
@@ -144,7 +144,8 @@ notes = (
     "At the end of each game every agent was asked for the notes it would leave the next player. Two tests used them. "
     f"In the first, four generations of two-agent Opus teams each started from the previous team's notes. Scores went {', '.join(n(v) for v in chain)}: "
     "no upward trend, and the first team, with no notes, happened to be the best. "
-    "In the second, models played alone starting from the notes Fable wrote after its solo game."
+    "In the second, models played alone starting from the notes Fable wrote after its solo game. Only Sonnet did clearly better with them; "
+    "Fable's notes are specific and correct, but most of what separates the models here seems to be execution through the screen, which notes do not transfer."
 )
 P["notes"] = notes
 P["notes_quotes"] = (

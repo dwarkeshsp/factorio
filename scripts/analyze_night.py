@@ -74,7 +74,7 @@ solo_runs = {
     "gpt-6.2-astra": ["night1/solo-astra62"],
     "claude-fable-5-2": ["night1/solo-fable52"],
     "claude-opus-5-5": ["night1/solo-opus55", "w3/rep-solo-opus55-b", "w3/rep-solo-opus55-c", "w3/s2-solo-opus55"],
-    "claude-sonnet-5-5": ["night1/solo-sonnet55"],
+    "claude-sonnet-5-5": ["night1/solo-sonnet55", "night1/rep-solo-sonnet55-b"],
     "gpt-6.2-sol": ["night1/solo-sol62"],
     "claude-haiku-5-5": ["night1/solo-haiku55"],
 }
@@ -158,9 +158,10 @@ transfer = [("Claude Opus 5.5", "claude-opus-5-5", "w1/hb-opus55-from-fable52"),
             ("Claude Fable 5.2", "claude-fable-5-2", "w1/hb-fable52-from-fable52")]
 transfer_rows = []
 for label, model, path in transfer:
-    run = done(path)
-    if run and model in solo:
-        transfer_rows.append({"model": label, "alone": solo[model]["mean"], "with_notes": score(run)})
+    with_notes = scores([path, path + "-b"])
+    if with_notes and model in solo:
+        transfer_rows.append({"model": label, "alone": solo[model]["mean"], "alone_games": solo[model]["scores"],
+                              "with_notes": sum(with_notes) / len(with_notes), "with_notes_games": with_notes})
 results["groups"]["handbook_transfer"] = transfer_rows
 
 # --- 5. matches --------------------------------------------------------------------------------

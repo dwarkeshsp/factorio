@@ -110,8 +110,13 @@ alone = {model: v["mean"] for model, v in solo.items()}
 chain = G.get("handbook_chain", [])
 transfer = G.get("handbook_transfer", [])
 org = G.get("org", {})
+def games(values: list[float]) -> str:
+    return f" <span class='dim'>({len(values)} games)</span>" if len(values) > 1 else ""
+
+
 transfer_rows = "".join(
-    f"<tr><td>{row['model']}</td><td class='num'>{n(row['alone'])}</td><td class='num'>{n(row['with_notes'])}</td>"
+    f"<tr><td>{row['model']}</td><td class='num'>{n(row['alone'])}{games(row.get('alone_games', []))}</td>"
+    f"<td class='num'>{n(row['with_notes'])}{games(row.get('with_notes_games', []))}</td>"
     f"<td class='num'>{row['with_notes'] / row['alone']:.2f}x</td></tr>" for row in transfer)
 org_rows = "".join(
     f"<tr><td>{label}</td><td class='num'>{', '.join(n(v) for v in values) or 'not run'}</td></tr>" for label, values in org.items())

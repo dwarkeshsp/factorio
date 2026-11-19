@@ -1,0 +1,93 @@
+{
+  "stop": "deadline",
+  "error": null,
+  "mode": "solo",
+  "teams": {
+    "player": {
+      "models": [
+        "claude-haiku-5-5"
+      ],
+      "players": [
+        "agent-1"
+      ],
+      "score": 887.2,
+      "gross_production": 1633.1,
+      "usd": 0.1789,
+      "turns": 127,
+      "furthest_rung": 4,
+      "furthest_label": "Mining drill placed",
+      "technologies_researched": 0,
+      "rocket_launched": false,
+      "production": {
+        "items": {
+          "wooden-chest": 2,
+          "transport-belt": 4,
+          "burner-inserter": 1,
+          "burner-mining-drill": 4,
+          "stone-furnace": 9,
+          "coal": 15,
+          "iron-ore": 215,
+          "iron-plate": 38,
+          "iron-gear-wheel": 15
+        },
+        "items_used": {
+          "stone-furnace": 4,
+          "wood": 19,
+          "coal": 7,
+          "stone": 45,
+          "iron-ore": 39,
+          "iron-plate": 45,
+          "iron-gear-wheel": 15
+        },
+        "fluids": {},
+        "built": {
+          "wooden-chest": 1,
+          "burner-mining-drill": 5,
+          "stone-furnace": 5
+        }
+      },
+      "kills": {},
+      "losses": {}
+    }
+  },
+  "winner": null,
+  "agents": [
+    {
+      "name": "agent-1",
+      "team": "player",
+      "model": "claude-haiku-5-5",
+      "stop": null,
+      "turns": 127,
+      "usd": 0.1789,
+      "tokens": {
+        "input": 1325,
+        "output": 107810,
+        "cache_write": 330894,
+        "cache_read": 7082479
+      },
+      "compactions": 3,
+      "screenshots": 159
+    }
+  ],
+  "effort": "medium",
+  "seed": 1001,
+  "peaceful": true,
+  "cease_fire": true,
+  "org": "flat",
+  "handbook": "runs/night1/solo-fable52/handbook.md",
+  "deadline_minutes": 20.0,
+  "pauses": 127,
+  "game_ticks": 72010,
+  "game_time": "0:20:00",
+  "usd": 0.1789,
+  "tokens": {
+    "input": 1325,
+    "output": 107810,
+    "cache_write": 330894,
+    "cache_read": 7082479
+  },
+  "integrity_clean": true,
+  "commands_denied": 0,
+  "commands_run": 0,
+  "wall_seconds": 2009
+}

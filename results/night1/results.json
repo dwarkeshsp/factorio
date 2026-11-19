@@ -167,17 +167,49 @@
       {
         "model": "Claude Opus 5.5",
         "alone": 6735.575,
-        "with_notes": 7833.4
+        "alone_games": [
+          6773.2,
+          5386.6,
+          8822.6,
+          5959.9
+        ],
+        "with_notes": 7833.4,
+        "with_notes_games": [
+          7833.4
+        ]
       },
       {
         "model": "Claude Sonnet 5.5",
         "alone": 1369.6,
-        "with_notes": 3094.2
+        "alone_games": [
+          1369.6
+        ],
+        "with_notes": 3094.2,
+        "with_notes_games": [
+          3094.2
+        ]
+      },
+      {
+        "model": "Claude Haiku 5.5",
+        "alone": 931.6,
+        "alone_games": [
+          931.6
+        ],
+        "with_notes": 887.2,
+        "with_notes_games": [
+          887.2
+        ]
       },
       {
         "model": "Claude Fable 5.2",
         "alone": 18617.3,
-        "with_notes": 16617.7
+        "alone_games": [
+          18617.3
+        ],
+        "with_notes": 16617.7,
+        "with_notes_games": [
+          16617.7
+        ]
       }
     ]
   },
@@ -266,6 +298,29 @@
       "turns": 10,
       "usd": 0.2099,
       "built": {},
+      "won": false,
+      "technologies": 0
+    },
+    {
+      "run": "night1/hb-haiku55-from-fable52",
+      "mode": "solo",
+      "team": "player",
+      "models": [
+        "claude-haiku-5-5"
+      ],
+      "seed": 1001,
+      "org": "flat",
+      "handbook": "runs/night1/solo-fable52/handbook.md",
+      "stop": "deadline",
+      "game_time": "0:20:00",
+      "score": 887.2,
+      "turns": 127,
+      "usd": 0.1789,
+      "built": {
+        "wooden-chest": 1,
+        "burner-mining-drill": 5,
+        "stone-furnace": 5
+      },
       "won": false,
       "technologies": 0
     },
@@ -938,33 +993,39 @@
       "technologies": 2
     }
   ],
-  "total_usd": 311.83,
+  "total_usd": 312.01,
   "videos": {
-    "night1/ffa4-a": "results/night1/video/night1-ffa4-a.mp4",
-    "night1/solo-astra62": "results/night1/video/night1-solo-astra62.mp4",
-    "night1/solo-fable52": "results/night1/video/night1-solo-fable52.mp4",
-    "night1/solo-haiku55": "results/night1/video/night1-solo-haiku55.mp4",
-    "night1/solo-opus55": "results/night1/video/night1-solo-opus55.mp4",
-    "night1/solo-sol62": "results/night1/video/night1-solo-sol62.mp4",
-    "night1/solo-sonnet55": "results/night1/video/night1-solo-sonnet55.mp4",
-    "night1/team2-opus55": "results/night1/video/night1-team2-opus55.mp4",
-    "night1/team4-opus55": "results/night1/video/night1-team4-opus55.mp4",
-    "night1/team4-opus55-r2": "results/night1/video/night1-team4-opus55-r2.mp4",
-    "night1/vs2-opus55-astra62": "results/night1/video/night1-vs2-opus55-astra62.mp4",
-    "w1/gen1-solo": "results/night1/video/w1-gen1-solo.mp4",
-    "w1/gen1-team2": "results/night1/video/w1-gen1-team2.mp4",
-    "w1/gen2-team2": "results/night1/video/w1-gen2-team2.mp4",
-    "w1/gen3-team2": "results/night1/video/w1-gen3-team2.mp4",
-    "w1/gen4-team2": "results/night1/video/w1-gen4-team2.mp4",
-    "w1/hb-fable52-from-fable52": "results/night1/video/w1-hb-fable52-from-fable52.mp4",
-    "w1/hb-opus55-from-fable52": "results/night1/video/w1-hb-opus55-from-fable52.mp4",
-    "w1/rep-team4-opus55-b": "results/night1/video/w1-rep-team4-opus55-b.mp4",
-    "w3/rep-solo-opus55-b": "results/night1/video/w3-rep-solo-opus55-b.mp4",
-    "w3/rep-solo-opus55-c": "results/night1/video/w3-rep-solo-opus55-c.mp4",
-    "w3/rep-team2-opus55-c": "results/night1/video/w3-rep-team2-opus55-c.mp4",
-    "w3/s2-solo-opus55": "results/night1/video/w3-s2-solo-opus55.mp4",
-    "w3/s2-team2-opus55": "results/night1/video/w3-s2-team2-opus55.mp4",
-    "w3/s2-team4-opus55": "results/night1/video/w3-s2-team4-opus55.mp4",
-    "w4/org-manager-team4": "results/night1/video/w4-org-manager-team4.mp4"
+    "night1/ffa4-a:overview": "results/night1/video/night1-ffa4-a-overview.mp4",
+    "night1/ffa4-a:screens": "results/night1/video/night1-ffa4-a-screens.mp4",
+    "night1/hb-haiku55-from-fable52:overview": "results/night1/video/night1-hb-haiku55-from-fable52-overview.mp4",
+    "night1/hb-sonnet55-from-fable52:overview": "results/night1/video/night1-hb-sonnet55-from-fable52-overview.mp4",
+    "night1/solo-astra62:overview": "results/night1/video/night1-solo-astra62-overview.mp4",
+    "night1/solo-fable52:overview": "results/night1/video/night1-solo-fable52-overview.mp4",
+    "night1/solo-haiku55:overview": "results/night1/video/night1-solo-haiku55-overview.mp4",
+    "night1/solo-opus55:overview": "results/night1/video/night1-solo-opus55-overview.mp4",
+    "night1/solo-sol62:overview": "results/night1/video/night1-solo-sol62-overview.mp4",
+    "night1/solo-sonnet55:overview": "results/night1/video/night1-solo-sonnet55-overview.mp4",
+    "night1/team2-opus55:overview": "results/night1/video/night1-team2-opus55-overview.mp4",
+    "night1/team4-opus55:overview": "results/night1/video/night1-team4-opus55-overview.mp4",
+    "night1/team4-opus55-r2:overview": "results/night1/video/night1-team4-opus55-r2-overview.mp4",
+    "night1/team4-opus55-r2:screens": "results/night1/video/night1-team4-opus55-r2-screens.mp4",
+    "night1/vs2-opus55-astra62:overview": "results/night1/video/night1-vs2-opus55-astra62-overview.mp4",
+    "night1/vs2-opus55-astra62:screens": "results/night1/video/night1-vs2-opus55-astra62-screens.mp4",
+    "w1/gen1-solo:overview": "results/night1/video/w1-gen1-solo-overview.mp4",
+    "w1/gen1-team2:overview": "results/night1/video/w1-gen1-team2-overview.mp4",
+    "w1/gen2-team2:overview": "results/night1/video/w1-gen2-team2-overview.mp4",
+    "w1/gen3-team2:overview": "results/night1/video/w1-gen3-team2-overview.mp4",
+    "w1/gen4-team2:overview": "results/night1/video/w1-gen4-team2-overview.mp4",
+    "w1/hb-fable52-from-fable52:overview": "results/night1/video/w1-hb-fable52-from-fable52-overview.mp4",
+    "w1/hb-opus55-from-fable52:overview": "results/night1/video/w1-hb-opus55-from-fable52-overview.mp4",
+    "w1/rep-team4-opus55-b:overview": "results/night1/video/w1-rep-team4-opus55-b-overview.mp4",
+    "w3/rep-solo-opus55-b:overview": "results/night1/video/w3-rep-solo-opus55-b-overview.mp4",
+    "w3/rep-solo-opus55-c:overview": "results/night1/video/w3-rep-solo-opus55-c-overview.mp4",
+    "w3/rep-team2-opus55-c:overview": "results/night1/video/w3-rep-team2-opus55-c-overview.mp4",
+    "w3/s2-solo-opus55:overview": "results/night1/video/w3-s2-solo-opus55-overview.mp4",
+    "w3/s2-team2-opus55:overview": "results/night1/video/w3-s2-team2-opus55-overview.mp4",
+    "w3/s2-team4-opus55:overview": "results/night1/video/w3-s2-team4-opus55-overview.mp4",
+    "w4/org-manager-team4:overview": "results/night1/video/w4-org-manager-team4-overview.mp4",
+    "w4/org-manager-team4:screens": "results/night1/video/w4-org-manager-team4-screens.mp4"
   }
 }

@@ -12,6 +12,10 @@ from pathlib import Path
 
 SURFACE, TEXT, MUTED, GRID = "#fcfcfb", "#0b0b0b", "#52514e", "#e6e5e0"
 SERIES = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300", "#6250d6", "#e34948"]
+MODEL_NAMES = {
+    "claude-opus-5-5": "Claude Opus 5.5", "claude-fable-5-2": "Claude Fable 5.2", "claude-sonnet-5-5": "Claude Sonnet 5.5",
+    "claude-haiku-5-5": "Claude Haiku 5.5", "gpt-6.2-astra": "GPT-6.2 Astra", "gpt-6.2-sol": "GPT-6.2 Sol",
+}
 TEAM_COLOR = {"red": "#e34948", "blue": "#2a78d6", "green": "#008300", "yellow": "#eda100"}
 
 
@@ -119,7 +123,8 @@ def versus(out: Path, run_dir: Path, title: str | None = None) -> Path:
     by_team: dict[str, list[str]] = {}
     for agent in agents_of(run_dir):
         by_team.setdefault(agent["team"], []).append(agent["model"])
-    names = {team: f"{team}: {' + '.join(models)}" for team, models in by_team.items()}
+    names = {team: f"{team}: {MODEL_NAMES.get(models[0], models[0])}" + (f" x{len(models)}" if len(models) > 1 else "")
+             for team, models in by_team.items()}
     fig, ax = _axes(title or "Two teams, one map", "Production score of each team over the match")
     ends = []
     for index, (team, points) in enumerate(series.items()):
