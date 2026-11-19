@@ -44,6 +44,10 @@ def cmd_compare(args: argparse.Namespace) -> None:
     print(analyze.compare([Path(run_dir) for run_dir in args.runs]))
 
 
+def cmd_ratio(args: argparse.Namespace) -> None:
+    print(analyze.team_ratio(Path(args.solo), Path(args.team)))
+
+
 def cmd_timelapse(args: argparse.Namespace) -> None:
     if args.team:
         print(report.team_timelapse(Path(args.run), speed=args.speed))
@@ -93,6 +97,11 @@ def main(argv: list[str] | None = None) -> None:
     p = sub.add_parser("compare", help="a table of several runs side by side (they may still be running)")
     p.add_argument("runs", nargs="+")
     p.set_defaults(func=cmd_compare)
+
+    p = sub.add_parser("ratio", help="a team's output over a solo run's at equal game time")
+    p.add_argument("solo")
+    p.add_argument("team")
+    p.set_defaults(func=cmd_ratio)
 
     p = sub.add_parser("timelapse", help="make an mp4 from a run's end-of-turn screenshots")
     p.add_argument("run")

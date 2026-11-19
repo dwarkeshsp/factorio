@@ -59,6 +59,8 @@ python -m factoriobench run --out runs/demo/duo --model claude-opus-5-5,claude-o
 # Two sides on one map, each with its own factory, research and score
 python -m factoriobench run --out runs/demo/match --model claude-opus-5-5 --against gpt-6.2-astra --max-turns 30 --max-usd 4
 python -m factoriobench compare runs/demo/*      # runs side by side; works while they are still running
+python -m factoriobench ratio runs/v0.2/solo/astra62-s1001 runs/v0.3/duo/astra62x2-s1001   # team over solo at equal game time
+python -m factoriobench timelapse runs/demo/duo --team   # every agent's view side by side
 ```
 
 Models: `claude-opus-5-5`, `claude-fable-5-2`, `claude-sonnet-5-5`, `claude-haiku-5-5` (needs `ANTHROPIC_API_KEY`) and
