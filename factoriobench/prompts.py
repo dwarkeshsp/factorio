@@ -74,6 +74,8 @@ ENEMIES_HOSTILE = "present and will attack as your pollution reaches them"
 
 OPENING = ("The game has just started. You begin with a few basic items in your inventory and nothing built.\n\n"
            "Current screen:")
+REJOINED = ("[You had left the game: the quit button in the Escape menu was pressed. You have been put back in, with "
+            "your character and inventory as they were.]")
 KEEP_PLAYING = "The game runs until the deadline, and the clock keeps going while you stand still. Keep playing."
 
 SUMMARY_INSTRUCTIONS = """You are writing the notes that will replace the earlier part of this Factorio session in your own memory. After this, you will no longer see the messages or screenshots summarised here; you will see only these notes and the most recent few turns. Write everything you would need to keep playing well without them.

@@ -1,0 +1,97 @@
+{
+  "stop": "deadline",
+  "error": null,
+  "mode": "solo",
+  "teams": {
+    "player": {
+      "models": [
+        "gpt-6.2-astra"
+      ],
+      "players": [
+        "agent-1"
+      ],
+      "score": 25020.9,
+      "gross_production": 52283.6,
+      "usd": 24.0752,
+      "turns": 533,
+      "furthest_rung": 9,
+      "furthest_label": "First technology researched",
+      "technologies_researched": 2,
+      "rocket_launched": false,
+      "production": {
+        "items": {
+          "wooden-chest": 5,
+          "iron-chest": 84,
+          "pipe": 65,
+          "steam-engine": 13,
+          "burner-mining-drill": 64,
+          "stone-furnace": 96,
+          "coal": 3752,
+          "stone": 417,
+          "iron-ore": 2140,
+          "copper-ore": 429,
+          "iron-plate": 2109,
+          "copper-plate": 420,
+          "iron-gear-wheel": 296
+        },
+        "items_used": {
+          "pipe": 65,
+          "stone-furnace": 64,
+          "wood": 19,
+          "coal": 1222,
+          "stone": 480,
+          "iron-ore": 2133,
+          "copper-ore": 423,
+          "iron-plate": 1651,
+          "iron-gear-wheel": 296
+        },
+        "fluids": {},
+        "built": {
+          "wooden-chest": 5,
+          "burner-mining-drill": 67,
+          "stone-furnace": 32
+        }
+      },
+      "kills": {},
+      "losses": {}
+    }
+  },
+  "winner": null,
+  "agents": [
+    {
+      "name": "agent-1",
+      "team": "player",
+      "model": "gpt-6.2-astra",
+      "stop": null,
+      "turns": 533,
+      "usd": 24.0752,
+      "tokens": {
+        "input": 2049,
+        "output": 28111,
+        "cache_write": 1237037,
+        "cache_read": 26409985
+      },
+      "compactions": 6,
+      "screenshots": 533
+    }
+  ],
+  "effort": "medium",
+  "seed": 1001,
+  "peaceful": true,
+  "cease_fire": true,
+  "deadline_minutes": 20.0,
+  "pauses": 533,
+  "game_ticks": 72012,
+  "game_time": "0:20:00",
+  "usd": 24.0752,
+  "tokens": {
+    "input": 2049,
+    "output": 28111,
+    "cache_write": 1237037,
+    "cache_read": 26409985
+  },
+  "integrity_clean": true,
+  "commands_denied": 0,
+  "commands_run": 0,
+  "wall_seconds": 4970
+}

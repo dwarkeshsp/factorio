@@ -3,6 +3,8 @@ team2-opus55    --model claude-opus-5-5,claude-opus-5-5 --effort medium --minute
 team4-opus55    --model claude-opus-5-5,claude-opus-5-5,claude-opus-5-5,claude-opus-5-5 --effort medium --minutes 20 --max-usd 90
 # Two teams on one map: the flagship match, two against two across labs
 vs2-opus55-astra62  --team red=claude-opus-5-5,claude-opus-5-5 --team blue=gpt-6.2-astra,gpt-6.2-astra --effort medium --minutes 20 --max-usd 90 --budget 170
+# Four firms, one map: every model on its own team, sharing the same ore
+ffa4-a          --team red=claude-opus-5-5 --team blue=gpt-6.2-astra --team green=claude-fable-5-2 --team yellow=claude-sonnet-5-5 --effort medium --minutes 20 --max-usd 90 --budget 170
 # The same team question with a cheaper model
 team2-sonnet55  --model claude-sonnet-5-5,claude-sonnet-5-5 --effort medium --minutes 20 --max-usd 30 --budget 170
 team4-sonnet55  --model claude-sonnet-5-5,claude-sonnet-5-5,claude-sonnet-5-5,claude-sonnet-5-5 --effort medium --minutes 20 --max-usd 50 --budget 170

@@ -117,9 +117,12 @@ class Client:
         return self.proc is not None and self.proc.poll() is None
 
     def stop(self) -> None:
+        """Returns once the process is gone, so its directory lock is free for a successor."""
         if self.alive():
+            os.killpg(self.proc.pid, signal.SIGCONT)  # a stopped process ignores everything but SIGKILL
             os.killpg(self.proc.pid, signal.SIGINT)
             try:
                 self.proc.wait(timeout=20)
             except subprocess.TimeoutExpired:
                 os.killpg(self.proc.pid, signal.SIGKILL)
+                self.proc.wait(timeout=20)
