@@ -1,0 +1,113 @@
+{
+  "out": "runs/night1/ffa4-a",
+  "teams": {
+    "red": [
+      "claude-opus-5-5"
+    ],
+    "blue": [
+      "gpt-6.2-astra"
+    ],
+    "green": [
+      "claude-fable-5-2"
+    ],
+    "yellow": [
+      "claude-sonnet-5-5"
+    ]
+  },
+  "effort": "medium",
+  "seed": 1001,
+  "peaceful": true,
+  "cease_fire": true,
+  "always_day": true,
+  "minutes": 20.0,
+  "max_turns": 2000,
+  "max_usd": 90.0,
+  "compact_at_tokens": 100000,
+  "keep_turns": 6,
+  "render_threads": null,
+  "gpu": false,
+  "edition": "full",
+  "ledger": "runs/ledger.jsonl",
+  "budget_usd": 265.0,
+  "overview": true,
+  "org": "flat",
+  "handbook": null,
+  "write_handbook": true,
+  "throttle": true,
+  "mode": "versus",
+  "agents": [
+    {
+      "name": "red-1",
+      "team": "red",
+      "model": "claude-opus-5-5"
+    },
+    {
+      "name": "blue-1",
+      "team": "blue",
+      "model": "gpt-6.2-astra"
+    },
+    {
+      "name": "green-1",
+      "team": "green",
+      "model": "claude-fable-5-2"
+    },
+    {
+      "name": "yellow-1",
+      "team": "yellow",
+      "model": "claude-sonnet-5-5"
+    }
+  ],
+  "spawns": {
+    "red": [
+      -16.0,
+      0.0
+    ],
+    "blue": [
+      16.0,
+      0.0
+    ],
+    "green": [
+      0.0,
+      -16.0
+    ],
+    "yellow": [
+      0.0,
+      16.0
+    ]
+  },
+  "harness_version": "0.1.0",
+  "harness_commit": "0ffee5ee877c8156655055423a74447797e39f9b",
+  "prompt_version": "0.3",
+  "factorio_version": "2.1.24",
+  "scenario": "freeplay with teams (factoriobench/scenario/control.lua)",
+  "screen": [
+    1280,
+    720
+  ],
+  "client_config": {
+    "other": {
+      "check-updates": "false",
+      "enable-crash-log-uploading": "false"
+    },
+    "graphics": {
+      "full-screen": "false",
+      "v-sync": "false",
+      "show-clouds": "false",
+      "show-fog": "false",
+      "show-animated-water": "false",
+      "show-tree-distortion": "false",
+      "additional-terrain-effects": "false",
+      "light-occlusion": "false",
+      "high-quality-animations": "false",
+      "show-game-simulations-in-background": "false"
+    }
+  },
+  "timing": {
+    "before_actions": 0.15,
+    "between_actions": 0.1,
+    "after_actions": 0.3,
+    "min_run": 1.0,
+    "render_wait": 0.7
+  },
+  "start_tick": 672
+}

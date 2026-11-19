@@ -1,227 +1,602 @@
 {
-  "runs": {
-    "solo-astra62": {
+  "charts": {
+    "solo_scores": "results/night1/solo-scores.png",
+    "solo_over_time": "results/night1/solo-over-time.png",
+    "team_scaling": "results/night1/team-scaling.png",
+    "team_scaling_per_agent": "results/night1/team-scaling-per-agent.png",
+    "team_scaling_seed2": "results/night1/team-scaling-seed2-over-time.png",
+    "handbook_chain": "results/night1/handbook-chain.png",
+    "vs2-opus55-astra62": "results/night1/vs2-opus55-astra62.png"
+  },
+  "groups": {
+    "solo": {
+      "gpt-6.2-astra": {
+        "scores": [
+          25020.9
+        ],
+        "mean": 25020.9,
+        "usd": 24.0752,
+        "turns": 533.0,
+        "built": {
+          "wooden-chest": 5,
+          "burner-mining-drill": 67,
+          "stone-furnace": 32
+        }
+      },
+      "claude-fable-5-2": {
+        "scores": [
+          18617.3
+        ],
+        "mean": 18617.3,
+        "usd": 11.6665,
+        "turns": 155.0,
+        "built": {
+          "wooden-chest": 11,
+          "burner-mining-drill": 46,
+          "stone-furnace": 17
+        }
+      },
+      "claude-opus-5-5": {
+        "scores": [
+          6773.2,
+          5386.6,
+          5959.9
+        ],
+        "mean": 6039.900000000001,
+        "usd": 5.2438,
+        "turns": 177.0,
+        "built": {
+          "wooden-chest": 1,
+          "iron-chest": 2,
+          "boiler": 1,
+          "burner-mining-drill": 13,
+          "stone-furnace": 6
+        }
+      },
+      "claude-sonnet-5-5": {
+        "scores": [
+          1369.6
+        ],
+        "mean": 1369.6,
+        "usd": 2.5659,
+        "turns": 181.0,
+        "built": {
+          "wooden-chest": 5,
+          "burner-mining-drill": 6,
+          "stone-furnace": 2
+        }
+      }
+    },
+    "scaling": {
+      "seed 1001": {
+        "1": [
+          6773.2,
+          5386.6
+        ],
+        "2": [
+          11962.4,
+          21163.2,
+          7679.3
+        ],
+        "4": [
+          14960.1
+        ]
+      },
+      "seed 2002": {
+        "1": [
+          5959.9
+        ],
+        "2": [
+          8570.1
+        ],
+        "4": [
+          12207.7
+        ]
+      },
+      "pooled_mean": {
+        "1": 6039.900000000001,
+        "2": 12343.75,
+        "4": 13583.900000000001
+      },
+      "speedup": {
+        "1": 1.0,
+        "2": 2.0437010546532224,
+        "4": 2.2490273017765197
+      }
+    },
+    "org": {
+      "No structure": [
+        14960.1
+      ],
+      "A manager": [],
+      "Assigned roles": []
+    },
+    "handbook_chain": [
+      [
+        "Generation 1\n(no notes)",
+        21163.2
+      ],
+      [
+        "Generation 2",
+        12383.5
+      ],
+      [
+        "Generation 3",
+        11727.6
+      ]
+    ],
+    "handbook_transfer": []
+  },
+  "runs": [
+    {
+      "run": "night1/solo-astra62",
       "mode": "solo",
+      "team": "player",
+      "models": [
+        "gpt-6.2-astra"
+      ],
+      "seed": 1001,
+      "org": "flat",
+      "handbook": null,
       "stop": "deadline",
       "game_time": "0:20:00",
+      "score": 25020.9,
+      "turns": 533,
       "usd": 24.0752,
-      "winner": null,
-      "integrity_clean": true,
-      "wall_minutes": 83,
-      "teams": {
-        "player": {
-          "models": [
-            "gpt-6.2-astra"
-          ],
-          "score": 25020.9,
-          "gross_production": 52283.6,
-          "usd": 24.0752,
-          "turns": 533,
-          "furthest_label": "First technology researched",
-          "technologies_researched": 2,
-          "built": {
-            "wooden-chest": 5,
-            "burner-mining-drill": 67,
-            "stone-furnace": 32
-          }
-        }
+      "built": {
+        "wooden-chest": 5,
+        "burner-mining-drill": 67,
+        "stone-furnace": 32
       },
-      "chat_messages": 0
+      "won": false,
+      "technologies": 2
     },
-    "solo-fable52": {
+    {
+      "run": "night1/solo-fable52",
       "mode": "solo",
+      "team": "player",
+      "models": [
+        "claude-fable-5-2"
+      ],
+      "seed": 1001,
+      "org": "flat",
+      "handbook": null,
       "stop": "deadline",
       "game_time": "0:20:00",
+      "score": 18617.3,
+      "turns": 155,
       "usd": 11.6665,
-      "winner": null,
-      "integrity_clean": true,
-      "wall_minutes": 52,
-      "teams": {
-        "player": {
-          "models": [
-            "claude-fable-5-2"
-          ],
-          "score": 18617.3,
-          "gross_production": 36483.9,
-          "usd": 11.6665,
-          "turns": 155,
-          "furthest_label": "First technology researched",
-          "technologies_researched": 1,
-          "built": {
-            "wooden-chest": 11,
-            "burner-mining-drill": 46,
-            "stone-furnace": 17
-          }
-        }
+      "built": {
+        "wooden-chest": 11,
+        "burner-mining-drill": 46,
+        "stone-furnace": 17
       },
-      "chat_messages": 0
+      "won": false,
+      "technologies": 1
     },
-    "solo-opus55": {
+    {
+      "run": "night1/solo-opus55",
       "mode": "solo",
+      "team": "player",
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "seed": 1001,
+      "org": "flat",
+      "handbook": null,
       "stop": "deadline",
       "game_time": "0:20:00",
+      "score": 6773.2,
+      "turns": 173,
       "usd": 4.971,
-      "winner": null,
-      "integrity_clean": true,
-      "wall_minutes": 36,
-      "teams": {
-        "player": {
-          "models": [
-            "claude-opus-5-5"
-          ],
-          "score": 6773.2,
-          "gross_production": 12953.3,
-          "usd": 4.971,
-          "turns": 173,
-          "furthest_label": "First technology researched",
-          "technologies_researched": 1,
-          "built": {
-            "wooden-chest": 1,
-            "iron-chest": 2,
-            "boiler": 1,
-            "burner-mining-drill": 13,
-            "stone-furnace": 6
-          }
-        }
+      "built": {
+        "wooden-chest": 1,
+        "iron-chest": 2,
+        "boiler": 1,
+        "burner-mining-drill": 13,
+        "stone-furnace": 6
       },
-      "chat_messages": 0
+      "won": false,
+      "technologies": 1
     },
-    "team2-opus55": {
-      "mode": "team",
+    {
+      "run": "night1/solo-sonnet55",
+      "mode": "solo",
+      "team": "player",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "seed": 1001,
+      "org": "flat",
+      "handbook": null,
       "stop": "deadline",
       "game_time": "0:20:00",
-      "usd": 9.7047,
-      "winner": null,
-      "integrity_clean": true,
-      "wall_minutes": 50,
-      "teams": {
-        "player": {
-          "models": [
-            "claude-opus-5-5",
-            "claude-opus-5-5"
-          ],
-          "score": 11962.4,
-          "gross_production": 23356.4,
-          "usd": 9.7047,
-          "turns": 355,
-          "furthest_label": "First technology researched",
-          "technologies_researched": 2,
-          "built": {
-            "iron-chest": 3,
-            "burner-mining-drill": 23,
-            "stone-furnace": 19
-          }
-        }
+      "score": 1369.6,
+      "turns": 181,
+      "usd": 2.5659,
+      "built": {
+        "wooden-chest": 5,
+        "burner-mining-drill": 6,
+        "stone-furnace": 2
       },
-      "chat_messages": 22
+      "won": false,
+      "technologies": 1
     },
-    "team4-opus55": {
+    {
+      "run": "night1/team2-opus55",
       "mode": "team",
+      "team": "player",
+      "models": [
+        "claude-opus-5-5",
+        "claude-opus-5-5"
+      ],
+      "seed": 1001,
+      "org": "flat",
+      "handbook": null,
+      "stop": "deadline",
+      "game_time": "0:20:00",
+      "score": 11962.4,
+      "turns": 355,
+      "usd": 9.7047,
+      "built": {
+        "iron-chest": 3,
+        "burner-mining-drill": 23,
+        "stone-furnace": 19
+      },
+      "won": false,
+      "technologies": 2
+    },
+    {
+      "run": "night1/team4-opus55",
+      "mode": "team",
+      "team": "player",
+      "models": [
+        "claude-opus-5-5",
+        "claude-opus-5-5",
+        "claude-opus-5-5",
+        "claude-opus-5-5"
+      ],
+      "seed": 1001,
+      "org": "flat",
+      "handbook": null,
       "stop": "left_game",
       "game_time": "0:00:32",
-      "usd": 0.4123,
-      "winner": null,
-      "integrity_clean": true,
-      "wall_minutes": 4,
-      "teams": {
-        "player": {
-          "models": [
-            "claude-opus-5-5",
-            "claude-opus-5-5",
-            "claude-opus-5-5",
-            "claude-opus-5-5"
-          ],
-          "score": 6.0,
-          "gross_production": 6.0,
-          "usd": 0.4124,
-          "turns": 24,
-          "furthest_label": "",
-          "technologies_researched": 0,
-          "built": {}
-        }
-      },
-      "chat_messages": 4
+      "score": 6.0,
+      "turns": 24,
+      "usd": 0.4124,
+      "built": {},
+      "won": false,
+      "technologies": 0
     },
-    "vs2-opus55-astra62": {
+    {
+      "run": "night1/team4-opus55-r2",
+      "mode": "team",
+      "team": "player",
+      "models": [
+        "claude-opus-5-5",
+        "claude-opus-5-5",
+        "claude-opus-5-5",
+        "claude-opus-5-5"
+      ],
+      "seed": 1001,
+      "org": "flat",
+      "handbook": null,
+      "stop": "deadline",
+      "game_time": "0:20:00",
+      "score": 14960.1,
+      "turns": 604,
+      "usd": 17.1955,
+      "built": {
+        "wooden-chest": 4,
+        "iron-chest": 4,
+        "burner-mining-drill": 22,
+        "stone-furnace": 22
+      },
+      "won": false,
+      "technologies": 2
+    },
+    {
+      "run": "night1/vs2-opus55-astra62",
       "mode": "versus",
+      "team": "red",
+      "models": [
+        "claude-opus-5-5",
+        "claude-opus-5-5"
+      ],
+      "seed": 1001,
+      "org": "flat",
+      "handbook": null,
       "stop": "left_game",
       "game_time": "0:15:50",
-      "usd": 38.9638,
-      "winner": null,
-      "integrity_clean": true,
-      "wall_minutes": 96,
-      "teams": {
-        "red": {
-          "models": [
-            "claude-opus-5-5",
-            "claude-opus-5-5"
-          ],
-          "score": 2664.6,
-          "gross_production": 4673.7,
-          "usd": 8.1075,
-          "turns": 300,
-          "furthest_label": "First technology researched",
-          "technologies_researched": 1,
-          "built": {
-            "wooden-chest": 4,
-            "burner-mining-drill": 8,
-            "stone-furnace": 5
-          }
-        },
-        "blue": {
-          "models": [
-            "gpt-6.2-astra",
-            "gpt-6.2-astra"
-          ],
-          "score": 16561.4,
-          "gross_production": 36466.8,
-          "usd": 30.8564,
-          "turns": 702,
-          "furthest_label": "First technology researched",
-          "technologies_researched": 2,
-          "built": {
-            "wooden-chest": 3,
-            "iron-chest": 1,
-            "burner-mining-drill": 53,
-            "stone-furnace": 26
-          }
-        }
+      "score": 2664.6,
+      "turns": 300,
+      "usd": 8.1075,
+      "built": {
+        "wooden-chest": 4,
+        "burner-mining-drill": 8,
+        "stone-furnace": 5
       },
-      "chat_messages": 6
+      "won": false,
+      "technologies": 1
+    },
+    {
+      "run": "night1/vs2-opus55-astra62",
+      "mode": "versus",
+      "team": "blue",
+      "models": [
+        "gpt-6.2-astra",
+        "gpt-6.2-astra"
+      ],
+      "seed": 1001,
+      "org": "flat",
+      "handbook": null,
+      "stop": "left_game",
+      "game_time": "0:15:50",
+      "score": 16561.4,
+      "turns": 702,
+      "usd": 30.8564,
+      "built": {
+        "wooden-chest": 3,
+        "iron-chest": 1,
+        "burner-mining-drill": 53,
+        "stone-furnace": 26
+      },
+      "won": false,
+      "technologies": 2
+    },
+    {
+      "run": "w1/gen1-solo",
+      "mode": "solo",
+      "team": "player",
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "seed": 1001,
+      "org": "flat",
+      "handbook": null,
+      "stop": "left_game",
+      "game_time": "0:02:39",
+      "score": 163.5,
+      "turns": 33,
+      "usd": 0.7396,
+      "built": {
+        "burner-mining-drill": 3,
+        "stone-furnace": 1
+      },
+      "won": false,
+      "technologies": 0
+    },
+    {
+      "run": "w1/gen1-team2",
+      "mode": "team",
+      "team": "player",
+      "models": [
+        "claude-opus-5-5",
+        "claude-opus-5-5"
+      ],
+      "seed": 1001,
+      "org": "flat",
+      "handbook": null,
+      "stop": "deadline",
+      "game_time": "0:20:00",
+      "score": 21163.2,
+      "turns": 412,
+      "usd": 12.2616,
+      "built": {
+        "iron-chest": 2,
+        "burner-mining-drill": 35,
+        "stone-furnace": 20
+      },
+      "won": false,
+      "technologies": 2
+    },
+    {
+      "run": "w1/gen2-solo",
+      "mode": "solo",
+      "team": "player",
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "seed": 1001,
+      "org": "flat",
+      "handbook": "runs/w1/gen1-solo/handbook.md",
+      "stop": "error",
+      "game_time": "0:00:00",
+      "score": 0.0,
+      "turns": 0,
+      "usd": 0.0,
+      "built": {},
+      "won": false,
+      "technologies": 0
+    },
+    {
+      "run": "w1/gen2-team2",
+      "mode": "team",
+      "team": "player",
+      "models": [
+        "claude-opus-5-5",
+        "claude-opus-5-5"
+      ],
+      "seed": 1001,
+      "org": "flat",
+      "handbook": "runs/w1/gen1-team2/handbook.md",
+      "stop": "deadline",
+      "game_time": "0:20:00",
+      "score": 12383.5,
+      "turns": 317,
+      "usd": 9.8336,
+      "built": {
+        "boiler": 3,
+        "burner-mining-drill": 22,
+        "stone-furnace": 15
+      },
+      "won": false,
+      "technologies": 2
+    },
+    {
+      "run": "w1/gen3-team2",
+      "mode": "team",
+      "team": "player",
+      "models": [
+        "claude-opus-5-5",
+        "claude-opus-5-5"
+      ],
+      "seed": 1001,
+      "org": "flat",
+      "handbook": "runs/w1/gen2-team2/handbook.md",
+      "stop": "deadline",
+      "game_time": "0:20:00",
+      "score": 11727.6,
+      "turns": 299,
+      "usd": 9.147,
+      "built": {
+        "wooden-chest": 4,
+        "iron-chest": 1,
+        "burner-mining-drill": 21,
+        "stone-furnace": 11
+      },
+      "won": false,
+      "technologies": 1
+    },
+    {
+      "run": "w3/rep-solo-opus55-b",
+      "mode": "solo",
+      "team": "player",
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "seed": 1001,
+      "org": "flat",
+      "handbook": null,
+      "stop": "deadline",
+      "game_time": "0:20:00",
+      "score": 5386.6,
+      "turns": 203,
+      "usd": 6.1241,
+      "built": {
+        "burner-mining-drill": 10,
+        "stone-furnace": 9
+      },
+      "won": false,
+      "technologies": 1
+    },
+    {
+      "run": "w3/rep-team2-opus55-c",
+      "mode": "team",
+      "team": "player",
+      "models": [
+        "claude-opus-5-5",
+        "claude-opus-5-5"
+      ],
+      "seed": 1001,
+      "org": "flat",
+      "handbook": null,
+      "stop": "deadline",
+      "game_time": "0:20:00",
+      "score": 7679.3,
+      "turns": 380,
+      "usd": 10.5836,
+      "built": {
+        "wooden-chest": 6,
+        "burner-mining-drill": 15,
+        "stone-furnace": 6
+      },
+      "won": false,
+      "technologies": 1
+    },
+    {
+      "run": "w3/s2-solo-opus55",
+      "mode": "solo",
+      "team": "player",
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "seed": 2002,
+      "org": "flat",
+      "handbook": null,
+      "stop": "deadline",
+      "game_time": "0:20:00",
+      "score": 5959.9,
+      "turns": 155,
+      "usd": 4.6363,
+      "built": {
+        "iron-chest": 2,
+        "burner-mining-drill": 10,
+        "stone-furnace": 7
+      },
+      "won": false,
+      "technologies": 1
+    },
+    {
+      "run": "w3/s2-team2-opus55",
+      "mode": "team",
+      "team": "player",
+      "models": [
+        "claude-opus-5-5",
+        "claude-opus-5-5"
+      ],
+      "seed": 2002,
+      "org": "flat",
+      "handbook": null,
+      "stop": "deadline",
+      "game_time": "0:20:00",
+      "score": 8570.1,
+      "turns": 462,
+      "usd": 13.2296,
+      "built": {
+        "wooden-chest": 2,
+        "iron-chest": 3,
+        "boiler": 2,
+        "burner-mining-drill": 18,
+        "stone-furnace": 7
+      },
+      "won": false,
+      "technologies": 1
+    },
+    {
+      "run": "w3/s2-team4-opus55",
+      "mode": "team",
+      "team": "player",
+      "models": [
+        "claude-opus-5-5",
+        "claude-opus-5-5",
+        "claude-opus-5-5",
+        "claude-opus-5-5"
+      ],
+      "seed": 2002,
+      "org": "flat",
+      "handbook": null,
+      "stop": "deadline",
+      "game_time": "0:20:00",
+      "score": 12207.7,
+      "turns": 484,
+      "usd": 14.5711,
+      "built": {
+        "burner-mining-drill": 17,
+        "stone-furnace": 14
+      },
+      "won": false,
+      "technologies": 2
     }
-  },
-  "charts": [
-    "results/night1/solo-scores.png",
-    "results/night1/solo-over-time.png",
-    "results/night1/team-scaling-opus55.png",
-    "results/night1/team-scaling-opus55-per-agent.png",
-    "results/night1/vs2-opus55-astra62.png"
   ],
-  "videos": [
-    "results/night1/solo-astra62-overview.mp4",
-    "results/night1/solo-fable52-overview.mp4",
-    "results/night1/solo-opus55-overview.mp4",
-    "results/night1/team2-opus55-overview.mp4",
-    "results/night1/team4-opus55-overview.mp4",
-    "results/night1/vs2-opus55-astra62-overview.mp4"
-  ],
-  "scaling": {
-    "opus55": {
-      "1 agent": {
-        "at_10_min": 1538.4,
-        "at_20_min": 6000.5,
-        "usd": 4.971
-      },
-      "2 agents": {
-        "at_10_min": 2561.5,
-        "at_20_min": 11878.2,
-        "usd": 9.7047
-      },
-      "4 agents": {
-        "at_10_min": 6.0,
-        "at_20_min": 6.0,
-        "usd": 0.4123
-      }
-    }
+  "total_usd": 190.68,
+  "videos": {
+    "night1/solo-astra62": "results/night1/video/night1-solo-astra62.mp4",
+    "night1/solo-fable52": "results/night1/video/night1-solo-fable52.mp4",
+    "night1/solo-opus55": "results/night1/video/night1-solo-opus55.mp4",
+    "night1/solo-sonnet55": "results/night1/video/night1-solo-sonnet55.mp4",
+    "night1/team2-opus55": "results/night1/video/night1-team2-opus55.mp4",
+    "night1/team4-opus55": "results/night1/video/night1-team4-opus55.mp4",
+    "night1/team4-opus55-r2": "results/night1/video/night1-team4-opus55-r2.mp4",
+    "night1/vs2-opus55-astra62": "results/night1/video/night1-vs2-opus55-astra62.mp4",
+    "w1/gen1-solo": "results/night1/video/w1-gen1-solo.mp4",
+    "w1/gen1-team2": "results/night1/video/w1-gen1-team2.mp4",
+    "w1/gen2-team2": "results/night1/video/w1-gen2-team2.mp4",
+    "w1/gen3-team2": "results/night1/video/w1-gen3-team2.mp4",
+    "w3/rep-solo-opus55-b": "results/night1/video/w3-rep-solo-opus55-b.mp4",
+    "w3/rep-team2-opus55-c": "results/night1/video/w3-rep-team2-opus55-c.mp4",
+    "w3/s2-solo-opus55": "results/night1/video/w3-s2-solo-opus55.mp4",
+    "w3/s2-team2-opus55": "results/night1/video/w3-s2-team2-opus55.mp4",
+    "w3/s2-team4-opus55": "results/night1/video/w3-s2-team4-opus55.mp4"
   }
 }

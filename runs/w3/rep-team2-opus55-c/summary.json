@@ -1,0 +1,114 @@
+{
+  "stop": "deadline",
+  "error": null,
+  "mode": "team",
+  "teams": {
+    "player": {
+      "models": [
+        "claude-opus-5-5",
+        "claude-opus-5-5"
+      ],
+      "players": [
+        "agent-1",
+        "agent-2"
+      ],
+      "score": 7679.3,
+      "gross_production": 14793.7,
+      "usd": 10.5836,
+      "turns": 380,
+      "furthest_rung": 9,
+      "furthest_label": "First technology researched",
+      "technologies_researched": 1,
+      "rocket_launched": false,
+      "production": {
+        "items": {
+          "wooden-chest": 5,
+          "pipe": 15,
+          "boiler": 3,
+          "burner-mining-drill": 13,
+          "offshore-pump": 1,
+          "stone-furnace": 20,
+          "coal": 761,
+          "stone": 40,
+          "iron-ore": 1095,
+          "iron-plate": 894,
+          "iron-gear-wheel": 187
+        },
+        "items_used": {
+          "pipe": 15,
+          "stone-furnace": 16,
+          "wood": 72,
+          "coal": 285,
+          "stone": 100,
+          "iron-ore": 897,
+          "iron-plate": 428,
+          "iron-gear-wheel": 41
+        },
+        "fluids": {},
+        "built": {
+          "wooden-chest": 6,
+          "burner-mining-drill": 15,
+          "stone-furnace": 6
+        }
+      },
+      "kills": {},
+      "losses": {}
+    }
+  },
+  "winner": null,
+  "agents": [
+    {
+      "name": "agent-1",
+      "team": "player",
+      "model": "claude-opus-5-5",
+      "stop": null,
+      "turns": 209,
+      "usd": 5.8531,
+      "tokens": {
+        "input": 1844,
+        "output": 72827,
+        "cache_write": 406388,
+        "cache_read": 11785993
+      },
+      "compactions": 4,
+      "screenshots": 233
+    },
+    {
+      "name": "agent-2",
+      "team": "player",
+      "model": "claude-opus-5-5",
+      "stop": null,
+      "turns": 171,
+      "usd": 4.7305,
+      "tokens": {
+        "input": 1413,
+        "output": 60553,
+        "cache_write": 332073,
+        "cache_read": 9267206
+      },
+      "compactions": 3,
+      "screenshots": 202
+    }
+  ],
+  "effort": "medium",
+  "seed": 1001,
+  "peaceful": true,
+  "cease_fire": true,
+  "org": "flat",
+  "handbook": null,
+  "deadline_minutes": 20.0,
+  "pauses": 356,
+  "game_ticks": 72011,
+  "game_time": "0:20:00",
+  "usd": 10.5836,
+  "tokens": {
+    "input": 3257,
+    "output": 133380,
+    "cache_write": 738461,
+    "cache_read": 21053199
+  },
+  "integrity_clean": true,
+  "commands_denied": 0,
+  "commands_run": 0,
+  "wall_seconds": 3187
+}

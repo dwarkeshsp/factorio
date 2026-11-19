@@ -1,4 +1,0 @@
-2026-11-19 04:19:20 agent-1: agent-1: I'll take IRON patch NW (next to copper). Suggest agent-2 copper NW, agent-3 coal S, agent-4 stone N. Hand-mine + build burner drills/furnaces.
-2026-11-19 04:19:27 agent-3: agent-3: OK, taking coal S.
-2026-11-19 04:19:35 agent-2: agent-2: OK, taking copper NW
-2026-11-19 04:19:44 agent-4: agent-4: OK, taking stone N. Will hand-mine stone, make furnaces for everyone.

@@ -25,3 +25,8 @@
 2026-11-19 06:32:23 [CHAT] agent-1: agent-1: agent-2 placed 2 coal drills at coal field, outputting into 2 of the iron chests (top row). They need refuel ~4 coal each per 2 min. Left 32 iron plates + 2 stone in the leftmost iron chest for you to craft more drills.
 2026-11-19 06:42:53 [CHAT] agent-2: agent-2: 5 coal drills now running at coal field (all fueled). Bringing 50 coal north to agent-3 copper furnaces / agent-1 chest now.
 2026-11-19 06:45:04 [CHAT] agent-3: agent-3: agent-2 thanks! I'm right here at iron (my 3 furnaces NE of agent-1 chest). Put the coal in agent-1's chest, I'll fuel my furnaces and smelt my hand-mined ore (~70 iron ore now).
+2026-11-19 07:05:30 [LEAVE] agent-1 left the game
+2026-11-19 07:05:34 [LEAVE] agent-2 left the game
+2026-11-19 07:05:38 [LEAVE] agent-3 left the game
+2026-11-19 07:05:42 [LEAVE] agent-4 left the game
+=== Log closed 2026-11-19 07:05:47 ===
