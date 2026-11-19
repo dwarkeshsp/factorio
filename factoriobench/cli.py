@@ -22,7 +22,8 @@ def cmd_setup(args: argparse.Namespace) -> None:
 
 def cmd_run(args: argparse.Namespace) -> None:
     cfg = RunConfig(
-        out=args.out, models=args.model.split(","), effort=args.effort, seed=args.seed, peaceful=not args.hostile,
+        out=args.out, models=args.model.split(","), rivals=args.against.split(",") if args.against else [],
+        effort=args.effort, seed=args.seed, peaceful=not args.hostile,
         max_turns=args.max_turns, max_usd=args.max_usd, max_game_hours=args.max_game_hours,
         compact_at_tokens=args.compact_at_tokens, keep_turns=args.keep_turns,
         render_threads=args.render_threads, gpu=args.gpu, ledger=args.ledger, budget_usd=args.budget,
@@ -61,6 +62,9 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("--out", required=True, help="run directory, for example runs/opus55-seed1001")
     p.add_argument("--model", default="claude-opus-5-5",
                    help="model name, or a comma-separated list for a team (one agent each). Known: " + ", ".join(sorted({**PRICES, **OPENAI_PRICES})))
+    p.add_argument("--against", default=None,
+                   help="a second team on the same map with its own factory and score: a model name or a "
+                        "comma-separated list")
     p.add_argument("--effort", default=None, help="low, medium, high, xhigh or max; default is the model's own default")
     p.add_argument("--seed", type=int, default=1001, help="map generation seed")
     p.add_argument("--hostile", action="store_true", help="enemies attack (default is peaceful mode)")

@@ -22,7 +22,7 @@ from .client import CLIENT_CONFIG, SCREEN, Client, Display
 from .desktop import ActionError, Desktop, encode_jpeg
 from .ledger import Ledger
 from .llm import HALT_TEXT, Call, Outcome, Reply, make_player
-from .scoring import SNAPSHOT_LUA, TICKS_PER_SECOND, Scorer, game_clock, ladder_check_lua
+from .scoring import LADDER, TICKS_PER_SECOND, Scorer, game_clock, ladder_check_lua, snapshot_lua
 from .server import Server
 
 # Seconds of running game around the models' actions. They are charged as game time, the
@@ -38,6 +38,7 @@ SNAPSHOT_EVERY = 25    # rounds between full production snapshots in the log
 class RunConfig:
     out: str
     models: list[str] = field(default_factory=lambda: ["claude-opus-5-5"])
+    rivals: list[str] = field(default_factory=list)  # a second team on the same map, with its own force
     effort: str | None = None
     seed: int = 1001
     peaceful: bool = True
@@ -65,9 +66,10 @@ def harness_commit() -> str | None:
 class Seat:
     """One agent: its display, its game client, its hands and eyes, and its model."""
 
-    def __init__(self, run_dir: Path, name: str, model: str, cfg: RunConfig):
+    def __init__(self, run_dir: Path, name: str, model: str, cfg: RunConfig, force: str = "player"):
         self.name = name
         self.model = model
+        self.force = force
         self.dir = run_dir / "agents" / name
         self.shots = self.dir / "shots"
         self.shots.mkdir(parents=True, exist_ok=True)
@@ -133,8 +135,15 @@ class Run:
         self.dir.mkdir(parents=True, exist_ok=True)
         self._log = (self.dir / "log.jsonl").open("a")
         self.server = Server(self.dir / "server", seed=cfg.seed, peaceful=cfg.peaceful, edition=cfg.edition)
-        self.seats = [Seat(self.dir, f"agent-{i}", model, cfg) for i, model in enumerate(cfg.models, start=1)]
-        self.scorer = Scorer()
+        # Without rivals everyone plays in the game's default force. With rivals each side gets its own.
+        sides = [("team-1", cfg.models), ("team-2", cfg.rivals)] if cfg.rivals else [("player", cfg.models)]
+        self.seats = []
+        for force, models in sides:
+            for model in models:
+                self.seats.append(Seat(self.dir, f"agent-{len(self.seats) + 1}", model, cfg, force=force))
+        self.forces = [force for force, _ in sides]
+        self.scorers = {force: Scorer() for force in self.forces}
+        self.start_tick = 0
         self.ledger = Ledger(Path(cfg.ledger), self.dir.name)
         self.turn = 0
         self.game_ticks = 0
@@ -176,12 +185,15 @@ class Run:
             time.sleep(1.0)
         time.sleep(2.0)  # the first frames after joining are still loading sprites
         start_tick = self.server.pause()
-        self.scorer = Scorer(start_tick=start_tick)
+        if cfg.rivals:
+            self.server.eval(self.forces_lua())
+        self.start_tick = start_tick
+        self.scorers = {force: Scorer(start_tick=start_tick) for force in self.forces}
         for seat in self.seats:
             seat.desktop = Desktop(seat.display.name, SCREEN)
         config = {
             **asdict(cfg),
-            "agents": [{"name": seat.name, "model": seat.model} for seat in self.seats],
+            "agents": [{"name": seat.name, "model": seat.model, "force": seat.force} for seat in self.seats],
             "harness_version": __version__,
             "harness_commit": harness_commit(),
             "prompt_version": prompts.PROMPT_VERSION,
@@ -195,24 +207,50 @@ class Run:
         (self.dir / "config.json").write_text(json.dumps(config, indent=2))
         self.emit(event="start", **config)
 
+    def forces_lua(self) -> str:
+        """Give each side its own force: its own research, production statistics and buildings.
+
+        Both sides keep the same spawn point and the same charted starting area, are friends with the
+        default force (so either can open the crashed ship's containers), and have a cease-fire with
+        each other (so turrets and stray shots do not start a war by accident).
+        """
+        lines = ["local surface = game.surfaces[1]", "local home = game.forces.player",
+                 "local spawn = home.get_spawn_position(surface)"]
+        for force in self.forces:
+            lines += [
+                f'local f = game.forces["{force}"] or game.create_force("{force}")',
+                "f.set_spawn_position(spawn, surface)",
+                "f.set_friend(home, true) home.set_friend(f, true)",
+                "f.chart(surface, {{spawn.x - 200, spawn.y - 200}, {spawn.x + 200, spawn.y + 200}})",
+            ]
+            for other in self.forces:
+                if other != force:
+                    lines.append(f'if game.forces["{other}"] then f.set_cease_fire("{other}", true) '
+                                 f'game.forces["{other}"].set_cease_fire(f, true) end')
+            for seat in self.seats:
+                if seat.force == force:
+                    lines.append(f'game.players["{seat.name}"].force = f')
+        lines.append("return true")
+        return "\n".join(lines)
+
     # --- one round -----------------------------------------------------------
     def capture(self, seat: Seat) -> tuple[str, bytes]:
         assert seat.desktop is not None
         return seat.save_shot(seat.desktop.grab(), self.turn)
 
-    def observe(self) -> tuple[dict[str, tuple[str, bytes]], list[str], dict]:
-        """With the game paused: capture every screen and read the score."""
+    def observe(self) -> tuple[dict[str, tuple[str, bytes]], dict[str, list[str]], dict[str, dict]]:
+        """With the game paused: capture every screen and read each side's score."""
         time.sleep(RENDER_WAIT)
         shots = {seat.name: self.capture(seat) for seat in self.seats}
-        snapshot = self.server.eval(SNAPSHOT_LUA)
-        new = self.scorer.update(snapshot)
-        return shots, new, snapshot
+        snapshots = {force: self.server.eval(snapshot_lua(force)) for force in self.forces}
+        new = {force: self.scorers[force].update(snapshots[force]) for force in self.forces}
+        return shots, new, snapshots
 
-    def stop_reason(self, snapshot: dict) -> str | None:
+    def stop_reason(self, snapshots: dict[str, dict]) -> str | None:
         cfg = self.cfg
-        if self.scorer.launched:
+        if any(scorer.launched for scorer in self.scorers.values()):
             return "rocket_launched"
-        connected = snapshot.get("connected") or []
+        connected = snapshots[self.forces[0]].get("connected") or []
         for seat in self.seats:
             if seat.name not in connected or not seat.client.alive():
                 return "left_game"
@@ -244,17 +282,18 @@ class Run:
 
     def play(self) -> str:
         cfg = self.cfg
-        team = [seat.name for seat in self.seats]
         shots, _, _ = self.observe()
         for seat in self.seats:
+            team = [other.name for other in self.seats if other.force == seat.force]
+            rivals = [other.name for other in self.seats if other.force != seat.force]
             seat.player = make_player(
-                seat.model, prompts.system_prompt(*SCREEN, name=seat.name, team=team), effort=cfg.effort,
+                seat.model, prompts.system_prompt(*SCREEN, name=seat.name, team=team, rivals=rivals), effort=cfg.effort,
                 compact_at_tokens=cfg.compact_at_tokens, keep_turns=cfg.keep_turns,
                 transcript=self.dir / "agents" / seat.name / "conversation.jsonl",
             )
             # No opening screenshot: the model asks for one, as it would at any other time. A provider
             # that keeps user messages verbatim through compaction would otherwise carry it forever.
-            seat.player.begin(prompts.opening(peaceful=cfg.peaceful, team=team))
+            seat.player.begin(prompts.opening(peaceful=cfg.peaceful, team=team, rivals=rivals))
             self.emit(event="observe", turn=0, agent=seat.name, shot=shots[seat.name][0])
 
         while True:
@@ -285,9 +324,10 @@ class Run:
                     results = dict(zip([s.name for s in acting], done))
                     time.sleep(AFTER_ACTIONS)
                 finally:
-                    self.game_ticks = self.server.pause() - self.scorer.start_tick
+                    self.game_ticks = self.server.pause() - self.start_tick
             act_s = time.time() - t1
-            shots, new, snapshot = self.observe()
+            shots, new_by_force, snapshots = self.observe()
+            new = new_by_force[self.forces[0]]
             ups = round((self.game_ticks - tick_before) / act_s, 1) if act_s > 0 else None
 
             for seat in acting:
@@ -305,14 +345,17 @@ class Run:
                 print(f"[{self.turn}] {seat.name} {game_clock(self.game_ticks)} ${seat.player.spent_usd:.2f} "
                       f"ctx={seat.player.context_tokens // 1000}k | {reply.text[:140]} | {summary[:240]}", flush=True)
             self.emit(event="round", turn=self.turn, game_ticks=self.game_ticks, act_s=round(act_s, 2), ups=ups,
-                      new=new, usd=round(self.spent, 4))
-            for key in new:
-                print(f"      first: {key} at {game_clock(self.game_ticks)}", flush=True)
+                      new=new, usd=round(self.spent, 4), **({"new_by_force": new_by_force} if cfg.rivals else {}))
+            for force, keys in new_by_force.items():
+                for key in keys:
+                    side = f" [{force}]" if cfg.rivals else ""
+                    print(f"      first{side}: {key} at {game_clock(self.game_ticks)}", flush=True)
             if self.turn % SNAPSHOT_EVERY == 0:
-                self.emit(event="snapshot", turn=self.turn, snapshot=snapshot)
+                self.emit(event="snapshot", turn=self.turn, snapshot=snapshots[self.forces[0]],
+                          **({"snapshots": snapshots} if cfg.rivals else {}))
                 self.ledger.record(self.spent)
 
-            stop = self.stop_reason(snapshot)
+            stop = self.stop_reason(snapshots)
             if stop:
                 return stop
             for seat in self.seats:
@@ -326,14 +369,15 @@ class Run:
     # --- wrap-up -------------------------------------------------------------
     def finish(self, stop: str, error: str | None = None) -> dict:
         integrity: dict[str, Any] = {}
-        final_snapshot: dict[str, Any] = {}
+        finals: dict[str, dict] = {}
         try:
-            final_snapshot = self.server.eval(SNAPSHOT_LUA)
-            self.scorer.update(final_snapshot)
+            for force in self.forces:
+                finals[force] = self.server.eval(snapshot_lua(force))
+                self.scorers[force].update(finals[force])
             integrity = self.server.integrity()
         except Exception as err:  # the server may already be gone; the summary is still worth writing
             integrity = {"clean": None, "error": str(err)}
-        score = self.scorer.report()
+        reports = {force: self.scorers[force].report() for force in self.forces}
         totals = {"input": 0, "output": 0, "cache_write": 0, "cache_read": 0}
         agents = []
         for seat in self.seats:
@@ -342,17 +386,31 @@ class Run:
                 for key, value in player.totals.items():
                     totals[key] += value
             agents.append({
-                "name": seat.name, "model": seat.model, "stop": seat.stop,
+                "name": seat.name, "model": seat.model, "force": seat.force, "stop": seat.stop,
                 "usd": round(player.spent_usd, 4) if player else 0.0,
                 "tokens": player.totals if player else {},
                 "compactions": player.compactions if player else 0,
                 "screenshots": seat.shot_n,
             })
+
+        def side(force: str) -> dict[str, Any]:
+            report, final = reports[force], finals.get(force, {})
+            return {
+                "rocket_launched": report["rocket_launched"],
+                "furthest_rung": report["furthest_rung"],
+                "furthest_label": report["furthest_label"],
+                "technologies_researched": report["technologies_researched"],
+                "production": {"items": final.get("items") or {}, "fluids": final.get("fluids") or {},
+                               "built": final.get("built") or {}},
+            }
+
+        first = side(self.forces[0])
         summary = {
             "stop": stop,
             "error": error,
             "agents": agents,
             "models": self.cfg.models,
+            "rivals": self.cfg.rivals,
             "effort": self.cfg.effort,
             "seed": self.cfg.seed,
             "peaceful": self.cfg.peaceful,
@@ -361,26 +419,35 @@ class Run:
             "game_time": game_clock(self.game_ticks),
             "usd": round(self.spent, 4),
             "tokens": totals,
-            "rocket_launched": score["rocket_launched"],
-            "furthest_rung": score["furthest_rung"],
-            "furthest_label": score["furthest_label"],
-            "rungs_total": score["rungs_total"],
-            "technologies_researched": score["technologies_researched"],
-            "production": {
-                "items": final_snapshot.get("items") or {},
-                "fluids": final_snapshot.get("fluids") or {},
-                "built": final_snapshot.get("built") or {},
-            },
+            **first,
+            "rungs_total": len(LADDER),
             "integrity_clean": integrity.get("clean"),
             "commands_denied": len(integrity.get("commands_denied", [])),
             "commands_run": len(integrity.get("commands_run", [])),
             "wall_seconds": round(time.time() - self.started),
         }
+        milestones: dict[str, Any] = reports[self.forces[0]]
+        if self.cfg.rivals:
+            summary["sides"] = {force: {"models": [s.model for s in self.seats if s.force == force], **side(force)}
+                                for force in self.forces}
+            summary["winner"] = self.winner(reports)
+            milestones = {"sides": reports}
         self.ledger.record(self.spent)
-        (self.dir / "milestones.json").write_text(json.dumps(score, indent=2))
+        (self.dir / "milestones.json").write_text(json.dumps(milestones, indent=2))
         (self.dir / "summary.json").write_text(json.dumps(summary, indent=2))
         self.emit(event="end", **summary, integrity=integrity)
         return summary
+
+    def winner(self, reports: dict[str, dict]) -> str:
+        """The side that launched; failing that, the higher rung; failing that, a tie."""
+        launched = [force for force in self.forces if reports[force]["rocket_launched"]]
+        if len(launched) == 1:
+            return launched[0]
+        if len(launched) > 1:
+            return min(launched, key=lambda force: self.scorers[force].firsts["rocket"])
+        best = max(reports[force]["furthest_rung"] for force in self.forces)
+        leaders = [force for force in self.forces if reports[force]["furthest_rung"] == best]
+        return leaders[0] if len(leaders) == 1 else "tie"
 
     def close(self) -> None:
         self.pool.shutdown(wait=False, cancel_futures=True)

@@ -11,8 +11,8 @@ from typing import Any
 TICKS_PER_SECOND = 60
 
 # One Lua call returns everything the score is made of.
-SNAPSHOT_LUA = """
-local force = game.forces.player
+SNAPSHOT_TEMPLATE = """
+local force = game.forces["%s"]
 local surface = game.surfaces[1]
 local researched = {}
 for name, tech in pairs(force.technologies) do
@@ -32,6 +32,12 @@ return {
   connected = connected,
 }
 """
+
+def snapshot_lua(force: str = "player") -> str:
+    return SNAPSHOT_TEMPLATE % force
+
+
+SNAPSHOT_LUA = snapshot_lua()
 
 # The headline ladder, in the order a factory normally reaches them. "Furthest milestone" is
 # the highest rung reached, so a run that stalls still gets a comparable score.
