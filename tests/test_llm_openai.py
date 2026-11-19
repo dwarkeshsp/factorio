@@ -136,3 +136,14 @@ def test_transcript_omits_image_bytes():
     item = {"type": "computer_call_output", "output": {"image_url": "data:image/jpeg;base64,AAAA", "detail": "original"}}
     assert strip_images(item)["output"]["image_url"] == "<image, 27 chars>"
     assert item["output"]["image_url"].endswith("AAAA")
+
+
+def test_an_empty_computer_call_is_not_replayed(player, monkeypatch):
+    player.begin("Objective")
+    monkeypatch.setattr(player, "_post", lambda body: response(
+        {"type": "message", "content": [{"type": "output_text", "text": "I'll take copper."}]},
+        {"type": "computer_call", "call_id": "c9", "actions": []}))
+    reply = player.step()
+    assert reply.stop == "stopped" and reply.text == "I'll take copper."
+    assert "empty computer call dropped" in reply.notes
+    assert all(item.get("type") != "computer_call" for item in player.history)

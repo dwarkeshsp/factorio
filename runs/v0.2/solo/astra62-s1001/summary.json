@@ -1,0 +1,95 @@
+{
+  "stop": "max_turns",
+  "error": null,
+  "agents": [
+    {
+      "name": "agent-1",
+      "model": "gpt-6.2-astra",
+      "force": "player",
+      "stop": null,
+      "usd": 25.1524,
+      "tokens": {
+        "input": 10570,
+        "output": 53799,
+        "cache_write": 623444,
+        "cache_read": 41703574
+      },
+      "compactions": 3,
+      "screenshots": 509
+    }
+  ],
+  "models": [
+    "gpt-6.2-astra"
+  ],
+  "rivals": [],
+  "effort": null,
+  "seed": 1001,
+  "peaceful": true,
+  "turns": 500,
+  "game_ticks": 98261,
+  "game_time": "0:27:17",
+  "usd": 25.1524,
+  "tokens": {
+    "input": 10570,
+    "output": 53799,
+    "cache_write": 623444,
+    "cache_read": 41703574
+  },
+  "rocket_launched": false,
+  "furthest_rung": 11,
+  "furthest_label": "Logistic science pack",
+  "technologies_researched": 7,
+  "production": {
+    "items": {
+      "wooden-chest": 1,
+      "transport-belt": 376,
+      "splitter": 1,
+      "inserter": 84,
+      "small-electric-pole": 62,
+      "pipe": 17,
+      "boiler": 1,
+      "steam-engine": 2,
+      "burner-mining-drill": 9,
+      "electric-mining-drill": 11,
+      "offshore-pump": 1,
+      "stone-furnace": 33,
+      "assembling-machine-1": 14,
+      "lab": 3,
+      "coal": 1477,
+      "iron-ore": 2811,
+      "copper-ore": 914,
+      "iron-plate": 2679,
+      "copper-plate": 842,
+      "iron-gear-wheel": 629,
+      "copper-cable": 672,
+      "electronic-circuit": 197,
+      "automation-science-pack": 143,
+      "logistic-science-pack": 14,
+      "science": 140
+    },
+    "fluids": {
+      "water": 2470.3761978149414,
+      "steam": 21704.495661973953
+    },
+    "built": {
+      "wooden-chest": 2,
+      "transport-belt": 271,
+      "splitter": 1,
+      "inserter": 53,
+      "small-electric-pole": 66,
+      "boiler": 1,
+      "steam-engine": 2,
+      "burner-mining-drill": 10,
+      "electric-mining-drill": 9,
+      "offshore-pump": 1,
+      "stone-furnace": 22,
+      "assembling-machine-1": 13,
+      "lab": 4
+    }
+  },
+  "rungs_total": 24,
+  "integrity_clean": true,
+  "commands_denied": 0,
+  "commands_run": 0,
+  "wall_seconds": 6614
+}

@@ -268,6 +268,7 @@ class OpenAIPlayer:
             return Reply("", "", [], "cut_off", usd, counts, notes)
 
         texts, summaries, refusals, calls = [], [], [], []
+        empty: list[dict] = []
         self._pending = []
         for item in output:
             kind = item.get("type")
@@ -280,8 +281,14 @@ class OpenAIPlayer:
             elif kind == "reasoning":
                 summaries.extend(part.get("text", "") for part in item.get("summary") or [])
             elif kind == "computer_call":
-                self._pending.append(item)
                 actions = item.get("actions") or ([item["action"]] if item.get("action") else [])
+                if not actions:
+                    # Seen from GPT-6.2 Astra alongside a remark: a computer call with no actions. The API
+                    # refuses to take such an item back, so it is left out of the history.
+                    empty.append(item)
+                    notes.append("empty computer call dropped")
+                    continue
+                self._pending.append(item)
                 for index, action in enumerate(actions):
                     calls.extend(computer_action_calls(item["call_id"], index, action))
             elif kind == "function_call":
@@ -306,7 +313,8 @@ class OpenAIPlayer:
             calls = staged
 
         for item in output:
-            self._append(item)
+            if not any(item is dropped for dropped in empty):
+                self._append(item)
         self._prune()
         if refusals:
             stop = "refusal"
