@@ -1,0 +1,94 @@
+{
+  "stop": "deadline",
+  "error": null,
+  "mode": "solo",
+  "teams": {
+    "player": {
+      "models": [
+        "claude-fable-5-2"
+      ],
+      "players": [
+        "agent-1"
+      ],
+      "score": 18617.3,
+      "gross_production": 36483.9,
+      "usd": 11.6665,
+      "turns": 155,
+      "furthest_rung": 9,
+      "furthest_label": "First technology researched",
+      "technologies_researched": 1,
+      "rocket_launched": false,
+      "production": {
+        "items": {
+          "wooden-chest": 11,
+          "iron-chest": 30,
+          "transport-belt": 240,
+          "burner-mining-drill": 44,
+          "stone-furnace": 58,
+          "coal": 3534,
+          "stone": 627,
+          "iron-ore": 1430,
+          "iron-plate": 1400,
+          "iron-gear-wheel": 303
+        },
+        "items_used": {
+          "stone-furnace": 44,
+          "wood": 29,
+          "coal": 951,
+          "stone": 290,
+          "iron-ore": 1410,
+          "iron-plate": 1098,
+          "iron-gear-wheel": 252
+        },
+        "fluids": {},
+        "built": {
+          "wooden-chest": 11,
+          "burner-mining-drill": 46,
+          "stone-furnace": 17
+        }
+      },
+      "kills": {},
+      "losses": {}
+    }
+  },
+  "winner": null,
+  "agents": [
+    {
+      "name": "agent-1",
+      "team": "player",
+      "model": "claude-fable-5-2",
+      "stop": null,
+      "turns": 155,
+      "usd": 11.6665,
+      "tokens": {
+        "input": 1736,
+        "output": 140116,
+        "cache_write": 428897,
+        "cache_read": 8795176
+      },
+      "compactions": 4,
+      "screenshots": 184
+    }
+  ],
+  "effort": "medium",
+  "seed": 1001,
+  "peaceful": true,
+  "cease_fire": true,
+  "org": "flat",
+  "handbook": null,
+  "deadline_minutes": 20.0,
+  "pauses": 155,
+  "game_ticks": 72012,
+  "game_time": "0:20:00",
+  "usd": 11.6665,
+  "tokens": {
+    "input": 1736,
+    "output": 140116,
+    "cache_write": 428897,
+    "cache_read": 8795176
+  },
+  "integrity_clean": true,
+  "commands_denied": 0,
+  "commands_run": 0,
+  "wall_seconds": 3149
+}
