@@ -45,7 +45,10 @@ def cmd_compare(args: argparse.Namespace) -> None:
 
 
 def cmd_timelapse(args: argparse.Namespace) -> None:
-    print(report.timelapse(Path(args.run), agent=args.agent, fps=args.fps))
+    if args.team:
+        print(report.team_timelapse(Path(args.run), speed=args.speed))
+    else:
+        print(report.timelapse(Path(args.run), agent=args.agent, fps=args.fps))
 
 
 def main(argv: list[str] | None = None) -> None:
@@ -94,6 +97,8 @@ def main(argv: list[str] | None = None) -> None:
     p = sub.add_parser("timelapse", help="make an mp4 from a run's end-of-turn screenshots")
     p.add_argument("run")
     p.add_argument("--agent", default="agent-1")
+    p.add_argument("--team", action="store_true", help="every agent's view side by side, on a common game clock")
+    p.add_argument("--speed", type=float, default=40.0, help="with --team: game seconds per video second")
     p.add_argument("--fps", type=int, default=6)
     p.set_defaults(func=cmd_timelapse)
 
