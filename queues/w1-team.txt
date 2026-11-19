@@ -1,0 +1,4 @@
+gen1-team2 --model claude-opus-5-5,claude-opus-5-5 --effort medium --minutes 20 --max-usd 25 --ledger runs/w1/ledger.jsonl --budget 95
+gen2-team2 --model claude-opus-5-5,claude-opus-5-5 --effort medium --minutes 20 --max-usd 25 --ledger runs/w1/ledger.jsonl --budget 95 --handbook runs/w1/gen1-team2/handbook.md
+gen3-team2 --model claude-opus-5-5,claude-opus-5-5 --effort medium --minutes 20 --max-usd 25 --ledger runs/w1/ledger.jsonl --budget 95 --handbook runs/w1/gen2-team2/handbook.md
+gen4-team2 --model claude-opus-5-5,claude-opus-5-5 --effort medium --minutes 20 --max-usd 25 --ledger runs/w1/ledger.jsonl --budget 95 --handbook runs/w1/gen3-team2/handbook.md
