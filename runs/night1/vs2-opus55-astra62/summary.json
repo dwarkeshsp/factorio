@@ -1,0 +1,198 @@
+{
+  "stop": "left_game",
+  "error": null,
+  "mode": "versus",
+  "teams": {
+    "red": {
+      "models": [
+        "claude-opus-5-5",
+        "claude-opus-5-5"
+      ],
+      "players": [
+        "red-1",
+        "red-2"
+      ],
+      "score": 2664.6,
+      "gross_production": 4673.7,
+      "usd": 8.1075,
+      "turns": 300,
+      "furthest_rung": 9,
+      "furthest_label": "First technology researched",
+      "technologies_researched": 1,
+      "rocket_launched": false,
+      "production": {
+        "items": {
+          "wooden-chest": 3,
+          "stone-brick": 69,
+          "burner-mining-drill": 7,
+          "stone-furnace": 9,
+          "coal": 262,
+          "stone": 214,
+          "iron-ore": 244,
+          "iron-plate": 195,
+          "iron-gear-wheel": 21
+        },
+        "items_used": {
+          "stone-furnace": 7,
+          "wood": 78,
+          "coal": 82,
+          "stone": 183,
+          "iron-ore": 197,
+          "iron-plate": 63,
+          "iron-gear-wheel": 21
+        },
+        "fluids": {},
+        "built": {
+          "wooden-chest": 4,
+          "burner-mining-drill": 8,
+          "stone-furnace": 5
+        }
+      },
+      "kills": {},
+      "losses": {}
+    },
+    "blue": {
+      "models": [
+        "gpt-6.2-astra",
+        "gpt-6.2-astra"
+      ],
+      "players": [
+        "blue-1",
+        "blue-2"
+      ],
+      "score": 16561.4,
+      "gross_production": 36466.8,
+      "usd": 30.8564,
+      "turns": 702,
+      "furthest_rung": 9,
+      "furthest_label": "First technology researched",
+      "technologies_researched": 2,
+      "rocket_launched": false,
+      "production": {
+        "items": {
+          "wooden-chest": 3,
+          "iron-chest": 5,
+          "pipe": 75,
+          "steam-engine": 15,
+          "burner-mining-drill": 58,
+          "stone-furnace": 89,
+          "coal": 2219,
+          "stone": 403,
+          "iron-ore": 1568,
+          "copper-ore": 174,
+          "iron-plate": 1494,
+          "copper-plate": 169,
+          "iron-gear-wheel": 331
+        },
+        "items_used": {
+          "pipe": 75,
+          "stone-furnace": 58,
+          "wood": 13,
+          "coal": 786,
+          "stone": 445,
+          "iron-ore": 1509,
+          "copper-ore": 174,
+          "iron-plate": 1101,
+          "iron-gear-wheel": 294
+        },
+        "fluids": {},
+        "built": {
+          "wooden-chest": 3,
+          "iron-chest": 1,
+          "burner-mining-drill": 53,
+          "stone-furnace": 26
+        }
+      },
+      "kills": {},
+      "losses": {}
+    }
+  },
+  "winner": null,
+  "agents": [
+    {
+      "name": "red-1",
+      "team": "red",
+      "model": "claude-opus-5-5",
+      "stop": null,
+      "turns": 150,
+      "usd": 4.0109,
+      "tokens": {
+        "input": 1012,
+        "output": 48632,
+        "cache_write": 281313,
+        "cache_read": 8138003
+      },
+      "compactions": 2,
+      "screenshots": 164
+    },
+    {
+      "name": "red-2",
+      "team": "red",
+      "model": "claude-opus-5-5",
+      "stop": null,
+      "turns": 150,
+      "usd": 4.0966,
+      "tokens": {
+        "input": 1014,
+        "output": 50171,
+        "cache_write": 285633,
+        "cache_read": 8304736
+      },
+      "compactions": 2,
+      "screenshots": 171
+    },
+    {
+      "name": "blue-1",
+      "team": "blue",
+      "model": "gpt-6.2-astra",
+      "stop": null,
+      "turns": 325,
+      "usd": 14.0813,
+      "tokens": {
+        "input": 1200,
+        "output": 14788,
+        "cache_write": 689129,
+        "cache_read": 16472165
+      },
+      "compactions": 3,
+      "screenshots": 326
+    },
+    {
+      "name": "blue-2",
+      "team": "blue",
+      "model": "gpt-6.2-astra",
+      "stop": null,
+      "turns": 377,
+      "usd": 16.7751,
+      "tokens": {
+        "input": 1431,
+        "output": 19846,
+        "cache_write": 855514,
+        "cache_read": 18536589
+      },
+      "compactions": 4,
+      "screenshots": 377
+    }
+  ],
+  "effort": "medium",
+  "seed": 1001,
+  "peaceful": true,
+  "cease_fire": true,
+  "org": "flat",
+  "handbook": null,
+  "deadline_minutes": 20.0,
+  "pauses": 638,
+  "game_ticks": 57034,
+  "game_time": "0:15:50",
+  "usd": 38.9638,
+  "tokens": {
+    "input": 4657,
+    "output": 133437,
+    "cache_write": 2111589,
+    "cache_read": 51451493
+  },
+  "integrity_clean": true,
+  "commands_denied": 0,
+  "commands_run": 0,
+  "wall_seconds": 5744
+}

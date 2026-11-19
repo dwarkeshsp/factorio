@@ -1,0 +1,114 @@
+{
+  "stop": "deadline",
+  "error": null,
+  "mode": "team",
+  "teams": {
+    "player": {
+      "models": [
+        "claude-opus-5-5",
+        "claude-opus-5-5"
+      ],
+      "players": [
+        "agent-1",
+        "agent-2"
+      ],
+      "score": 11962.4,
+      "gross_production": 23356.4,
+      "usd": 9.7047,
+      "turns": 355,
+      "furthest_rung": 9,
+      "furthest_label": "First technology researched",
+      "technologies_researched": 2,
+      "rocket_launched": false,
+      "production": {
+        "items": {
+          "iron-chest": 3,
+          "pipe": 4,
+          "boiler": 1,
+          "burner-mining-drill": 21,
+          "stone-furnace": 40,
+          "coal": 938,
+          "stone": 96,
+          "iron-ore": 1814,
+          "copper-ore": 21,
+          "iron-plate": 1598,
+          "copper-plate": 20,
+          "iron-gear-wheel": 242
+        },
+        "items_used": {
+          "pipe": 4,
+          "stone-furnace": 22,
+          "wood": 2,
+          "coal": 503,
+          "stone": 200,
+          "iron-ore": 1607,
+          "copper-ore": 20,
+          "iron-plate": 575,
+          "iron-gear-wheel": 63
+        },
+        "fluids": {},
+        "built": {
+          "iron-chest": 3,
+          "burner-mining-drill": 23,
+          "stone-furnace": 19
+        }
+      },
+      "kills": {},
+      "losses": {}
+    }
+  },
+  "winner": null,
+  "agents": [
+    {
+      "name": "agent-1",
+      "team": "player",
+      "model": "claude-opus-5-5",
+      "stop": null,
+      "turns": 119,
+      "usd": 3.2926,
+      "tokens": {
+        "input": 950,
+        "output": 45809,
+        "cache_write": 219379,
+        "cache_read": 6378635
+      },
+      "compactions": 2,
+      "screenshots": 129
+    },
+    {
+      "name": "agent-2",
+      "team": "player",
+      "model": "claude-opus-5-5",
+      "stop": null,
+      "turns": 236,
+      "usd": 6.4121,
+      "tokens": {
+        "input": 1894,
+        "output": 78337,
+        "cache_write": 443376,
+        "cache_read": 13104748
+      },
+      "compactions": 4,
+      "screenshots": 263
+    }
+  ],
+  "effort": "medium",
+  "seed": 1001,
+  "peaceful": true,
+  "cease_fire": true,
+  "deadline_minutes": 20.0,
+  "pauses": 335,
+  "game_ticks": 72011,
+  "game_time": "0:20:00",
+  "usd": 9.7047,
+  "tokens": {
+    "input": 2844,
+    "output": 124146,
+    "cache_write": 662755,
+    "cache_read": 19483383
+  },
+  "integrity_clean": true,
+  "commands_denied": 0,
+  "commands_run": 0,
+  "wall_seconds": 3014
+}

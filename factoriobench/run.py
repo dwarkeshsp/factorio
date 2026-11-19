@@ -42,6 +42,7 @@ MIN_RUN = 1.0          # the game runs at least this long between pauses, so eac
 RENDER_WAIT = 0.7      # paused; lets the clients draw the frozen state before the capture
 SNAPSHOT_EVERY = 40    # pauses between full production snapshots in the log
 OVERVIEW_EVERY = 20.0  # game seconds between overview frames of the whole base
+MAX_REJOINS = 5        # times one player is put back into the game after leaving it
 
 SOLO_FORCE = "player"
 TEAM_COLORS = {"red": (0.9, 0.15, 0.1), "blue": (0.15, 0.45, 0.95), "green": (0.1, 0.8, 0.2), "yellow": (0.9, 0.8, 0.1)}
@@ -157,6 +158,8 @@ class Seat:
         self.started_at = 0.0
         self.result: tuple[list[Outcome], list[dict]] | None = None
         self.busy = False
+        self.rejoins = 0
+        self.rejoined = False  # set when it was put back in; cleared once it has been told
 
     def save_shot(self, image: Image.Image, suffix: str = "") -> tuple[str, bytes]:
         jpeg = encode_jpeg(image)
@@ -433,9 +436,8 @@ class Run:
         if any(scorer.launched for scorer in self.scorers.values()):
             return "rocket_launched"
         connected = snap.get("connected") or []
-        for seat in self.seats:
-            if seat.name not in connected or not seat.client.alive():
-                return "left_game"
+        if any(seat.name not in connected for seat in self.seats):
+            return "left_game"  # only reached when putting a player back in has failed
         if not any(seat.active for seat in self.seats):
             return self.seats[0].stop or "model_stopped" if len(self.seats) == 1 else "all_agents_stopped"
         if (self.dir / "STOP").exists():
@@ -473,6 +475,55 @@ class Run:
             self.game_ticks = self.server.pause() - self.start_tick
         return self.clock.now() - t0
 
+    def is_connected(self, name: str) -> bool:
+        return any(p["name"] == name and p["connected"] and p["is_character"] for p in self.server.players())
+
+    def wait_for(self, name: str, connected: bool, seconds: float, client: Client | None = None) -> bool:
+        """Wait until the server reports the player as connected (or not). False if it did not happen in time."""
+        deadline = time.time() + seconds
+        while time.time() < deadline:
+            if self.is_connected(name) == connected:
+                return True
+            if client is not None and not client.alive():
+                return False
+            time.sleep(1.0)
+        return False
+
+    def rejoin_leavers(self) -> None:
+        """Put back any player who is no longer in the game. Call with the game paused.
+
+        The game's own menu has a quit button, and a stray click on it would otherwise end the
+        game for everyone. The player keeps its character and inventory; the game stays paused
+        while its client reloads, so the others lose nothing, and it is told what happened.
+        """
+        try:
+            connected = {p["name"] for p in self.server.players() if p["connected"]}
+        except Exception:
+            return
+        gone = [seat for seat in self.seats if seat.name not in connected or not seat.client.alive()]
+        for seat in gone:
+            if seat.rejoins >= MAX_REJOINS:
+                continue
+            seat.rejoins += 1
+            self.emit(event="rejoin", agent=seat.name, n=seat.rejoins, game_ticks=self.game_ticks)
+            print(f"      {seat.name} left the game; reconnecting it ({seat.rejoins})", flush=True)
+            seat.client.stop()
+            # A client that died without saying goodbye is still a connected player to the server
+            # until its connection times out; a second client cannot join under that name until then.
+            self.wait_for(seat.name, connected=False, seconds=5)
+            if self.is_connected(seat.name):
+                try:
+                    self.server.rcon.command(f"/kick {seat.name} reconnecting")
+                except Exception:
+                    pass
+                self.wait_for(seat.name, connected=False, seconds=90)
+            seat.client.connect(self.server.port)
+            if self.wait_for(seat.name, connected=True, seconds=420, client=seat.client):
+                seat.rejoined = True
+            time.sleep(2.0)
+        if gone and self.throttle:
+            self.throttle.pids = [seat.client.proc.pid for seat in self.seats if seat.client.proc]
+
     def play(self) -> str:
         cfg = self.cfg
         deadline = game_clock(self.deadline_ticks)
@@ -499,6 +550,7 @@ class Run:
             tick_before = self.game_ticks
             ran = self.run_until_someone_is_done()
             self.pauses += 1
+            self.rejoin_leavers()
             time.sleep(RENDER_WAIT)
             finished = [seat for seat in self.seats if seat.busy and seat.done.is_set()]
             shots = {}
@@ -514,7 +566,11 @@ class Run:
                 outcomes, actions = seat.result
                 name, jpeg = shots[seat.name]
                 seat.busy = False
-                seat.player.observe(outcomes, self.note(seat), jpeg)
+                note = self.note(seat)
+                if seat.rejoined:
+                    note += " " + prompts.REJOINED
+                    seat.rejoined = False
+                seat.player.observe(outcomes, note, jpeg)
                 reply = seat.reply
                 self.emit(
                     event="turn", agent=seat.name, team=seat.team, turn=seat.turn, game_ticks=self.game_ticks,

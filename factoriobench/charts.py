@@ -159,6 +159,30 @@ def bars(out: Path, rows: list[tuple[str, float]], title: str, subtitle: str = "
     return out
 
 
+def dots(out: Path, groups: list[tuple[str, list[float]]], title: str, subtitle: str = "",
+         ylabel: str = "Production score at the deadline") -> Path:
+    """Every run as its own dot, grouped along the x axis, with a short bar at each group's mean."""
+    fig, ax = _axes(title, subtitle, ylabel)
+    top = max((v for _, values in groups for v in values), default=1.0) or 1.0
+    for index, (label, values) in enumerate(groups):
+        if not values:
+            continue
+        mean = sum(values) / len(values)
+        ax.plot([index - 0.22, index + 0.22], [mean, mean], color=TEXT, linewidth=2, solid_capstyle="round", zorder=2)
+        spread = [index + (i - (len(values) - 1) / 2) * 0.09 for i in range(len(values))]
+        ax.scatter(spread, sorted(values), s=64, color=SERIES[0], edgecolors=SURFACE, linewidths=2, zorder=3)
+        ax.text(index + 0.27, mean, f"{mean:,.0f}", va="center", ha="left", fontsize=10, color=TEXT)
+    ax.set_xticks(range(len(groups)))
+    ax.set_xticklabels([f"{label}\n(n={len(values)})" for label, values in groups], color=TEXT, fontsize=10.5)
+    ax.set_xlim(-0.6, len(groups) - 0.3)
+    ax.set_ylim(0, top * 1.1)
+    ax.yaxis.set_major_formatter(lambda value, _: f"{value:,.0f}")
+    fig.subplots_adjust(left=0.1, right=0.95, top=0.84, bottom=0.13)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(out, facecolor=SURFACE)
+    return out
+
+
 def table(root: Path) -> str:
     """A markdown table of every finished run under `root`."""
     lines_ = ["| Run | Mode | Team | Models | Score | Turns | Cost | Game time | Furthest milestone |", "|---|---|---|---|---|---|---|---|---|"]

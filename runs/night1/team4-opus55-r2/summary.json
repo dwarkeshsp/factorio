@@ -1,0 +1,150 @@
+{
+  "stop": "deadline",
+  "error": null,
+  "mode": "team",
+  "teams": {
+    "player": {
+      "models": [
+        "claude-opus-5-5",
+        "claude-opus-5-5",
+        "claude-opus-5-5",
+        "claude-opus-5-5"
+      ],
+      "players": [
+        "agent-1",
+        "agent-2",
+        "agent-3",
+        "agent-4"
+      ],
+      "score": 14960.1,
+      "gross_production": 32776.6,
+      "usd": 17.1955,
+      "turns": 604,
+      "furthest_rung": 9,
+      "furthest_label": "First technology researched",
+      "technologies_researched": 2,
+      "rocket_launched": false,
+      "production": {
+        "items": {
+          "wooden-chest": 4,
+          "iron-chest": 4,
+          "burner-mining-drill": 68,
+          "stone-furnace": 98,
+          "coal": 1279,
+          "iron-ore": 1960,
+          "copper-ore": 116,
+          "iron-plate": 1734,
+          "copper-plate": 93,
+          "iron-gear-wheel": 403
+        },
+        "items_used": {
+          "stone-furnace": 68,
+          "wood": 44,
+          "coal": 516,
+          "stone": 490,
+          "iron-ore": 1744,
+          "copper-ore": 94,
+          "iron-plate": 1042,
+          "iron-gear-wheel": 204
+        },
+        "fluids": {},
+        "built": {
+          "wooden-chest": 4,
+          "iron-chest": 4,
+          "burner-mining-drill": 22,
+          "stone-furnace": 22
+        }
+      },
+      "kills": {},
+      "losses": {}
+    }
+  },
+  "winner": null,
+  "agents": [
+    {
+      "name": "agent-1",
+      "team": "player",
+      "model": "claude-opus-5-5",
+      "stop": null,
+      "turns": 107,
+      "usd": 3.05,
+      "tokens": {
+        "input": 930,
+        "output": 36661,
+        "cache_write": 230243,
+        "cache_read": 5809110
+      },
+      "compactions": 2,
+      "screenshots": 125
+    },
+    {
+      "name": "agent-2",
+      "team": "player",
+      "model": "claude-opus-5-5",
+      "stop": null,
+      "turns": 191,
+      "usd": 5.2934,
+      "tokens": {
+        "input": 1453,
+        "output": 62987,
+        "cache_write": 377089,
+        "cache_read": 10711948
+      },
+      "compactions": 3,
+      "screenshots": 244
+    },
+    {
+      "name": "agent-3",
+      "team": "player",
+      "model": "claude-opus-5-5",
+      "stop": null,
+      "turns": 87,
+      "usd": 2.6715,
+      "tokens": {
+        "input": 535,
+        "output": 27120,
+        "cache_write": 250754,
+        "cache_read": 4365996
+      },
+      "compactions": 1,
+      "screenshots": 107
+    },
+    {
+      "name": "agent-4",
+      "team": "player",
+      "model": "claude-opus-5-5",
+      "stop": null,
+      "turns": 219,
+      "usd": 6.1806,
+      "tokens": {
+        "input": 1864,
+        "output": 78409,
+        "cache_write": 435230,
+        "cache_read": 12144200
+      },
+      "compactions": 4,
+      "screenshots": 286
+    }
+  ],
+  "effort": "medium",
+  "seed": 1001,
+  "peaceful": true,
+  "cease_fire": true,
+  "org": "flat",
+  "handbook": null,
+  "deadline_minutes": 20.0,
+  "pauses": 502,
+  "game_ticks": 72013,
+  "game_time": "0:20:00",
+  "usd": 17.1955,
+  "tokens": {
+    "input": 4782,
+    "output": 205177,
+    "cache_write": 1293316,
+    "cache_read": 33031254
+  },
+  "integrity_clean": true,
+  "commands_denied": 0,
+  "commands_run": 0,
+  "wall_seconds": 4129
+}
