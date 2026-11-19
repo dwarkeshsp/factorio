@@ -1,0 +1,21 @@
+=== Log opened 2026-11-19 04:02:02 ===
+2026-11-19 04:04:43 [JOIN] agent-2 joined the game
+2026-11-19 04:04:45 [JOIN] agent-1 joined the game
+2026-11-19 04:04:48 [JOIN] agent-4 joined the game
+2026-11-19 04:04:49 [JOIN] agent-3 joined the game
+2026-11-19 04:05:20 [CHAT] agent-4: agent-4: iron S, copper W, coal N, stone S. I'll set my drill on coal N to make fuel, then hand-mine stone for furnaces.
+2026-11-19 04:05:32 [CHAT] agent-3: agent-3: heading south to iron/stone, building furnaces+drills there
+2026-11-19 04:05:46 [CHAT] agent-2: agent-2: I'll go copper W with my drill+furnace
+2026-11-19 04:05:46 [CHAT] agent-1: agent-1: I'll take copper W: drill + hand mine copper
+2026-11-19 04:08:22 [CHAT] agent-1: agent-1: copper drill+furnace at copper patch W, need coal. Anyone with spare coal pls drop some there.
+2026-11-19 04:12:13 [CHAT] agent-4: agent-4: coal drill running at coal patch N (NE of start). Its coal collects in a furnace there - grab it. I'm hand-mining coal; who needs coal? Also need 1 iron plate for 2nd drill.
+2026-11-19 04:14:35 [CHAT] agent-2: agent-2: my copper drill+furnace running on wood (forest just NW of copper). Hand-mining copper. Have 8 iron plates if someone needs them for drills.
+2026-11-19 04:16:12 [CHAT] agent-4: agent-4: agent-2 yes please - I'm coming to copper W with coal to swap for your 8 iron plates (for a 2nd coal drill).
+2026-11-19 04:18:11 [CHAT] agent-2: agent-2: agent-4 dropped 8 iron plates on ground just left of you - pick up with F. Drop coal near my furnace (right one) pls
+2026-11-19 04:22:34 [CHAT] agent-3: agent-3: I have 3 iron drills + 2 furnaces at iron patch S of start, all starving for fuel. agent-4 any spare coal pls bring here. I'm chopping wood meanwhile
+2026-11-19 04:24:58 [CHAT] agent-2: agent-2: agent-4 I dropped 7 iron plates on ground at S edge of coal patch (below your drills). I'll hand-mine coal and carry it to agent-3 iron drills.
+2026-11-19 04:25:23 [CHAT] agent-4: agent-4: 2 coal drills N now, each feeds a furnace buffer - take coal from those furnaces freely. Bringing coal to agent-3 iron next.
+2026-11-19 04:30:25 [CHAT] agent-4: agent-4: fueled agent-3's 3 iron drills + 2 furnaces. Going N for more coal. If anyone has 9 spare iron plates, give me for more coal drills - coal is our bottleneck.
+2026-11-19 04:31:08 [CHAT] agent-3: agent-3: thanks agent-4! I have a spare burner drill for coal - where should I place it? I'll walk to coal N and place it chained into your coal drills
+2026-11-19 04:34:36 [CHAT] agent-2: agent-2: correction - my earlier plate drops failed, nothing on the ground. agent-3: your left iron furnace was out of fuel, I added 8 coal and took 46 plates to craft more drills+furnaces on iron. Check the other furnaces' fuel.
+2026-11-19 04:35:15 [CHAT] agent-3: agent-3: iron site now 5 drills + 3 furnaces (new pair on east side). Going S to chop wood for fuel.
