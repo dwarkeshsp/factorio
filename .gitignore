@@ -13,6 +13,11 @@ runs/**
 !runs/**/config.json
 !runs/**/summary.json
 !runs/**/milestones.json
+!runs/**/log.jsonl
+!runs/**/console.log
+!runs/**/handbook*.md
+!runs/**/overview.mp4
+!runs/**/prices.json
 !runs/README.md
 !runs/ledger.jsonl
 # Throwaway runs made while checking the harness

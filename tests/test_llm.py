@@ -34,18 +34,21 @@ def test_usage_counts_reads_objects_and_dicts():
     assert usage_counts({"input_tokens": 1, "output_tokens": 2}) == {"input": 1, "output": 2, "cache_write": 0, "cache_read": 0}
 
 
-def test_observe_answers_every_call_and_puts_the_screenshot_on_the_last(player):
+def test_observe_answers_every_call_and_ends_with_the_screenshot(player):
     player.begin("Objective", JPEG)
     calls = [Call("a", "left_click", {}, "computer"), Call("b", "mouse_hold", {}, None), Call("c", "key", {}, "computer")]
     player.observe(
         [Outcome(calls[0]), Outcome(calls[1], "Error: no button", error=True), Outcome(calls[2], "skipped", error=True)],
         "[game time 0:00:05]", JPEG,
     )
-    results = player.history[-1]["content"]
+    content = player.history[-1]["content"]
+    results = [block for block in content if block["type"] == "tool_result"]
     assert [r["tool_use_id"] for r in results] == ["a", "b", "c"]
     assert results[0]["toolset_name"] == "computer" and "toolset_name" not in results[1]
     assert "is_error" not in results[0] and results[1]["is_error"] and results[2]["is_error"]
-    assert [b["type"] for b in results[2]["content"]] == ["text", "text", "image"]
+    # The API accepts only text inside a result marked as an error, so the screenshot follows the results.
+    assert [b["type"] for b in results[2]["content"]] == ["text"]
+    assert [b["type"] for b in content[3:]] == ["text", "image"]
     assert count_images(player.history) == 2
 
 
@@ -100,3 +103,15 @@ def test_ledger_totals_across_runs(tmp_path):
     assert second.total_with(1.25) == pytest.approx(3.25)
     first.record(2.0)
     assert first.total() == pytest.approx(2.25)
+
+
+def test_a_failed_last_action_keeps_its_result_text_only(monkeypatch):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test")
+    from factoriobench.llm import Call, ClaudePlayer, Outcome
+    player = ClaudePlayer("claude-opus-5-5", "system")
+    calls = [Call("a", "key", {"text": "e"}, "computer"), Call("b", "left_click", {"coordinate": [9999, 0]}, "computer")]
+    player.observe([Outcome(calls[0], "OK"), Outcome(calls[1], "Error: outside the screen", error=True)], "[note]", b"jpeg")
+    content = player.history[-1]["content"]
+    failed = content[1]
+    assert failed["is_error"] and all(block["type"] == "text" for block in failed["content"])
+    assert [block["type"] for block in content[2:]] == ["text", "image"]

@@ -39,7 +39,7 @@ BEFORE_ACTIONS = 0.15  # the client needs a few ticks to see the unpause; input 
 BETWEEN_ACTIONS = 0.1  # lets one input register before the next
 AFTER_ACTIONS = 0.3    # lets an agent's last input take effect before the game is paused for it
 MIN_RUN = 1.0          # the game runs at least this long between pauses, so each response costs about a second
-RENDER_WAIT = 0.4      # paused; lets the clients draw the frozen state before the capture
+RENDER_WAIT = 0.7      # paused; lets the clients draw the frozen state before the capture
 SNAPSHOT_EVERY = 40    # pauses between full production snapshots in the log
 OVERVIEW_EVERY = 20.0  # game seconds between overview frames of the whole base
 
@@ -68,6 +68,9 @@ class RunConfig:
     ledger: str = "runs/ledger.jsonl"
     budget_usd: float = 500.0
     overview: bool = True
+    org: str = "flat"            # how a team is organised: flat, manager (the first agent leads) or roles (assigned)
+    handbook: str | None = None  # a file of notes from an earlier team, given to every agent of the first team
+    write_handbook: bool = True  # at the end, ask each agent for the notes it would leave the next team
     throttle: bool = True        # rest the game clients while the models think
 
 
@@ -473,13 +476,14 @@ class Run:
     def play(self) -> str:
         cfg = self.cfg
         deadline = game_clock(self.deadline_ticks)
+        handbook = Path(cfg.handbook).read_text() if cfg.handbook else None
         time.sleep(RENDER_WAIT)
         for seat in self.seats:
             assert seat.desktop is not None
             seat.player = make_player(
                 seat.model,
                 prompts.system_prompt(*SCREEN, name=seat.name, deadline=deadline, team=seat.team, teams=self.roster,
-                                      peaceful=cfg.peaceful, cease_fire=cfg.cease_fire),
+                                      peaceful=cfg.peaceful, cease_fire=cfg.cease_fire, org=cfg.org, handbook=handbook),
                 effort=cfg.effort, compact_at_tokens=cfg.compact_at_tokens, keep_turns=cfg.keep_turns,
                 summary_instructions=prompts.SUMMARY_INSTRUCTIONS,
                 transcript=self.dir / "agents" / seat.name / "conversation.jsonl",
@@ -548,6 +552,49 @@ class Run:
                               f"${outcome.get('usd', 0):.3f}", flush=True)
             self.think_all(again)
 
+    # --- notes for the next team ---------------------------------------------
+    def ask_handbook(self, seat: Seat) -> str:
+        """One more reply from an agent after the game: the notes it would leave the next team."""
+        assert seat.desktop is not None and seat.player is not None
+        if seat.busy and seat.reply is not None:
+            # Its last batch was still running at the deadline: close those calls before saying anything else.
+            outcomes = [Outcome(call, "Not executed: the game ended.", error=True) for call in seat.reply.calls]
+            _, jpeg = seat.save_shot(seat.desktop.grab(), "final")
+            seat.player.observe(outcomes, self.note(seat), jpeg)
+            seat.busy = False
+        mates = self.roster[seat.team]
+        score = f"{self.scores[seat.team]['score']:,.0f}"
+        if self.versus:
+            others = ", ".join(f"{team} {self.scores[team]['score']:,.0f}" for team in self.cfg.teams if team != seat.team)
+            result = f"Final production scores: your team ({seat.team}) {score}, {others}."
+        else:
+            result = f"Your {'team' if len(mates) > 1 else ''} final production score was {score}.".replace("  ", " ")
+        seat.player.nudge(prompts.HANDBOOK_REQUEST.format(
+            result=result, unit="team" if len(mates) > 1 else "player",
+            team_part=", and how a team should split the work and talk to each other" if len(mates) > 1 else ""))
+        reply = seat.player.step()
+        return reply.text.strip()
+
+    def write_handbooks(self) -> None:
+        texts = {}
+        for seat, outcome in zip(self.seats, self.pool.map(self._handbook_safely, self.seats)):
+            if outcome:
+                texts[seat.name] = outcome
+                (self.dir / "agents" / seat.name / "handbook.md").write_text(outcome + "\n")
+        for team, names in self.roster.items():
+            parts = [f"Notes from {name}:\n\n{texts[name]}" for name in names if name in texts]
+            if parts:
+                name = "handbook.md" if len(self.roster) == 1 else f"handbook-{team}.md"
+                (self.dir / name).write_text("\n\n".join(parts) + "\n")
+        self.emit(event="handbooks", agents=sorted(texts), usd=round(self.spent, 4))
+
+    def _handbook_safely(self, seat: Seat) -> str | None:
+        try:
+            return self.ask_handbook(seat) if seat.player is not None and seat.stop != "error" else None
+        except Exception:
+            self.emit(event="handbook_failed", agent=seat.name, error=traceback.format_exc())
+            return None
+
     # --- wrap-up -------------------------------------------------------------
     def finish(self, stop: str, error: str | None = None) -> dict:
         integrity: dict[str, Any] = {}
@@ -608,6 +655,8 @@ class Run:
             "seed": self.cfg.seed,
             "peaceful": self.cfg.peaceful,
             "cease_fire": self.cfg.cease_fire,
+            "org": self.cfg.org,
+            "handbook": self.cfg.handbook,
             "deadline_minutes": self.cfg.minutes,
             "pauses": self.pauses,
             "game_ticks": self.game_ticks,
@@ -637,6 +686,8 @@ class Run:
         try:
             self.launch()
             stop = self.play()
+            if stop == "deadline" and self.cfg.write_handbook:
+                self.write_handbooks()
         except KeyboardInterrupt:
             stop = "interrupted"
         except Exception:

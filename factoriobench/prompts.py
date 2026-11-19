@@ -1,6 +1,6 @@
 """What the model is told. Changing any of this changes the benchmark, so it is versioned."""
 
-PROMPT_VERSION = "0.2"
+PROMPT_VERSION = "0.3"
 
 SYSTEM = """You are playing the video game Factorio (version 2.1, base game, no mods) on a Linux desktop. You see the screen and control the mouse and keyboard, exactly as a human player would. Nobody else is at the computer, and nobody will answer questions.
 
@@ -37,6 +37,35 @@ Chat goes to your own team: press the grave key (`) to open the chat line, type 
 
 OPENING_TWO = "Two teams are playing on this map, and the team with the higher production score at the deadline wins."
 OPENING_MANY = "{count} teams are playing on this map, and the team with the highest production score at the deadline wins."
+ORG_MANAGER = """
+
+Your team has a manager: {manager}. The manager decides the plan and who does what, and says so in the chat. The other players do what the manager asks and report back in the chat."""
+
+ORG_ROLES = """
+
+Your team agreed on these roles before the game:
+{roles}
+Your role is the one listed for {name}."""
+
+ROLES = [
+    "mines iron ore and smelts it into plates",
+    "keeps the team in fuel: mines coal and keeps every drill and furnace fuelled",
+    "mines stone and copper, and crafts furnaces, mining drills and other machines for the team to place",
+    "builds the factory: places machines, connects them, and starts research when it becomes possible",
+]
+
+HANDBOOK = """
+
+{who} played this same game on this same map before you, from the same start, and left these notes for whoever played next:
+
+{notes}"""
+
+HANDBOOK_REQUEST = """The game is over. {result}
+
+Another {unit} is about to play this same game on this same map, from the same start, with the same objective and deadline. Write the notes you would leave for them, in at most 300 words: what to do first, what earned the most score for the time it took, what wasted time, how to operate the game through the screen without fumbling{team_part}. Be specific and concrete; they will read this once before they start and cannot ask you anything.
+
+Reply with the notes as plain text only. Do not call any tools."""
+
 RELATIONS_CEASE_FIRE = "The {teams} are under a cease-fire: nothing targets another team automatically."
 RELATIONS_HOSTILE = ("The {teams} are hostile: weapons and turrets can damage another team's players and buildings, "
                      "and a player who is killed reappears at their team's start a few seconds later.")
@@ -61,7 +90,7 @@ Write plain text only. Do not call any tools."""
 
 
 def system_prompt(width: int, height: int, name: str, deadline: str, team: str, teams: dict[str, list[str]],
-                  peaceful: bool = True, cease_fire: bool = True) -> str:
+                  peaceful: bool = True, cease_fire: bool = True, org: str = "flat", handbook: str | None = None) -> str:
     """`teams` maps each team's name to its players' names; `team` is this player's team."""
     mates = teams[team]
     enemies = ENEMIES_PEACEFUL if peaceful else ENEMIES_HOSTILE
@@ -82,4 +111,11 @@ def system_prompt(width: int, height: int, name: str, deadline: str, team: str, 
         text += TEAM.format(name=name, count=len(mates), names=", ".join(mates), enemies=enemies)
     else:
         text += SOLO.format(enemies=enemies)
+    if len(mates) > 1 and org == "manager":
+        text += ORG_MANAGER.format(manager=mates[0] + (" (you)" if mates[0] == name else ""))
+    elif len(mates) > 1 and org == "roles":
+        roles = "\n".join(f"- {mate}: {ROLES[i % len(ROLES)]}" for i, mate in enumerate(mates))
+        text += ORG_ROLES.format(roles=roles, name=name)
+    if handbook:
+        text += HANDBOOK.format(who="Another team" if len(mates) > 1 else "Another player", notes=handbook.strip())
     return text

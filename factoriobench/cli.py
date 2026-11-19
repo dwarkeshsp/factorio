@@ -36,6 +36,7 @@ def cmd_run(args: argparse.Namespace) -> None:
         cease_fire=not args.war, minutes=args.minutes, max_turns=args.max_turns, max_usd=args.max_usd,
         compact_at_tokens=args.compact_at_tokens, keep_turns=args.keep_turns,
         render_threads=args.render_threads, gpu=args.gpu, ledger=args.ledger, budget_usd=args.budget,
+        org=args.org, handbook=args.handbook, write_handbook=not args.no_handbook,
     )
     summary = run(cfg)
     print(json.dumps(summary, indent=2))
@@ -77,6 +78,10 @@ def main(argv: list[str] | None = None) -> None:
                    help="give two to four times for a versus run, for example --team red=claude-opus-5-5 --team blue=gpt-6.2-astra")
     p.add_argument("--war", action="store_true", help="versus only: the teams can attack each other (default is a cease-fire)")
     p.add_argument("--minutes", type=float, default=20.0, help="the deadline, in game minutes")
+    p.add_argument("--org", choices=["flat", "manager", "roles"], default="flat",
+                   help="how a team is organised: no structure, the first agent leads, or roles assigned in advance")
+    p.add_argument("--handbook", default=None, help="a file of notes left by an earlier team, shown to every agent")
+    p.add_argument("--no-handbook", action="store_true", help="do not ask the agents for notes at the end")
     p.add_argument("--max-turns", type=int, default=2000, help="per agent")
     p.add_argument("--max-usd", type=float, default=25.0, help="for the whole run")
     p.add_argument("--compact-at-tokens", type=int, default=100_000, help="summarise older history past this context size")

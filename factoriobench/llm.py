@@ -214,7 +214,13 @@ class ClaudePlayer:
             if outcome.error:
                 result["is_error"] = True
             results.append(result)
-        results[-1]["content"].extend([{"type": "text", "text": note}, image_block(jpeg)])
+        # A result marked as an error may hold only text, so after a failed last action the
+        # end-of-turn screenshot follows the results as its own blocks.
+        if results[-1].get("is_error"):
+            results[-1]["content"] = [block for block in results[-1]["content"] if block.get("type") == "text"]
+            results.extend([{"type": "text", "text": note}, image_block(jpeg)])
+        else:
+            results[-1]["content"].extend([{"type": "text", "text": note}, image_block(jpeg)])
         self._append({"role": "user", "content": results})
 
     def step(self) -> Reply:
