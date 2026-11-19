@@ -1,0 +1,2 @@
+org-manager-team4 --model claude-opus-5-5,claude-opus-5-5,claude-opus-5-5,claude-opus-5-5 --org manager --effort medium --minutes 20 --max-usd 35 --ledger runs/w4/ledger.jsonl --budget 60
+org-roles-team4 --model claude-opus-5-5,claude-opus-5-5,claude-opus-5-5,claude-opus-5-5 --org roles --effort medium --minutes 20 --max-usd 35 --ledger runs/w4/ledger.jsonl --budget 60

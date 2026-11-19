@@ -1,0 +1,41 @@
+=== Log opened 2026-11-19 08:30:43 ===
+2026-11-19 08:33:01 [JOIN] agent-4 joined the game
+2026-11-19 08:33:03 [JOIN] agent-2 joined the game
+2026-11-19 08:33:04 [JOIN] agent-1 joined the game
+2026-11-19 08:33:07 [JOIN] agent-3 joined the game
+2026-11-19 08:33:30 [CHAT] agent-1: Plan: everyone go to nearest ore patches, hand-mine stone first to make stone furnaces, then burner drills on iron/coal, smelt plates. Keep everything producing. Report locations of ore in chat.
+2026-11-19 08:33:53 [CHAT] agent-1: Map: iron+copper NW of spawn, stone N, coal S. agent-2: coal patch south, mine coal by hand then burner drills on coal. agent-3: stone N, mine stone, make furnaces, share stone. agent-4 + me: iron NW, drills+furnaces smelting iron. Put chests/furnaces at drill outputs.
+2026-11-19 08:34:00 [CHAT] agent-2: agent-2: ok, going to coal patch south
+2026-11-19 08:34:01 [CHAT] agent-3: agent-3: ok, going to stone N
+2026-11-19 08:34:06 [CHAT] agent-4: agent-4: ok, going to iron NW
+2026-11-19 08:36:58 [CHAT] agent-4: -4: iron drill+furnace placed at iron patch, need coal for the furnace. Hand-mining iron meanwhile.
+2026-11-19 08:40:33 [CHAT] agent-1: agent-2: when you have ~50 coal, bring it to iron patch (2 drills+furnaces there), then go back. Better: place your drill on coal feeding a chest. agent-3: stone status? we need stone for furnaces.
+2026-11-19 08:43:16 [CHAT] agent-3: agent-3: at stone patch (N of iron, ~center). 30 stone now, mining more. Will craft furnaces and bring them to iron patch at ~50+ stone. Stone drill here is out of fuel.
+2026-11-19 08:43:18 [CHAT] agent-2: agent-2: coal drill+chest running at coal S. Bringing 35 coal to iron patch now.
+2026-11-19 08:45:37 [CHAT] agent-1: Thanks agent-2! Please also put coal in both furnaces here. Next: craft more burner drills on coal (self-feeding pairs facing each other) so coal grows. agent-3: furnaces to iron patch please.
+2026-11-19 08:47:05 [CHAT] agent-2: agent-2: fueled both drills+furnaces here. Crafting 1 burner drill, going back to coal. Need stone (5 per drill) to make more drills - can anyone send stone/furnaces to coal patch S?
+2026-11-19 08:47:30 [CHAT] agent-3: agent-3: I have 9 stone furnaces at iron patch. agent-1: where do you want them? Default: I give 5 to agent-2 for coal drills, place 4 here at iron drills. agent-2 wait for me?
+2026-11-19 08:47:40 [CHAT] agent-2: agent-2: agent-3 yes I'm right next to you (south of iron drills), drop them to me. I also need iron plates for drills (9 each).
+2026-11-19 08:48:22 [CHAT] agent-3: agent-3: agent-2: 5 furnaces in iron chest just south of iron drills (next to the big rock). I keep 4, going back to mine stone.
+2026-11-19 08:52:44 [CHAT] agent-2: agent-2: coal patch now has 2 drills (chained into chest). I have 37 coal, 5 furnaces, 20 stone, 6 plates. Need ~9 iron plates per extra drill. agent-1: should I bring coal+furnaces to iron, or can someone send plates here?
+2026-11-19 08:53:12 [CHAT] agent-1: agent-2: yes bring coal+furnaces to iron (fuel the furnaces/drills here), I will give you gears+plates for more coal drills, then go back to coal. agent-4: keep all iron furnaces fueled+emptied, craft gears from plates.
+2026-11-19 08:56:52 [CHAT] agent-4: agent-4: placed 3 more iron drill+furnace pairs SW of agent-1's drills, all fueled (~5 coal each). Coal is our bottleneck. Mining big rocks south of iron patch for coal+stone now.
+2026-11-19 08:57:41 [CHAT] agent-1: agent-2: 10 gears in the iron chest south of iron drills (next to rock) for your coal drills. Coal drills feeding each other = infinite coal.
+2026-11-19 08:58:22 [CHAT] agent-3: agent-3: stone drill running on wood, furnace there makes bricks. I'll have ~10 furnaces soon. Tell me where to bring them / if you need stone instead.
+2026-11-19 08:59:17 [CHAT] agent-2: agent-2: fueled the 3 SW iron pairs, got gears (thx). Crafting 5 burner drills -> coal patch now.
+2026-11-19 09:00:58 [CHAT] agent-3: agent-3: forest right next to stone patch - I'll chop wood (fuel, 2MJ each, fast to gather) and bring it to iron furnaces along with furnaces.
+2026-11-19 09:02:56 [CHAT] agent-4: agent-4: crafting 3 more burner drills + 6 furnaces (have 3 boilers too, by mistake). No coal left. agent-2: can coal patch spare coal? Else I'll put my 3 new drills on coal patch to feed iron. agent-1: your NE furnace was out of fuel w/50 plates; I took plates, added wood.
+2026-11-19 09:06:54 [CHAT] agent-3: agent-3: have 15 stone furnaces + 28 wood. Going to fuel my stone drill then iron patch. agent-1: where should the furnaces go?
+2026-11-19 09:07:29 [CHAT] agent-1: agent-3: place ~6 furnaces in a row just north of me (agent-1, center of iron patch), fuel with wood; I will fill with hand-mined ore. Put rest of furnaces in the iron chest for drill crafting. Then hand-mine iron into those furnaces too.
+2026-11-19 09:09:19 [CHAT] agent-2: agent-2: coal patch now 5 drills (4 into chests, fueled). Chests at coal patch collect coal - anyone can take from them. agent-3: bring furnaces to iron patch for more pairs, or give me 2-3 furnaces + plates for more coal drills. Someone research Automation (T).
+2026-11-19 09:12:15 [CHAT] agent-1: EL is the bottleneck: most iron drills+furnaces are out. agent-2: build more coal drills + ferry coal to iron every ~2 min. agent-4: help agent-2 ferry coal. agent-3: chop wood and fuel the new furnace row (I filled 2 with 50 ore each).
+2026-11-19 09:14:32 [CHAT] agent-3: agent-3: placed 5 furnaces north of agent-1, all have wood. Hand-mining iron into them now. 10 furnaces left with me.
+2026-11-19 09:15:04 [CHAT] agent-4: agent-4: placed 4 coal drills around my iron chest at coal patch (east side), fueled. Will ferry coal to iron + build 2 more iron drill/furnace pairs.
+2026-11-19 09:15:58 [CHAT] agent-3: 3: fuel is the bottleneck. Going to forest by stone patch (NE) to chop lots of wood, will bring it back to these furnaces/drills.
+2026-11-19 09:21:01 [CHAT] agent-2: agent-2: fueled center iron drill+furnace, crafting 3 burner drills for coal patch. Is Automation researching?
+2026-11-19 09:37:54 [CHAT] agent-3: agent-3: placed 5 new burner drill+furnace pairs east side of iron, fuelled with wood. Hand-mining iron now.
+2026-11-19 09:41:59 [LEAVE] agent-1 left the game
+2026-11-19 09:42:03 [LEAVE] agent-2 left the game
+2026-11-19 09:42:07 [LEAVE] agent-3 left the game
+2026-11-19 09:42:11 [LEAVE] agent-4 left the game
+=== Log closed 2026-11-19 09:42:14 ===
