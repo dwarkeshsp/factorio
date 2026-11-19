@@ -214,6 +214,9 @@ The two played side by side rather than against each other. What passed between 
 Neither claimed land or resources early. "Launch a rocket first" was too far off to shape what either did, and
 sharing the map cost them almost nothing. For the two sides to compete, something has to be scarce.
 
+One thing Astra did is worth noting for the tool design: unable to walk and build in the same moment (inputs run
+one after another), it opened the game's controls at turn 376 and bound the middle mouse button so it could.
+
 This match also shows the turn-budget problem: Opus spent its 500 turns in 40.5 game minutes, and Astra then
 played alone for 37 more. Its final totals (6,182 iron plates, 13 technologies) include that time; the table
 above cuts both off at minute 40.5. The budget did not decide the result: Astra had reached steel, rung 12,
@@ -235,7 +238,8 @@ this page reports between conditions, apart from the gap between the two models.
 
 ## Faults the run reviews found in the harness
 
-Each finished run was read turn by turn (reasoning, actions and a sample of screenshots).
+Five of the runs were read turn by turn (reasoning, actions and a sample of screenshots); the reviews are in
+[`reviews/`](reviews/). The seed-1002 runs and the cross-lab pair have not been reviewed this way.
 
 | Fault | Evidence | Status |
 |---|---|---|
