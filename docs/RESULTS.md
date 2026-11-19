@@ -184,15 +184,24 @@ Astra won on every measure:
 | Lab placed at minute | 20.3 | 8.8 |
 | Automation researched at minute | 22.3 | 13.1 |
 
-The sides did interact. Both mined the same iron patch from the first minutes; Opus noticed ("Agent-2 is close
-by, mining the same iron", "a rock disappeared earlier, which could mean agent-2 took it") and late in the game
-found itself "boxed in by the agent-2 drill" beside its own. I found no sign in the logs that either tried to
-interfere with the other on purpose (GPT-6.2 Astra shows little of its reasoning, so this is less certain for
-it), and neither used the chat.
+The two played side by side rather than against each other. What passed between them:
 
-This match also shows the turn-budget problem: Opus spent its 500 turns in 48 game minutes, and Astra then
-played alone to minute 78. Its final totals (6,182 iron plates, 13 technologies) include that extra half hour;
-the table above cuts both off at the same game time.
+- Both mined the same big rock in the second minute, and Astra got it. Both then worked the one iron, copper,
+  coal and stone patch with their drills interleaved. Nothing ran out.
+- Astra's buildings left Opus no room for a coal drill site and a smelting line it had planned, and one wall of
+  the pocket Opus got "boxed in" by for three turns was Astra's drill pair (the rest was its own).
+- Opus learned it was behind from numbers floating over Astra's furnaces ("Agent-2 has 206 iron plates and is
+  ahead") and did not change its plan.
+- Astra once ctrl-clicked two of Opus's stone chests. The game answered "Cannot transfer from enemy structures".
+- No chat, no console attempts, no shooting, no mining of the other's buildings.
+
+Neither claimed land or resources early. "Launch a rocket first" was too far off to shape what either did, and
+sharing the map cost them almost nothing. For the two sides to compete, something has to be scarce.
+
+This match also shows the turn-budget problem: Opus spent its 500 turns in 40.5 game minutes, and Astra then
+played alone for 37 more. Its final totals (6,182 iron plates, 13 technologies) include that time; the table
+above cuts both off at minute 40.5. The budget did not decide the result: Astra had reached steel, rung 12,
+before Opus's last turn.
 
 ## How much runs differ
 
@@ -268,5 +277,6 @@ Astra's totals may be slightly low.
 - **The interesting team behaviour is in the logs, not the score**: role negotiation, colliding proposals,
   stale beliefs about what a teammate has done. A benchmark of agent societies should publish the chat and the
   reasoning with the numbers.
-- **Not yet tested:** teams of four or more, a manager role, hostile enemies, anything where the two sides of a
-  match have a reason to fight, and any model from a third lab.
+- **A match needs something worth contesting.** Two sides on an ample map play two solo games. Scarce ore, a
+  shared objective only one side can hold, or a score each side can see would give them a reason to compete.
+- **Not yet tested:** teams of four or more, a manager role, hostile enemies, and any model from a third lab.
