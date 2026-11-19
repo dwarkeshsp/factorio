@@ -30,7 +30,7 @@ from .server import Server
 BEFORE_ACTIONS = 0.15  # the client needs a few ticks to see the unpause; input sent sooner is lost
 BETWEEN_ACTIONS = 0.1  # lets one input register before the next
 AFTER_ACTIONS = 0.3    # lets the last input take effect before the game is paused
-RENDER_WAIT = 0.25     # paused; lets the clients draw the frozen state before the capture
+RENDER_WAIT = 0.4      # paused; lets the clients draw the frozen state before the capture
 SNAPSHOT_EVERY = 25    # rounds between full production snapshots in the log
 
 
