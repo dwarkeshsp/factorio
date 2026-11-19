@@ -20,6 +20,8 @@ capability up? Background and plan: [`docs/HANDOFF.md`](docs/HANDOFF.md).
 - With several agents the game advances in rounds: it stays paused until every agent has replied, then all their
   actions run at once. Agents talk through the in-game chat.
 
+The reasons behind each of these, and what was checked on the real game, are in [`docs/DESIGN.md`](docs/DESIGN.md).
+
 ## Quick start
 
 ```sh
@@ -37,8 +39,18 @@ python -m factoriobench report runs/demo/opus
 python -m factoriobench timelapse runs/demo/opus
 ```
 
-A team is a comma-separated list, one agent per entry:
-`--model claude-opus-5-5,claude-opus-5-5`.
+Teams and matches:
+
+```sh
+# Two agents of one model sharing a factory
+python -m factoriobench run --out runs/demo/duo --model claude-opus-5-5,claude-opus-5-5 --max-turns 30 --max-usd 4
+# Two sides on one map, each with its own factory, research and score
+python -m factoriobench run --out runs/demo/match --model claude-opus-5-5 --against gpt-6.2-astra --max-turns 30 --max-usd 4
+python -m factoriobench compare runs/demo/*      # runs side by side; works while they are still running
+```
+
+Models: `claude-opus-5-5`, `claude-fable-5-2`, `claude-sonnet-5-5`, `claude-haiku-5-5` (needs `ANTHROPIC_API_KEY`) and
+`gpt-6.2-astra` (needs `OPENAI_API_KEY`).
 
 No GPU is needed: the client renders in software. Each client uses about two cores and 2 GB of memory.
 
@@ -54,7 +66,8 @@ and `--budget` caps the total across runs.
 | `factoriobench/server.py` | The game server: map creation, the pause clock, Lua over RCON, the console-log audit |
 | `factoriobench/client.py` | The virtual display and the graphical client |
 | `factoriobench/desktop.py` | Screen capture and every mouse and keyboard action |
-| `factoriobench/llm.py` | Model conversations, prices, context compaction |
+| `factoriobench/llm.py`, `llm_openai.py` | Claude and GPT conversations, prices, context compaction |
+| `factoriobench/analyze.py`, `report.py` | Run comparison tables, single-run reports, timelapses |
 | `factoriobench/scoring.py` | The score snapshot and the milestone ladder |
 | `factoriobench/run.py` | The round loop for one or more agents |
 | `factoriobench/prompts.py` | Everything a model is told (versioned) |
