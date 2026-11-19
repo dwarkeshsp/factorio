@@ -1,0 +1,69 @@
+{
+  "out": "runs/night1/solo-astra62",
+  "teams": {
+    "player": [
+      "gpt-6.2-astra"
+    ]
+  },
+  "effort": "medium",
+  "seed": 1001,
+  "peaceful": true,
+  "cease_fire": true,
+  "always_day": true,
+  "minutes": 20.0,
+  "max_turns": 2000,
+  "max_usd": 40.0,
+  "compact_at_tokens": 100000,
+  "keep_turns": 6,
+  "render_threads": null,
+  "gpu": false,
+  "edition": "full",
+  "ledger": "runs/ledger.jsonl",
+  "budget_usd": 440.0,
+  "overview": true,
+  "throttle": true,
+  "mode": "solo",
+  "agents": [
+    {
+      "name": "agent-1",
+      "team": "player",
+      "model": "gpt-6.2-astra"
+    }
+  ],
+  "spawns": {},
+  "harness_version": "0.1.0",
+  "harness_commit": "bee5e7f758ec474db243be709db869535c2c31c5",
+  "prompt_version": "0.2",
+  "factorio_version": "2.1.24",
+  "scenario": "freeplay with teams (factoriobench/scenario/control.lua)",
+  "screen": [
+    1280,
+    720
+  ],
+  "client_config": {
+    "other": {
+      "check-updates": "false",
+      "enable-crash-log-uploading": "false"
+    },
+    "graphics": {
+      "full-screen": "false",
+      "v-sync": "false",
+      "show-clouds": "false",
+      "show-fog": "false",
+      "show-animated-water": "false",
+      "show-tree-distortion": "false",
+      "additional-terrain-effects": "false",
+      "light-occlusion": "false",
+      "high-quality-animations": "false",
+      "show-game-simulations-in-background": "false"
+    }
+  },
+  "timing": {
+    "before_actions": 0.15,
+    "between_actions": 0.1,
+    "after_actions": 0.3,
+    "min_run": 1.0,
+    "render_wait": 0.4
+  },
+  "start_tick": 269
+}

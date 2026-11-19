@@ -240,6 +240,7 @@ class Run:
         self.game_ticks = 0
         self.deadline_ticks = int(cfg.minutes * 60 * TICKS_PER_SECOND)
         self.next_overview = 0.0
+        self.view: list[float] | None = None
         self.throttle: Throttle | None = None
         self.started = time.time()
         self.pool = ThreadPoolExecutor(max_workers=max(2, len(self.seats)))
@@ -340,17 +341,35 @@ class Run:
         return "[" + " | ".join(parts) + "]"
 
     def overview(self) -> None:
-        """Ask the first client to write a wide view of the base to its script-output folder (for the timelapse)."""
+        """Ask the first client to write a view of everything built so far to its script-output folder (for the
+        timelapse). The frame only ever widens, so the camera does not jump about."""
         if not self.cfg.overview or self.game_ticks / TICKS_PER_SECOND < self.next_overview:
             return
         self.next_overview = self.game_ticks / TICKS_PER_SECOND + OVERVIEW_EVERY
         name = self.seats[0].name
+        forces = ", ".join(f'"{team}"' for team in self.cfg.teams)
         try:
+            box = self.server.eval(
+                f"local x0, y0, x1, y1 = 1e9, 1e9, -1e9, -1e9 "
+                f"for _, e in pairs(game.surfaces[1].find_entities_filtered{{force = {{{forces}}}}}) do "
+                f"local p = e.position "
+                f"if p.x < x0 then x0 = p.x end if p.x > x1 then x1 = p.x end "
+                f"if p.y < y0 then y0 = p.y end if p.y > y1 then y1 = p.y end end "
+                f"return {{x0, y0, x1, y1}}")
+            if box and box[0] <= box[2]:
+                view = self.view or box
+                self.view = [min(view[0], box[0]), min(view[1], box[1]), max(view[2], box[2]), max(view[3], box[3])]
+            if not self.view:
+                return
+            x0, y0, x1, y1 = self.view
+            margin = 12.0
+            zoom = min(1280 / ((x1 - x0 + 2 * margin) * 32), 720 / ((y1 - y0 + 2 * margin) * 32))
+            zoom = max(0.1, min(0.75, zoom))
             self.server.eval(
                 f'local p = game.get_player("{name}") if p then game.take_screenshot{{player = p, by_player = p, '
-                f'surface = p.surface, position = {{0, 0}}, resolution = {{1280, 720}}, zoom = 0.2, '
-                f'path = "overview/{self.game_ticks:08d}.jpg", quality = 80, show_gui = false, show_entity_info = true, '
-                f'daytime = 0}} end')
+                f'surface = p.surface, position = {{{(x0 + x1) / 2:.1f}, {(y0 + y1) / 2:.1f}}}, resolution = {{1280, 720}}, '
+                f'zoom = {zoom:.4f}, path = "overview/{self.game_ticks:08d}.jpg", quality = 80, show_gui = false, '
+                f'show_entity_info = true, daytime = 0}} end')
         except Exception as err:  # the overview is decoration; never let it end a run
             self.emit(event="overview_failed", error=str(err))
             self.cfg.overview = False
