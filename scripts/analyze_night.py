@@ -102,7 +102,7 @@ scaling = {
     "seed 1001": {
         1: ["night1/solo-opus55", "w3/rep-solo-opus55-b", "w3/rep-solo-opus55-c"],
         2: ["night1/team2-opus55", "w1/gen1-team2", "w3/rep-team2-opus55-c"],
-        4: ["night1/team4-opus55-r2"],
+        4: ["night1/team4-opus55-r2", "w1/rep-team4-opus55-b"],
     },
     "seed 2002": {1: ["w3/s2-solo-opus55"], 2: ["w3/s2-team2-opus55"], 4: ["w3/s2-team4-opus55"]},
 }
@@ -131,9 +131,9 @@ if all(done(p) for _, p in trio):
         "One, two and four agents on the same map", "Claude Opus 5.5, team production score over game time (map seed 2002)"))
 
 # --- 3. how a team of four is organised -----------------------------------------------------
-org = {"No structure": ["night1/team4-opus55-r2", "w2/org-flat-team4", "w3/org-flat-team4"],
-       "A manager": ["w3/org-manager-team4", "w2/org-manager-team4", "w3/org-manager-team4-r2"],
-       "Assigned roles": ["w3/org-roles-team4", "w2/org-roles-team4", "w3/org-roles-team4-r2"]}
+org = {"No structure": ["night1/team4-opus55-r2", "w1/rep-team4-opus55-b"],
+       "A manager": ["w4/org-manager-team4"],
+       "Assigned roles": ["w4/org-roles-team4"]}
 org_scores = {label: scores(paths) for label, paths in org.items()}
 results["groups"]["org"] = org_scores
 if sum(1 for v in org_scores.values() if v) >= 2:
