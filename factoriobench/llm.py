@@ -189,7 +189,7 @@ class ClaudePlayer:
     def nudge(self, text: str) -> None:
         self._append({"role": "user", "content": [{"type": "text", "text": text}]})
 
-    def observe(self, outcomes: list[Outcome], note: str, jpeg: bytes) -> None:
+    def observe(self, outcomes: list[Outcome], jpeg: bytes) -> None:
         """Answer every call of the last reply; the end-of-turn screenshot rides on the last result."""
         results = []
         for outcome in outcomes:
@@ -204,7 +204,7 @@ class ClaudePlayer:
             if outcome.error:
                 result["is_error"] = True
             results.append(result)
-        results[-1]["content"].extend([{"type": "text", "text": note}, image_block(jpeg)])
+        results[-1]["content"].append(image_block(jpeg))
         self._append({"role": "user", "content": results})
 
     def step(self) -> Reply:

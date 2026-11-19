@@ -250,7 +250,6 @@ class Run:
             seat.player = make_player(
                 seat.model, prompts.system_prompt(*SCREEN, name=seat.name, team=team), effort=cfg.effort,
                 compact_at_tokens=cfg.compact_at_tokens, keep_turns=cfg.keep_turns,
-                summary_instructions=prompts.SUMMARY_INSTRUCTIONS,
                 transcript=self.dir / "agents" / seat.name / "conversation.jsonl",
             )
             name, jpeg = shots[seat.name]
@@ -288,14 +287,13 @@ class Run:
                     self.game_ticks = self.server.pause() - self.scorer.start_tick
             act_s = time.time() - t1
             shots, new, snapshot = self.observe()
-            note = f"[game time {game_clock(self.game_ticks)}]"
             ups = round((self.game_ticks - tick_before) / act_s, 1) if act_s > 0 else None
 
             for seat in acting:
                 reply, think_s = thoughts[seat.name]
                 outcomes, actions = results[seat.name]
                 name, jpeg = shots[seat.name]
-                seat.player.observe(outcomes, note, jpeg)
+                seat.player.observe(outcomes, jpeg)
                 self.emit(
                     event="turn", turn=self.turn, agent=seat.name, think_s=round(think_s, 1), text=reply.text,
                     thinking=reply.thinking, actions=actions, shot=name, usd=round(seat.player.spent_usd, 4),

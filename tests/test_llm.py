@@ -39,13 +39,13 @@ def test_observe_answers_every_call_and_puts_the_screenshot_on_the_last(player):
     calls = [Call("a", "left_click", {}, "computer"), Call("b", "mouse_hold", {}, None), Call("c", "key", {}, "computer")]
     player.observe(
         [Outcome(calls[0]), Outcome(calls[1], "Error: no button", error=True), Outcome(calls[2], "skipped", error=True)],
-        "[game time 0:00:05]", JPEG,
+        JPEG,
     )
     results = player.history[-1]["content"]
     assert [r["tool_use_id"] for r in results] == ["a", "b", "c"]
     assert results[0]["toolset_name"] == "computer" and "toolset_name" not in results[1]
     assert "is_error" not in results[0] and results[1]["is_error"] and results[2]["is_error"]
-    assert [b["type"] for b in results[2]["content"]] == ["text", "text", "image"]
+    assert [b["type"] for b in results[2]["content"]] == ["text", "image"]
     assert count_images(player.history) == 2
 
 
@@ -66,7 +66,7 @@ def test_compaction_keeps_the_last_turns_and_cuts_between_user_and_assistant(pla
     player.begin("Objective", JPEG)
     for i in range(5):
         player.history.append({"role": "assistant", "content": [{"type": "tool_use", "id": str(i), "name": "key", "input": {}}]})
-        player.observe([Outcome(Call(str(i), "key", {}, "computer"))], "note", JPEG)
+        player.observe([Outcome(Call(str(i), "key", {}, "computer"))], JPEG)
     sent = {}
 
     def create(**kwargs):
@@ -86,7 +86,7 @@ def test_compaction_keeps_the_last_turns_and_cuts_between_user_and_assistant(pla
 def test_compaction_is_skipped_when_there_is_too_little_to_summarise(player):
     player.begin("Objective", JPEG)
     player.history.append({"role": "assistant", "content": []})
-    player.observe([Outcome(Call("0", "key", {}, "computer"))], "note", JPEG)
+    player.observe([Outcome(Call("0", "key", {}, "computer"))], JPEG)
     assert player.compact() is None
 
 

@@ -1,6 +1,6 @@
 """What the model is told. Changing any of this changes the benchmark, so it is versioned."""
 
-PROMPT_VERSION = "0.1"
+PROMPT_VERSION = "0.2"
 
 SYSTEM = """You are playing the video game Factorio (version 2.1, base game, no mods) on a Linux desktop. You see the screen and control the mouse and keyboard, exactly as a human player would. Nobody else is at the computer, and nobody will answer questions.
 
@@ -24,19 +24,6 @@ START_SOLO = "You start a new freeplay game alone, with nothing built"
 START_TEAM = "Your team starts a new freeplay game together, with nothing built"
 ENEMIES_PEACEFUL = "enemies are present but peaceful (they do not attack unless attacked)."
 ENEMIES_HOSTILE = "enemies will attack as your pollution reaches them."
-
-SUMMARY_INSTRUCTIONS = """You are writing the notes that will replace the earlier part of this Factorio session in your own memory. After this, you will no longer see the messages or screenshots summarised here; you will see only these notes and the most recent few turns. Write everything you would need to keep playing well without them.
-
-Cover, concisely and concretely:
-1. The objective and how far along you are (what is built and running, what has been researched, what is being researched now).
-2. The layout: where the important things are relative to your starting point and to each other (ore patches, water, oil, your furnaces, power, labs, assembly lines, chests with useful stock), using compass directions and rough distances, and where your character is now.
-3. What you are carrying, roughly, and what is in the hotbar.
-4. The plan: the next several steps in order, and the longer-term route to the objective.
-5. What you have learned about operating this game through the screen: which keys and mouse actions do what, where menus and buttons are on this screen, timings that worked, and mistakes to avoid repeating.
-6. Anything unresolved: problems you noticed, things you meant to check.
-
-Write plain text only. Do not call any tools."""
-
 
 def system_prompt(width: int, height: int, name: str = "agent-1", team: list[str] | None = None) -> str:
     text = SYSTEM.format(width=width, height=height)
