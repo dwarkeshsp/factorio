@@ -14,11 +14,11 @@ conditions is not established.
    science. Nobody came near a rocket: the furthest rung reached was 12 of 24.
 2. **GPT-6.2 Astra is well ahead of Claude Opus 5.5** on the same map: it reached each early milestone in
    roughly a third to a half of the game time, alone and in a head-to-head match on a shared map.
-3. **Two agents are ahead of one at equal game time, once each agent acts on its own clock**: in all three
-   pairings tried they reached the lab and science several minutes sooner and had made 1.6 to 2.5 times the
-   science packs by the later minutes. Raw plate output was about double on one map and no higher on the other.
-   Per dollar a pair gets about a third as much as one agent. It builds the same kind of factory sooner, not a
-   better one.
+3. **Two agents are ahead of one at equal game time, once each agent acts on its own clock, by somewhere between
+   nothing and double.** In four pairings (two models, two maps) the pair reached the lab and science sooner
+   every time, by 1 to 13 game minutes. Its iron output was 1.7 to 2.1 times the solo's in three pairings and no
+   higher in the fourth; its science output was 1.1 to 2.5 times. Per dollar a pair gets about a third as much
+   as one agent. It builds the same kind of factory sooner, not a better one.
 4. **How the game clock is shared between agents decides the answer.** With agents taking turns in rounds, the
    same pair of Opus agents was no faster than one agent, because each stood idle about a third of the time
    waiting for the other.
@@ -43,6 +43,8 @@ Production columns are iron plates / copper plates / automation science packs ma
 | 0.3 | `v0.3/solo/opus55-s1002` (left the game at turn 467) | Opus 5.5 | 42:51 | $15.86 | 9 | 5 | 1,959 / 582 / 70 |
 | 0.3 | `v0.3/duo/opus55x2-s1002` (continuous) | Opus 5.5 x2 | 51:55 | $31.95 | 11 | 8 | 3,736 / 2,283 / 208 |
 | 0.3 | `v0.3/solo/astra62-s1002` | GPT-6.2 Astra | 28:31 | $24.87 | 12 | 8 | 2,674 / 757 / 190 |
+| 0.3.1 | `v0.3/duo/astra62x2-s1002` (continuous) | GPT-6.2 Astra x2 | 25:06 | $50.12 | 11 | 7 | 3,495 / 1,433 / 172 |
+| 0.3.1 | `v0.3/duo/opus55-astra62-s1001` (continuous) | Opus 5.5 with GPT-6.2 Astra | 44:49 | $42.17 | 11 | 8 | 3,666 / 1,214 / 241 |
 
 Rungs: 9 is the first technology researched, 10 the first assembling machine placed, 11 the first logistic
 (green) science pack, 12 the first steel plate. Every run was clean: no console command was attempted, let alone run.
@@ -95,46 +97,43 @@ wreckage it had learned to avoid; otherwise its plan survived, including one tur
 ## Two agents on one team
 
 The fair comparison is at equal game time, since machines produce by the clock. Team output divided by solo
-output, pairs on the continuous schedule against solos on the same input rules and the same map
-(`python -m factoriobench ratio SOLO TEAM` prints these):
+output, pairs on the continuous schedule against a solo of the same model on the same map and input rules
+(`python -m factoriobench ratio SOLO TEAM` prints these). Each cell is iron plates, then automation science
+packs; a dash means the solo had made no packs yet:
 
-| Game minutes | Opus 5.5, seed 1001: iron | science | Opus 5.5, seed 1002: iron | science | GPT-6.2 Astra, seed 1001: iron | science |
-|---:|---:|---:|---:|---:|---:|---:|
-| 10 | 2.4 | – | 1.1 | – | 2.1 | 2.5 |
-| 15 | 2.1 | – | 0.8 | – | 2.1 | 2.1 |
-| 20 | 3.7 | – | 1.0 | – | 1.8 | 2.4 |
-| 25 | 2.2 | 9.0 | 1.1 | 4.9 | | |
-| 30 | 2.0 | 2.1 | 0.9 | 1.6 | | |
-| 35 | 1.8 | 1.9 | 1.0 | 1.7 | | |
-| 40 | 1.3 | 1.8 | 1.1 | 2.0 | | |
-| 45 | 1.3 | 1.7 | | | | |
+| Game minutes | Opus 5.5, seed 1001 | Opus 5.5, seed 1002 | GPT-6.2 Astra, seed 1001 | GPT-6.2 Astra, seed 1002 |
+|---:|---|---|---|---|
+| 10 | 2.4, – | 1.1, – | 2.1, 2.5 | 2.1, 1.5 |
+| 15 | 2.1, – | 0.8, – | 2.1, 2.1 | 1.7, 1.6 |
+| 20 | 3.7, – | 1.0, – | 1.8, 2.4 | 1.8, 1.3 |
+| 25 | 2.2, 9.0 | 1.1, 4.9 | | 1.9, 1.1 |
+| 30 | 2.0, 2.1 | 0.9, 1.6 | | |
+| 35 | 1.8, 1.9 | 1.0, 1.7 | | |
+| 40 | 1.3, 1.8 | 1.1, 2.0 | | |
+| 45 | 1.3, 1.7 | | | |
 
-(A dash means the solo had made no science packs yet.)
-
-The two Opus pairings disagree on iron: about double on seed 1001, no gain on seed 1002. The seed-1001 ratios
-before minute 30 flatter the pair, because that solo had no copper until minute 22, where another Opus solo on
-the same seed had it at minute 8; against that other solo the pair's ratio at 25 to 35 minutes is 0.9 to 1.3.
-What all three pairings share is the science: 1.6 to 2.5 times the solo's once the solo has been making packs
-for a few minutes.
+The pair is ahead on at least one of the two measures in every pairing, and on neither by more than about
+double once both have been producing for a while. Which measure gains differs from run to run: the Opus pair on
+seed 1002 made no more iron than the solo but twice the science; the Astra pair on seed 1002 made nearly twice
+the iron and barely more science. The seed-1001 Opus ratios before minute 30 flatter the pair, because that
+solo had no copper until minute 22, where another Opus solo on the same seed had it at minute 8; against that
+other solo the pair's iron ratio at 25 to 35 minutes is 0.9 to 1.3.
 
 Milestones, pair against solo, in game minutes:
 
-| | Opus 5.5, seed 1001 | Opus 5.5, seed 1002 | GPT-6.2 Astra, seed 1001 |
-|---|---|---|---|
-| Lab placed | 14.6 v 27.5 | 17.9 v 21.8 | 6.0 v 8.1 |
-| Automation science pack | 10.3 v 25.6 | 14.4 v 21.8 | 5.8 v 7.2 |
-| Assembling machine placed | 22.0 v 32.4 | 22.9 v never | 8.0 v 10.9 |
-| Logistic science pack | never v never | 42.5 v never | 20.2 v 26.3 |
+| | Opus 5.5, seed 1001 | Opus 5.5, seed 1002 | GPT-6.2 Astra, seed 1001 | GPT-6.2 Astra, seed 1002 |
+|---|---|---|---|---|
+| Lab placed | 14.6 v 27.5 | 17.9 v 21.8 | 6.0 v 8.1 | 7.4 v 8.1 |
+| Automation science pack | 10.3 v 25.6 | 14.4 v 21.8 | 5.8 v 7.2 | 7.3 v 8.3 |
+| Assembling machine placed | 22.0 v 32.4 | 22.9 v never | 8.0 v 10.9 | 9.5 v 11.7 |
+| Logistic science pack | never v never | 42.5 v never | 20.2 v 26.3 | 21.7 v 23.6 |
 
-The other two ways to compare, at the end of the runs:
+At equal total turns, which is roughly equal spend (the pair at 250 turns each against the solo at 500), the
+pair has made 0.30, 0.45, 0.30 and 0.31 of the solo's iron in the four pairings, and 0.2 to 0.4 of its science
+in three of them (about the same in the fourth, where the solo was the weak seed-1002 Opus run).
 
-| | Opus 5.5 | GPT-6.2 Astra |
-|---|---|---|
-| Equal turns per agent (500 each; the pair costs twice as much): iron / science, pair v solo | 2,836 / 216 v 2,237 / 129 | 3,288 / 191 v 2,679 / 143 |
-| Equal total turns and spend (pair at 250 turns each v solo at 500): iron / science | 678 / 25 v 2,237 / 129 | 795 / 56 v 2,679 / 143 |
-
-So a second agent brings the science forward and gets about a third as much per dollar: a team turn buys half
-the game time, and the machines do most of the producing.
+So a second agent brings the factory forward by a few minutes and gets about a third as much per dollar: a team
+turn buys half the game time, and the machines do most of the producing.
 
 **The same factory, sooner.** The Opus pair placed the same number of drills as the solo (18 burner and 10
 electric against 18 and 11) and a few more assemblers and labs, and reached steam power, a lab and Automation 7
@@ -146,9 +145,9 @@ Coordination lost each agent an estimated 6 to 11% of its turns: fuelling the sa
 coal the other was about to use, both setting out to add the second steam engine. About 8% of chat messages had
 faded from the screen before the receiver's next screenshot.
 
-**Simultaneous moves collide.** In all three runs where both teammates played, the two agents opened by each
-proposing a split at the same moment. In two of them each then accepted the other's proposal, swapping roles in
-mid-air:
+**Simultaneous moves collide.** In the first three runs where both teammates played, the two agents opened by
+each proposing a split at the same moment. In two of them each then accepted the other's proposal, swapping
+roles in mid-air:
 
 > agent-2: I'll set up coal and copper; please handle iron and power/science.
 > agent-1: I'll bootstrap iron and coal; please handle power, copper and research.
@@ -158,6 +157,23 @@ mid-air:
 (GPT-6.2 Astra pair. The first Opus pair did the same and broke the tie three rounds later with "FINAL: I
 (agent-2) take iron/copper". The second Opus pair escaped only because one of the two opening messages failed
 to send.)
+
+### A team across labs
+
+One run paired Opus 5.5 with GPT-6.2 Astra on seed 1001. The pair did about as well as GPT-6.2 Astra alone on
+iron (0.9 to 1.3 times, minutes 10 to 25) and better on science (1.4 to 2.2 times from minute 15), reached the
+lab at minute 5.6 against 8.1 and green science at 19.6 against 26.3, and was far ahead of Opus 5.5 alone
+throughout. Astra took the lead in the chat from its first message and kept it:
+
+> agent-2 (Astra): I will get power and research going. Please focus iron/coal production.
+> agent-2: Lab placed east edge iron. Please handcraft 10 red science and feed it for automation, then set up
+> red+green production. I will wire plant to lab now.
+> agent-1 (Opus): added 2 more iron pairs (6 iron now). Fuel is the bottleneck. Plan: I'll get stone, build
+> more furnaces, then electric drills on coal patch + belt coal north to the smelting area. OK?
+> agent-2: Yes, great. Electric drill is 25 red, can you prioritize that? I'll buffer plates for reds.
+
+Astra used its 500 turns by about minute 26 and Opus played the last 19 minutes alone, so the run's final
+totals mix the two. This run has not been reviewed turn by turn.
 
 ### Rounds against the continuous schedule
 
@@ -240,12 +256,11 @@ durations the model asked for. Game times here are not comparable with a human's
 
 ## A second map
 
-Seed 1002, harness 0.3: Opus 5.5 alone, an Opus 5.5 pair and GPT-6.2 Astra alone (rows in the table of runs).
+Seed 1002: Opus 5.5 alone, an Opus 5.5 pair, GPT-6.2 Astra alone and a GPT-6.2 Astra pair (rows in the table of
+runs; the pairs are compared with the solos above).
 
 - GPT-6.2 Astra alone did about what it did on seed 1001: steel (rung 12) in 28:31, 8 technologies. Its lead
   over Opus 5.5 held: lab at minute 8.1 against 21.8, first assembling machine at 11.7 against never.
-- The Opus 5.5 pair again reached every milestone before the solo and made about twice the science, but no more
-  iron (table above).
 - **The Opus solo ended itself by accident on turn 467.** It sent one batch of some twenty actions that pressed
   Escape four times between clicks, and its next screenshot was the game's main menu. Apparently an Escape with
   nothing open brought up the game menu and a later click landed on the button that leaves the game; I did not
@@ -253,13 +268,11 @@ Seed 1002, harness 0.3: Opus 5.5 alone, an Opus 5.5 pair and GPT-6.2 Astra alone
   at least five times in an earlier run without consequence. Whether an accidental exit should cost the rest of
   a run, or the agent should be left to find "Continue" on the main menu, is an open rule.
 
-A GPT-6.2 Astra pair on seed 1002 was still running when this was written.
-
 ## Spend
 
-About $347 of API credit so far: $338 on the twelve runs in the table and about $9 on harness tests and aborted
-starts (kept under `runs/shakedown/`, not in git). The GPT-6.2 Astra pair still running will add up to $60.
-Every run's spend is in [`runs/ledger.jsonl`](../runs/ledger.jsonl).
+$439 of API credit in all, against a budget of $500: $430 on the fourteen runs in the table and about $9 on
+harness tests and aborted starts (kept under `runs/shakedown/`, not in git). Every run's spend is in
+[`runs/ledger.jsonl`](../runs/ledger.jsonl).
 
 One uncertainty: OpenAI's usage figures do not show what its server-side compaction pass costs, so GPT-6.2
 Astra's totals may be slightly low.
@@ -270,10 +283,11 @@ Astra's totals may be slightly low.
   from one agent. The score comes from the game, and the game refuses the obvious cheats.
 - **Budget game time, not turns.** Turns per agent make agents with short turns leave early and let one side of
   a match play on alone.
-- **Always report equal game time and equal spend together.** Here they point in opposite directions (ahead,
-  and about 0.3x).
-- **Several runs per condition are needed before any ratio is believed.** At $17 to $50 a run that is
-  affordable for 500 turns; a run to the rocket would be far longer than anything tried here.
+- **Always report equal game time and equal spend together.** Here they point in opposite directions (ahead by
+  up to 2x, and about 0.3x).
+- **Several runs per condition are needed before any ratio is believed.** Four pairings gave team-to-solo
+  ratios from 0.8 to 2.5. At $17 to $50 a run, repeats are affordable for 500 turns; a run to the rocket would
+  be far longer than anything tried here.
 - **The interesting team behaviour is in the logs, not the score**: role negotiation, colliding proposals,
   stale beliefs about what a teammate has done. A benchmark of agent societies should publish the chat and the
   reasoning with the numbers.

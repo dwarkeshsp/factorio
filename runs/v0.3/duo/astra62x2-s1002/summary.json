@@ -1,0 +1,116 @@
+{
+  "stop": "max_turns",
+  "error": null,
+  "agents": [
+    {
+      "name": "agent-1",
+      "model": "gpt-6.2-astra",
+      "force": "player",
+      "stop": null,
+      "usd": 25.2252,
+      "tokens": {
+        "input": 8001,
+        "output": 59183,
+        "cache_write": 634927,
+        "cache_read": 41111560
+      },
+      "compactions": 3,
+      "screenshots": 517
+    },
+    {
+      "name": "agent-2",
+      "model": "gpt-6.2-astra",
+      "force": "player",
+      "stop": null,
+      "usd": 24.8905,
+      "tokens": {
+        "input": 7371,
+        "output": 49485,
+        "cache_write": 618398,
+        "cache_read": 41670312
+      },
+      "compactions": 3,
+      "screenshots": 505
+    }
+  ],
+  "models": [
+    "gpt-6.2-astra",
+    "gpt-6.2-astra"
+  ],
+  "rivals": [],
+  "effort": null,
+  "seed": 1002,
+  "peaceful": true,
+  "turns": 500,
+  "game_ticks": 90407,
+  "game_time": "0:25:06",
+  "usd": 50.1157,
+  "tokens": {
+    "input": 15372,
+    "output": 108668,
+    "cache_write": 1253325,
+    "cache_read": 82781872
+  },
+  "rocket_launched": false,
+  "furthest_rung": 11,
+  "furthest_label": "Logistic science pack",
+  "technologies_researched": 7,
+  "production": {
+    "items": {
+      "wooden-chest": 4,
+      "iron-chest": 2,
+      "transport-belt": 586,
+      "underground-belt": 6,
+      "inserter": 133,
+      "small-electric-pole": 86,
+      "pipe": 61,
+      "stone-brick": 24,
+      "boiler": 2,
+      "steam-engine": 4,
+      "burner-mining-drill": 19,
+      "electric-mining-drill": 16,
+      "offshore-pump": 2,
+      "stone-furnace": 67,
+      "assembling-machine-1": 14,
+      "lab": 8,
+      "coal": 2498,
+      "stone": 252,
+      "iron-ore": 3700,
+      "copper-ore": 1536,
+      "iron-plate": 3495,
+      "copper-plate": 1433,
+      "iron-gear-wheel": 930,
+      "copper-cable": 1066,
+      "electronic-circuit": 307,
+      "automation-science-pack": 172,
+      "logistic-science-pack": 41,
+      "science": 170
+    },
+    "fluids": {
+      "water": 3852.3303629755974,
+      "steam": 30533.281577408314
+    },
+    "built": {
+      "wooden-chest": 5,
+      "iron-chest": 4,
+      "transport-belt": 395,
+      "underground-belt": 6,
+      "inserter": 76,
+      "small-electric-pole": 74,
+      "pipe": 3,
+      "boiler": 2,
+      "steam-engine": 4,
+      "burner-mining-drill": 21,
+      "electric-mining-drill": 14,
+      "offshore-pump": 1,
+      "stone-furnace": 38,
+      "assembling-machine-1": 15,
+      "lab": 6
+    }
+  },
+  "rungs_total": 24,
+  "integrity_clean": true,
+  "commands_denied": 0,
+  "commands_run": 0,
+  "wall_seconds": 13439
+}
