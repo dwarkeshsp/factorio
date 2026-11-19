@@ -7,6 +7,7 @@ from pathlib import Path
 
 from . import install, report
 from .llm import PRICES
+from .llm_openai import PRICES as OPENAI_PRICES
 from .run import RunConfig, run
 
 
@@ -55,7 +56,7 @@ def main(argv: list[str] | None = None) -> None:
     p = sub.add_parser("run", help="one model plays one freeplay map")
     p.add_argument("--out", required=True, help="run directory, for example runs/opus55-seed1001")
     p.add_argument("--model", default="claude-opus-5-5",
-                   help="model name, or a comma-separated list for a team (one agent each). Known: " + ", ".join(sorted(PRICES)))
+                   help="model name, or a comma-separated list for a team (one agent each). Known: " + ", ".join(sorted({**PRICES, **OPENAI_PRICES})))
     p.add_argument("--effort", default=None, help="low, medium, high, xhigh or max; default is the model's own default")
     p.add_argument("--seed", type=int, default=1001, help="map generation seed")
     p.add_argument("--hostile", action="store_true", help="enemies attack (default is peaceful mode)")

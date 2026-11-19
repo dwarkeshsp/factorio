@@ -29,6 +29,8 @@ KEY_ALIASES = {
     "ctrl": "ctrl", "control": "ctrl", "alt": "alt", "option": "alt", "shift": "shift",
     "super": "super", "cmd": "super", "win": "super", "meta": "super",
     "capslock": "Caps_Lock", "plus": "plus", "minus": "minus",
+    "arrowup": "Up", "arrowdown": "Down", "arrowleft": "Left", "arrowright": "Right",
+    "command": "super", "grave": "grave", "backquote": "grave", "backtick": "grave", "tilde": "grave",
 }
 SYMBOLS = {
     "`": "grave", "~": "asciitilde", "-": "minus", "=": "equal", "[": "bracketleft", "]": "bracketright",
@@ -191,18 +193,22 @@ class Desktop:
                 raise ActionError("mouse_move needs a coordinate")
             self._move(inp["coordinate"])
         elif name == "left_click_drag":
-            x0, y0 = self._point(inp.get("start_coordinate"))
-            x1, y1 = self._point(inp.get("coordinate"))
+            # A drag is a start and an end, or a whole path of points to pass through.
+            path = [self._point(p) for p in inp["path"]] if inp.get("path") else [
+                self._point(inp.get("start_coordinate")), self._point(inp.get("coordinate"))]
+            if len(path) < 2:
+                raise ActionError("a drag needs at least two points")
 
             def drag() -> None:
-                self._x("mousemove", str(x0), str(y0))
+                self._x("mousemove", str(path[0][0]), str(path[0][1]))
                 time.sleep(0.1)
                 self._x("mousedown", "1")
                 try:
-                    steps = 12
-                    for i in range(1, steps + 1):
-                        self._x("mousemove", str(x0 + (x1 - x0) * i // steps), str(y0 + (y1 - y0) * i // steps))
-                        time.sleep(0.03)
+                    for (x0, y0), (x1, y1) in zip(path, path[1:]):
+                        steps = max(1, min(12, max(abs(x1 - x0), abs(y1 - y0)) // 8))
+                        for i in range(1, steps + 1):
+                            self._x("mousemove", str(x0 + (x1 - x0) * i // steps), str(y0 + (y1 - y0) * i // steps))
+                            time.sleep(0.03)
                 finally:
                     self._x("mouseup", "1")
 
@@ -264,6 +270,8 @@ class Desktop:
                     self._x("keyup", key)
         elif name == "wait":
             time.sleep(seconds(inp.get("duration"), "wait"))
+        elif name == "unsupported":
+            raise ActionError(f"{inp.get('what', 'that action')} is not supported here")
         else:
             raise ActionError(f"unknown action {name!r}")
         return "OK"

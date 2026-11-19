@@ -296,4 +296,7 @@ class ClaudePlayer:
 def make_player(model: str, system: str, **kwargs: Any):
     if model.startswith("claude-"):
         return ClaudePlayer(model, system, **kwargs)
+    if model.startswith("gpt-"):
+        from .llm_openai import OpenAIPlayer
+        return OpenAIPlayer(model, system, **kwargs)
     raise KeyError(f"no player for model {model!r}")
