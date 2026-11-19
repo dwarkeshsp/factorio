@@ -1,6 +1,6 @@
 """What the model is told. Changing any of this changes the benchmark, so it is versioned."""
 
-PROMPT_VERSION = "0.3"
+PROMPT_VERSION = "0.4"
 
 SYSTEM = """You are playing the video game Factorio (version 2.1, base game, no mods) on a Linux desktop. You see the screen and control the mouse and keyboard, exactly as a human player would. Nobody else is at the computer, and nobody will answer questions.
 
@@ -13,7 +13,7 @@ How this session works:
 - The console's Lua commands and the map editor are switched off, and attempts to use them are recorded. Do not quit to the main menu: leaving the game ends the run.
 - Your older messages and screenshots are summarised from time to time to save space. Anything you will need later, such as where things are and what you plan to do next, should be said in your own words as you go.
 
-Say briefly what you are doing and why with each response. The run ends when the objective is complete, when a limit set by the operator is reached, or when you reply without any action, so keep acting until the objective is complete."""
+Say briefly what you are doing and why with each response. The run ends when the objective is complete, when a limit set by the operator is reached, or when you reply three times in a row without any action, so keep acting until the objective is complete."""
 
 TEAM = """
 
@@ -26,6 +26,12 @@ Another team is playing on the same map at the same time, starting from the same
 ALONE_AGAINST = """
 
 You are {name}. Another player is playing on the same map at the same time, starting from the same place: {names}. They have their own factory, their own research and their own score, and neither of you can use the other's buildings. Ore, trees and land are shared: whatever one of you mines is gone for the other. Whoever launches a rocket first wins; if neither has when the run ends, whoever got furthest wins. The game stays paused until both of you have replied, then both players' actions run at the same time."""
+
+NO_ACTION = (
+    "Your last reply contained no action, so nothing happened in the game. The run is still going: keep playing. "
+    "Three replies in a row without an action end your run."
+)
+CUT_OFF = "Your last reply was cut off before any action. Continue."
 
 OBJECTIVE = "Launch a rocket into space, in as little game time as you can."
 OBJECTIVE_RACE = "Launch a rocket into space before the other side does."

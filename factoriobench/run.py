@@ -32,6 +32,7 @@ BETWEEN_ACTIONS = 0.1  # lets one input register before the next
 AFTER_ACTIONS = 0.4    # lets the last input take effect and be drawn before the capture and the pause
 RENDER_WAIT = 0.8      # before the opening capture only, which is taken paused
 SNAPSHOT_EVERY = 25    # rounds between full production snapshots in the log
+MAX_EMPTY_REPLIES = 3  # replies in a row without an action that end an agent's run
 
 
 @dataclass
@@ -272,15 +273,19 @@ class Run:
         return None
 
     def think(self, seat: Seat) -> tuple[Reply, float]:
-        """One model reply, retrying a reply that was cut off before any action."""
+        """One model reply with actions. A reply without any is answered with a fixed reminder, twice at most.
+
+        One stray remark without a tool call should not end an agent's game; three in a row do.
+        """
         t0 = time.time()
         reply = seat.player.step()
-        retries = 0
-        while reply.stop == "cut_off" and retries < 2:
-            self.emit(event="cut_off", turn=self.turn, agent=seat.name, text=reply.text)
-            seat.player.nudge("Your last response was cut off before any action. Continue.")
+        empties = 0
+        while reply.stop in ("stopped", "cut_off") and empties < MAX_EMPTY_REPLIES - 1:
+            empties += 1
+            self.emit(event="no_action", turn=self.turn, agent=seat.name, kind=reply.stop, text=reply.text,
+                      thinking=reply.thinking, notes=reply.notes)
+            seat.player.nudge(prompts.NO_ACTION if reply.stop == "stopped" else prompts.CUT_OFF)
             reply = seat.player.step()
-            retries += 1
         return reply, time.time() - t0
 
     def play(self) -> str:

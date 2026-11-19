@@ -51,3 +51,28 @@ def test_prompts_name_teammates_and_rivals():
     assert "You are agent-1. Another player" in duel
     assert "before the other side does" in prompts.opening(True, ["agent-1"], ["agent-2"])
     assert "in as little game time as you can" in prompts.opening(True, ["agent-1"])
+
+
+class FakePlayer:
+    def __init__(self, stops):
+        self.stops = list(stops)
+        self.nudges = []
+
+    def step(self):
+        from factoriobench.llm import Reply
+        return Reply("", "", [], self.stops.pop(0), 0.0, {})
+
+    def nudge(self, text):
+        self.nudges.append(text)
+
+
+def test_a_reply_without_actions_gets_a_reminder_and_three_in_a_row_end_the_run(tmp_path):
+    run = make(tmp_path, models=["claude-opus-5-5"])
+    seat = run.seats[0]
+    seat.player = FakePlayer(["stopped", "actions"])
+    reply, _ = run.think(seat)
+    assert reply.stop == "actions" and seat.player.nudges == [prompts.NO_ACTION]
+    seat.player = FakePlayer(["stopped", "cut_off", "stopped", "actions"])
+    reply, _ = run.think(seat)
+    assert reply.stop == "stopped" and seat.player.nudges == [prompts.NO_ACTION, prompts.CUT_OFF]
+    run.close()

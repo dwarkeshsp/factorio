@@ -1,0 +1,113 @@
+{
+  "stop": "max_turns",
+  "error": null,
+  "agents": [
+    {
+      "name": "agent-1",
+      "model": "gpt-6.2-astra",
+      "force": "player",
+      "stop": null,
+      "usd": 25.3001,
+      "tokens": {
+        "input": 7817,
+        "output": 59106,
+        "cache_write": 637242,
+        "cache_read": 41252317
+      },
+      "compactions": 3,
+      "screenshots": 513
+    },
+    {
+      "name": "agent-2",
+      "model": "gpt-6.2-astra",
+      "force": "player",
+      "stop": "model_stopped",
+      "usd": 0.0351,
+      "tokens": {
+        "input": 6,
+        "output": 124,
+        "cache_write": 2939,
+        "cache_read": 1818
+      },
+      "compactions": 0,
+      "screenshots": 501
+    }
+  ],
+  "models": [
+    "gpt-6.2-astra",
+    "gpt-6.2-astra"
+  ],
+  "rivals": [],
+  "effort": null,
+  "seed": 1001,
+  "peaceful": true,
+  "turns": 500,
+  "game_ticks": 91432,
+  "game_time": "0:25:23",
+  "usd": 25.3352,
+  "tokens": {
+    "input": 7823,
+    "output": 59230,
+    "cache_write": 640181,
+    "cache_read": 41254135
+  },
+  "rocket_launched": false,
+  "furthest_rung": 12,
+  "furthest_label": "Steel plate",
+  "technologies_researched": 8,
+  "production": {
+    "items": {
+      "iron-chest": 5,
+      "transport-belt": 242,
+      "underground-belt": 2,
+      "inserter": 79,
+      "small-electric-pole": 64,
+      "pipe": 19,
+      "boiler": 1,
+      "steam-engine": 2,
+      "burner-mining-drill": 13,
+      "electric-mining-drill": 8,
+      "offshore-pump": 1,
+      "stone-furnace": 41,
+      "assembling-machine-1": 10,
+      "lab": 4,
+      "coal": 1508,
+      "iron-ore": 2605,
+      "copper-ore": 951,
+      "iron-plate": 2533,
+      "copper-plate": 866,
+      "steel-plate": 20,
+      "iron-gear-wheel": 613,
+      "copper-cable": 596,
+      "electronic-circuit": 176,
+      "automation-science-pack": 206,
+      "logistic-science-pack": 17,
+      "science": 192
+    },
+    "fluids": {
+      "water": 2262.38689827919,
+      "steam": 19624.426501572132
+    },
+    "built": {
+      "iron-chest": 4,
+      "transport-belt": 183,
+      "underground-belt": 4,
+      "inserter": 49,
+      "small-electric-pole": 59,
+      "pipe": 2,
+      "boiler": 2,
+      "steam-engine": 3,
+      "burner-mining-drill": 16,
+      "electric-mining-drill": 8,
+      "offshore-pump": 1,
+      "stone-furnace": 24,
+      "assembling-machine-1": 10,
+      "lab": 5
+    }
+  },
+  "rungs_total": 24,
+  "integrity_clean": true,
+  "commands_denied": 0,
+  "commands_run": 0,
+  "wall_seconds": 7107
+}
