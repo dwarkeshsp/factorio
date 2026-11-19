@@ -27,8 +27,8 @@ def cmd_run(args: argparse.Namespace) -> None:
             if not name or not models:
                 raise SystemExit(f"--team wants NAME=MODEL[,MODEL...], got {spec!r}")
             teams[name] = models.split(",")
-        if len(teams) != 2:
-            raise SystemExit("a versus run needs exactly two --team options")
+        if not 2 <= len(teams) <= 4:
+            raise SystemExit("a versus run needs two to four --team options")
     else:
         teams = {SOLO_FORCE: args.model.split(",")}
     cfg = RunConfig(
@@ -74,7 +74,7 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("--seed", type=int, default=1001, help="map generation seed")
     p.add_argument("--hostile", action="store_true", help="enemies attack (default is peaceful mode)")
     p.add_argument("--team", action="append", default=[], metavar="NAME=MODEL[,MODEL...]",
-                   help="give twice for a versus run, for example --team red=claude-opus-5-5 --team blue=gpt-6.2-astra")
+                   help="give two to four times for a versus run, for example --team red=claude-opus-5-5 --team blue=gpt-6.2-astra")
     p.add_argument("--war", action="store_true", help="versus only: the teams can attack each other (default is a cease-fire)")
     p.add_argument("--minutes", type=float, default=20.0, help="the deadline, in game minutes")
     p.add_argument("--max-turns", type=int, default=2000, help="per agent")

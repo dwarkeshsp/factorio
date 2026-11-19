@@ -333,7 +333,7 @@ class Run:
         parts = [f"game time {game_clock(self.game_ticks)} of {game_clock(self.deadline_ticks)}"]
         own = f"{self.scores[seat.team]['score']:,.0f}"
         if self.versus:
-            others = ", ".join(f"team {team} {self.scores[team]['score']:,.0f}" for team in self.cfg.teams if team != seat.team)
+            others = ", ".join(f"{team} {self.scores[team]['score']:,.0f}" for team in self.cfg.teams if team != seat.team)
             parts.append(f"production score: your team ({seat.team}) {own}, {others}")
         else:
             parts.append(f"production score {own}")

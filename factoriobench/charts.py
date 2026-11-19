@@ -12,7 +12,7 @@ from pathlib import Path
 
 SURFACE, TEXT, MUTED, GRID = "#fcfcfb", "#0b0b0b", "#52514e", "#e6e5e0"
 SERIES = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300", "#6250d6", "#e34948"]
-TEAM_COLOR = {"red": "#e34948", "blue": "#2a78d6"}
+TEAM_COLOR = {"red": "#e34948", "blue": "#2a78d6", "green": "#008300", "yellow": "#eda100"}
 
 
 def events(run_dir: Path) -> list[dict]:

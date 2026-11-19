@@ -29,14 +29,16 @@ You are {name}, one of {count} players on the same team: {names}. You share one 
 
 VERSUS = """
 
-Two teams are playing on this map, and the team with the higher production score at the deadline wins. You are {name}, on team {team}: {names}. The other team is {other}: {other_names}. Every player is an AI like you, at its own computer, seeing only its own screen, and each acts at its own pace.
+{opening} You are {name}, on team {team}: {names}. {others} Every player is an AI like you, at its own computer, seeing only its own screen, and each acts at its own pace.
 
-Each team has its own buildings, its own research and its own score. Both teams start close together and share the same ore patches and the same land. You cannot open, use or pick up the other team's buildings. {relations}
+Each team has its own buildings, its own research and its own score. {all_teams} start close together and share the same ore patches and the same land. You cannot open, use or pick up another team's buildings. {relations}
 
 Chat goes to your own team: press the grave key (`) to open the chat line, type a message and press Enter. Start a message with /shout to send it to everyone in the game. Messages appear at the bottom left of the screen for a short while, and opening the chat line shows earlier ones. Enemies (the native creatures) are {enemies}."""
 
-RELATIONS_CEASE_FIRE = "The two teams are under a cease-fire: nothing targets the other team automatically."
-RELATIONS_HOSTILE = ("The two teams are hostile: weapons and turrets can damage the other team's players and buildings, "
+OPENING_TWO = "Two teams are playing on this map, and the team with the higher production score at the deadline wins."
+OPENING_MANY = "{count} teams are playing on this map, and the team with the highest production score at the deadline wins."
+RELATIONS_CEASE_FIRE = "The {teams} are under a cease-fire: nothing targets another team automatically."
+RELATIONS_HOSTILE = ("The {teams} are hostile: weapons and turrets can damage another team's players and buildings, "
                      "and a player who is killed reappears at their team's start a few seconds later.")
 ENEMIES_PEACEFUL = "present but peaceful (they do not attack unless attacked)"
 ENEMIES_HOSTILE = "present and will attack as your pollution reaches them"
@@ -66,10 +68,16 @@ def system_prompt(width: int, height: int, name: str, deadline: str, team: str, 
     text = SYSTEM.format(width=width, height=height)
     text += SCORE.format(deadline=deadline, who="you have" if len(teams) == 1 and len(mates) == 1 else "your team has")
     if len(teams) > 1:
-        other = next(t for t in teams if t != team)
-        text += VERSUS.format(name=name, team=team, names=", ".join(mates), other=other,
-                              other_names=", ".join(teams[other]), enemies=enemies,
-                              relations=RELATIONS_CEASE_FIRE if cease_fire else RELATIONS_HOSTILE)
+        rivals = [t for t in teams if t != team]
+        two = len(teams) == 2
+        if two:
+            others = f"The other team is {rivals[0]}: {', '.join(teams[rivals[0]])}."
+        else:
+            others = "The other teams are " + "; ".join(f"{t}: {', '.join(teams[t])}" for t in rivals) + "."
+        relations = (RELATIONS_CEASE_FIRE if cease_fire else RELATIONS_HOSTILE).format(teams="two teams" if two else "teams")
+        text += VERSUS.format(opening=OPENING_TWO if two else OPENING_MANY.format(count={3: "Three", 4: "Four"}.get(len(teams), len(teams))),
+                              name=name, team=team, names=", ".join(mates), others=others,
+                              all_teams="Both teams" if two else "All teams", relations=relations, enemies=enemies)
     elif len(mates) > 1:
         text += TEAM.format(name=name, count=len(mates), names=", ".join(mates), enemies=enemies)
     else:
