@@ -10,6 +10,7 @@ import json
 import os
 import re
 import secrets
+import shutil
 import signal
 import socket
 import subprocess
@@ -21,6 +22,8 @@ from . import paths
 from .rcon import Rcon, RconError
 
 TICKS_PER_SECOND = 60
+SCENARIO_NAME = "factoriobench"
+SCENARIO_SOURCE = Path(__file__).parent / "scenario" / "control.lua"
 
 SERVER_SETTINGS = {
     "name": "factoriobench",
@@ -108,19 +111,17 @@ class Server:
             capture_output=True, text=True, check=False,
         )
 
-    def create_map(self) -> None:
+    def prepare(self) -> None:
+        """Write this server's config and install the benchmark scenario into its own directory."""
         paths.write_instance_config(self.dir, self.edition)
-        settings = self.dir / "map-gen-settings.json"
-        settings.write_text(json.dumps({"peaceful_mode": self.peaceful}, indent=2))
-        result = self._run_binary(
-            "--create", str(self.save_path), "--map-gen-seed", str(self.seed), "--map-gen-settings", str(settings)
-        )
-        if result.returncode != 0 or not self.save_path.exists():
-            raise RuntimeError(f"map creation failed:\n{result.stdout[-2000:]}\n{result.stderr[-2000:]}")
+        (self.dir / "map-gen-settings.json").write_text(json.dumps({"peaceful_mode": self.peaceful}, indent=2))
+        scenario = self.dir / "scenarios" / SCENARIO_NAME
+        scenario.mkdir(parents=True, exist_ok=True)
+        shutil.copy(SCENARIO_SOURCE, scenario / "control.lua")
+        (self.dir / "saves").mkdir(exist_ok=True)
 
-    def start(self, timeout: float = 120.0) -> None:
-        if not self.save_path.exists():
-            self.create_map()
+    def start(self, timeout: float = 180.0) -> None:
+        self.prepare()
         (self.dir / "server-settings.json").write_text(json.dumps(SERVER_SETTINGS, indent=2))
         self.port = free_port(socket.SOCK_DGRAM)
         self.rcon_port = free_port(socket.SOCK_STREAM)
@@ -129,7 +130,9 @@ class Server:
         self.proc = subprocess.Popen(
             [
                 str(paths.binary(self.edition)), "-c", str(self.dir / "config.ini"),
-                "--start-server", str(self.save_path),
+                "--start-server-load-scenario", SCENARIO_NAME,
+                "--map-gen-seed", str(self.seed),
+                "--map-gen-settings", str(self.dir / "map-gen-settings.json"),
                 "--port", str(self.port),
                 "--rcon-bind", f"127.0.0.1:{self.rcon_port}",
                 "--rcon-password", password,
@@ -192,6 +195,21 @@ class Server:
             raise LuaError(parsed.get("error", "unknown Lua error"))
         return parsed.get("value")
 
+    # --- teams and prices ----------------------------------------------------
+    def configure(self, teams: dict[str, list[str]], spawns: dict[str, tuple[float, float]] | None = None,
+                  colors: dict[str, tuple[float, float, float]] | None = None, cease_fire: bool = True) -> None:
+        """Create each team's force. Call before any player joins."""
+        config = {"teams": teams, "spawns": spawns or {}, "colors": colors or {},
+                  "cease_fire": cease_fire, "peaceful": self.peaceful}
+        self.eval(f"return remote.call('bench', 'configure', helpers.json_to_table([==[{json.dumps(config)}]==]))")
+
+    def prices(self) -> dict[str, float]:
+        """The game's own production price list (core/lualib/production-score.lua)."""
+        return self.eval("return remote.call('bench', 'prices')") or {}
+
+    def speed(self, value: float) -> None:
+        self.eval(f"game.speed = {float(value)}")
+
     # --- clock -------------------------------------------------------------
     def pause(self) -> int:
         """Stop the simulation. Nothing in the game responds while paused, menus included."""
@@ -214,7 +232,7 @@ class Server:
             """
             local out = {}
             for _, p in pairs(game.players) do
-              out[#out + 1] = {name = p.name, connected = p.connected, admin = p.admin,
+              out[#out + 1] = {name = p.name, connected = p.connected, admin = p.admin, force = p.force.name,
                                cheat_mode = p.cheat_mode, controller = p.controller_type,
                                is_character = p.controller_type == defines.controllers.character}
             end

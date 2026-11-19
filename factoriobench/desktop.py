@@ -106,10 +106,23 @@ def encode_jpeg(image: Image.Image) -> bytes:
     return buffer.getvalue()
 
 
+class _WallClock:
+    """Stands in for run.Clock when nothing pauses the game (tests, the prototype)."""
+
+    @staticmethod
+    def send(action):
+        return action()
+
+    @staticmethod
+    def sleep(seconds: float) -> None:
+        time.sleep(max(0.0, seconds))
+
+
 class Desktop:
-    def __init__(self, display: str, size: tuple[int, int]):
+    def __init__(self, display: str, size: tuple[int, int], clock: Any = None):
         self.display = display
         self.size = size
+        self.clock = clock or _WallClock()
         self._env = {**os.environ, "DISPLAY": display}
         self._grabber = mss.MSS(display=display)
 
@@ -136,7 +149,8 @@ class Desktop:
 
     # --- input -------------------------------------------------------------
     def _x(self, *args: str) -> str:
-        result = subprocess.run(["xdotool", *args], env=self._env, capture_output=True, text=True, check=False)
+        result = self.clock.send(
+            lambda: subprocess.run(["xdotool", *args], env=self._env, capture_output=True, text=True, check=False))
         if result.returncode != 0:
             raise ActionError(f"input failed: {result.stderr.strip() or 'xdotool error'}")
         return result.stdout.strip()
@@ -154,7 +168,7 @@ class Desktop:
         if coordinate is not None:
             x, y = self._point(coordinate)
             self._x("mousemove", str(x), str(y))
-            time.sleep(0.05)
+            self.clock.sleep(0.05)
 
     def _held(self, modifiers: str | None, action) -> None:
         keys = parse_keys(modifiers) if modifiers else []
@@ -196,13 +210,13 @@ class Desktop:
 
             def drag() -> None:
                 self._x("mousemove", str(x0), str(y0))
-                time.sleep(0.1)
+                self.clock.sleep(0.1)
                 self._x("mousedown", "1")
                 try:
                     steps = 12
                     for i in range(1, steps + 1):
                         self._x("mousemove", str(x0 + (x1 - x0) * i // steps), str(y0 + (y1 - y0) * i // steps))
-                        time.sleep(0.03)
+                        self.clock.sleep(0.03)
                 finally:
                     self._x("mouseup", "1")
 
@@ -221,7 +235,7 @@ class Desktop:
             def hold() -> None:
                 self._x("mousedown", str(button))
                 try:
-                    time.sleep(duration)
+                    self.clock.sleep(duration)
                 finally:
                     self._x("mouseup", str(button))
 
@@ -251,19 +265,19 @@ class Desktop:
                 raise ActionError("repeat must be a number") from None
             for _ in range(repeat):
                 self._x("key", combo)
-                time.sleep(0.05)
+                self.clock.sleep(0.05)
         elif name == "hold_key":
             keys = parse_keys(inp.get("text", ""))
             duration = seconds(inp.get("duration"), "hold_key")
             for key in keys:
                 self._x("keydown", key)
             try:
-                time.sleep(duration)
+                self.clock.sleep(duration)
             finally:
                 for key in reversed(keys):
                     self._x("keyup", key)
         elif name == "wait":
-            time.sleep(seconds(inp.get("duration"), "wait"))
+            self.clock.sleep(seconds(inp.get("duration"), "wait"))
         else:
             raise ActionError(f"unknown action {name!r}")
         return "OK"

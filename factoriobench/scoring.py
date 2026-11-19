@@ -10,28 +10,63 @@ from typing import Any
 
 TICKS_PER_SECOND = 60
 
-# One Lua call returns everything the score is made of.
+# One Lua call returns everything the score is made of, for every team's force.
 SNAPSHOT_LUA = """
-local force = game.forces.player
 local surface = game.surfaces[1]
-local researched = {}
-for name, tech in pairs(force.technologies) do
-  if tech.researched then researched[#researched + 1] = name end
+local out = {tick = game.tick, forces = {}, connected = {}, players = {},
+             finished = game.finished or game.finished_but_continuing}
+for _, p in pairs(game.connected_players) do
+  out.connected[#out.connected + 1] = p.name
+  out.players[p.name] = {x = math.floor(p.position.x * 10) / 10, y = math.floor(p.position.y * 10) / 10,
+                         force = p.force.name, alive = p.character ~= nil}
 end
-local connected = {}
-for _, p in pairs(game.connected_players) do connected[#connected + 1] = p.name end
-return {
-  tick = game.tick,
-  items = force.get_item_production_statistics(surface).input_counts,
-  fluids = force.get_fluid_production_statistics(surface).input_counts,
-  built = force.get_entity_build_count_statistics(surface).input_counts,
-  researched = researched,
-  researching = force.current_research and force.current_research.name or nil,
-  rockets_launched = force.rockets_launched,
-  finished = game.finished or game.finished_but_continuing,
-  connected = connected,
-}
+for _, name in pairs({%s}) do
+  local force = game.forces[name]
+  local researched = {}
+  for tech_name, tech in pairs(force.technologies) do
+    if tech.researched then researched[#researched + 1] = tech_name end
+  end
+  local items = force.get_item_production_statistics(surface)
+  local fluids = force.get_fluid_production_statistics(surface)
+  local kills = force.get_kill_count_statistics(surface)
+  out.forces[name] = {
+    items = items.input_counts, items_used = items.output_counts,
+    fluids = fluids.input_counts, fluids_used = fluids.output_counts,
+    built = force.get_entity_build_count_statistics(surface).input_counts,
+    kills = kills.input_counts, losses = kills.output_counts,
+    researched = researched,
+    researching = force.current_research and force.current_research.name or nil,
+    rockets_launched = force.rockets_launched,
+  }
+end
+return out
 """
+
+
+def snapshot_lua(forces: list[str]) -> str:
+    return SNAPSHOT_LUA % ", ".join(f'"{name}"' for name in forces)
+
+
+# Things a player can pick up by hand far faster than their price assumes. At the game's prices
+# a tree is worth more than a minute of mining and a fish more than a mining drill, so a team
+# could win by deforestation. They are worth nothing here; everything else is at the game's price.
+UNPRICED = ("wood", "raw-fish")
+
+
+def production_score(force: dict[str, Any], prices: dict[str, float]) -> dict[str, float]:
+    """The game's PvP production score for one force: the value, at the game's own price list, of
+    everything produced and not used up. Science packs spent on research still count, so that
+    researching is not scored as a loss."""
+    made = {**_counts(force.get("items")), **_counts(force.get("fluids"))}
+    used = {**_counts(force.get("items_used")), **_counts(force.get("fluids_used"))}
+    net = gross = science_spent = 0.0
+    for name in set(made) | set(used):
+        price = 0.0 if name in UNPRICED else float(prices.get(name) or 0.0)
+        gross += price * made.get(name, 0)
+        net += price * (made.get(name, 0) - used.get(name, 0))
+        if name.endswith("science-pack"):
+            science_spent += price * used.get(name, 0)
+    return {"score": round(net + science_spent, 1), "gross": round(gross, 1)}
 
 # The headline ladder, in the order a factory normally reaches them. "Furthest milestone" is
 # the highest rung reached, so a run that stalls still gets a comparable score.

@@ -17,23 +17,28 @@ def render(run_dir: Path) -> str:
     tokens = summary.get("tokens") or {}
     lines = [
         f"{run_dir}",
-        f"  agents      {', '.join(a['model'] for a in summary['agents'])}" + (f" (effort {summary['effort']})" if summary.get("effort") else ""),
-        f"  map         seed {summary['seed']}, {'peaceful' if summary['peaceful'] else 'hostile'}",
+        f"  mode        {summary['mode']}, seed {summary['seed']}, {'peaceful' if summary['peaceful'] else 'hostile'} natives"
+        + (f", {'cease-fire' if summary['cease_fire'] else 'teams at war'}" if summary["mode"] == "versus" else ""),
         f"  stopped     {summary['stop']}" + (" (see log.jsonl for the error)" if summary.get("error") else ""),
-        f"  turns       {summary['turns']}",
-        f"  game time   {summary['game_time']}",
-        f"  cost        ${summary['usd']:.2f}  ({sum(tokens.values()):,} tokens, {sum(a['compactions'] for a in summary['agents'])} compactions)",
-        f"  rocket      {'launched' if summary['rocket_launched'] else 'not launched'}",
-        f"  furthest    rung {summary['furthest_rung']} of {summary['rungs_total']}: {summary['furthest_label'] or 'none'}",
-        f"  research    {summary['technologies_researched']} technologies",
+        f"  game time   {summary['game_time']} of {summary['deadline_minutes']:g} minutes",
+        f"  cost        ${summary['usd']:.2f}  ({sum(tokens.values()):,} tokens)",
         f"  integrity   {'clean' if summary['integrity_clean'] else 'NOT CLEAN' if summary['integrity_clean'] is False else 'unknown'}"
         f" ({summary['commands_denied']} console commands refused, {summary['commands_run']} run)",
-        "",
-        "  ladder",
     ]
-    for rung in milestones["ladder"]:
-        mark = rung["game_time"] or "   -   "
-        lines.append(f"    {rung['rung']:>2}  {mark:>8}  {rung['label']}")
+    if summary.get("winner"):
+        lines.append(f"  winner      {summary['winner']}")
+    for team, result in summary["teams"].items():
+        lines += [
+            "",
+            f"  team {team}: {', '.join(result['models'])}",
+            f"    production score  {result['score']:,.0f}",
+            f"    turns / cost      {result['turns']} / ${result['usd']:.2f}",
+            f"    furthest          rung {result['furthest_rung']}: {result['furthest_label'] or 'none'}; "
+            f"{result['technologies_researched']} technologies",
+        ]
+        for rung in milestones[team]["ladder"]:
+            if rung["game_time"]:
+                lines.append(f"      {rung['rung']:>2}  {rung['game_time']:>8}  {rung['label']}")
     return "\n".join(lines)
 
 

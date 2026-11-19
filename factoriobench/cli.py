@@ -7,7 +7,7 @@ from pathlib import Path
 
 from . import install, report
 from .llm import PRICES
-from .run import RunConfig, run
+from .run import SOLO_FORCE, RunConfig, run
 
 
 def cmd_setup(args: argparse.Namespace) -> None:
@@ -20,9 +20,20 @@ def cmd_setup(args: argparse.Namespace) -> None:
 
 
 def cmd_run(args: argparse.Namespace) -> None:
+    if args.team:
+        teams = {}
+        for spec in args.team:
+            name, _, models = spec.partition("=")
+            if not name or not models:
+                raise SystemExit(f"--team wants NAME=MODEL[,MODEL...], got {spec!r}")
+            teams[name] = models.split(",")
+        if len(teams) != 2:
+            raise SystemExit("a versus run needs exactly two --team options")
+    else:
+        teams = {SOLO_FORCE: args.model.split(",")}
     cfg = RunConfig(
-        out=args.out, models=args.model.split(","), effort=args.effort, seed=args.seed, peaceful=not args.hostile,
-        max_turns=args.max_turns, max_usd=args.max_usd, max_game_hours=args.max_game_hours,
+        out=args.out, teams=teams, effort=args.effort, seed=args.seed, peaceful=not args.hostile,
+        cease_fire=not args.war, minutes=args.minutes, max_turns=args.max_turns, max_usd=args.max_usd,
         compact_at_tokens=args.compact_at_tokens, keep_turns=args.keep_turns,
         render_threads=args.render_threads, gpu=args.gpu, ledger=args.ledger, budget_usd=args.budget,
     )
@@ -52,17 +63,20 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("--force", action="store_true", help="download again even if installed")
     p.set_defaults(func=cmd_setup)
 
-    p = sub.add_parser("run", help="one model plays one freeplay map")
+    p = sub.add_parser("run", help="one agent, one team, or two teams play one freeplay map to a deadline")
     p.add_argument("--out", required=True, help="run directory, for example runs/opus55-seed1001")
     p.add_argument("--model", default="claude-opus-5-5",
                    help="model name, or a comma-separated list for a team (one agent each). Known: " + ", ".join(sorted(PRICES)))
     p.add_argument("--effort", default=None, help="low, medium, high, xhigh or max; default is the model's own default")
     p.add_argument("--seed", type=int, default=1001, help="map generation seed")
     p.add_argument("--hostile", action="store_true", help="enemies attack (default is peaceful mode)")
-    p.add_argument("--max-turns", type=int, default=100)
-    p.add_argument("--max-usd", type=float, default=5.0)
-    p.add_argument("--max-game-hours", type=float, default=40.0)
-    p.add_argument("--compact-at-tokens", type=int, default=150_000, help="summarise older history past this context size")
+    p.add_argument("--team", action="append", default=[], metavar="NAME=MODEL[,MODEL...]",
+                   help="give twice for a versus run, for example --team red=claude-opus-5-5 --team blue=gpt-6.2-astra")
+    p.add_argument("--war", action="store_true", help="versus only: the teams can attack each other (default is a cease-fire)")
+    p.add_argument("--minutes", type=float, default=20.0, help="the deadline, in game minutes")
+    p.add_argument("--max-turns", type=int, default=2000, help="per agent")
+    p.add_argument("--max-usd", type=float, default=25.0, help="for the whole run")
+    p.add_argument("--compact-at-tokens", type=int, default=100_000, help="summarise older history past this context size")
     p.add_argument("--keep-turns", type=int, default=6, help="recent turns kept verbatim through a compaction")
     p.add_argument("--ledger", default="runs/ledger.jsonl", help="spend ledger shared by all runs")
     p.add_argument("--budget", type=float, default=500.0, help="stop when the ledger's total reaches this many dollars")
