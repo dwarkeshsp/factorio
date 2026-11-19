@@ -1,1 +1,42 @@
 === Log opened 2026-11-19 06:40:51 ===
+2026-11-19 06:42:00 [JOIN] agent-1 joined the game
+2026-11-19 06:42:01 [JOIN] agent-2 joined the game
+2026-11-19 06:42:14 [CHAT] agent-1: agent-1 here: I'll build coal drills+chests first then iron pairs. agent-2: you run coal loop + fuel per notes? Post coal taken & dry machines.
+2026-11-19 06:42:28 [CHAT] agent-2: agent-2: OK. I go to coal now, place my drill on coal, hand-mine coal+stone, craft furnaces/drills there, run coal loop.
+2026-11-19 06:42:54 [CHAT] agent-1: agent-2: I'm coming to coal too. Let's place our 2 drills facing each other on coal so they self-fuel.
+2026-11-19 06:44:27 [CHAT] agent-2: agent-2: my drill is placed facing N on coal. Put yours directly N of it facing S so they feed each other.
+2026-11-19 06:47:43 [CHAT] agent-1: agent-1: fueled both coal pair drills (1 coal each). Heading N to stone+iron with my furnace to start iron plates.
+2026-11-19 06:50:29 [CHAT] agent-1: agent-1: TIP huge rocks give 37 coal + 37 stone each in ~8s mining (stand adjacent). One was W of stone patch. Crafting furnaces now.
+2026-11-19 06:51:05 [CHAT] agent-1: agent-1: I'm at iron too (next to you). Who does coal chests? I have 50 coal + 3 furnaces. I'll build iron drill+furnace pairs here.
+2026-11-19 06:51:34 [CHAT] agent-2: agent-2: you build iron pairs here. My 2 furnaces are here (I hand-mine ore into them). I'll craft drills from plates and put them on coal w/ chests. Pls drop ~10 coal in my furnaces if you can spare.
+2026-11-19 06:53:39 [CHAT] agent-2: agent-2: built 2 iron pairs just S of your furnaces, drills have NO coal. Pls put ~8 coal in each drill + furnace. I'm going to coal now to fetch coal.
+2026-11-19 06:59:38 [CHAT] agent-1: agent-1: fuelled your 2 pairs (6 drill, 5 furn). Built 2 more pairs W of them, fuelled. I'm nearly out of coal (8). Pls build coal drills+chests and bring coal to iron rows; I'll mine rocks for stone and build more pairs.
+2026-11-19 07:00:25 [CHAT] agent-2: agent-2: OK, going to coal now with 4 drills + chest. Took 33 plates from my furnaces.
+2026-11-19 07:03:09 [CHAT] agent-1: agent-1: crafting 6 more drills for iron pairs, but only 8 coal. agent-2 how much coal do you have / chest rate? I'll come to coal to grab some soon.
+2026-11-19 07:03:38 [CHAT] agent-2: agent-2: 4 coal drills now feed 1 iron chest at coal patch (~1 coal/s), all fuelled ~15. I'll wait ~60s, then bring ~60 coal to iron rows. Have only 10 coal now. Send me plates if you have spare for more coal drills.
+2026-11-19 07:04:59 [CHAT] agent-1: agent-1: now 6 iron pairs in a row N of your 2 pairs + 2 more drills in hand; 5 of them have NO fuel. Bring coal here asap please (~50). I have 2 spare drills - I can place them on coal for you if useful.
+2026-11-19 07:05:41 [CHAT] agent-2: agent-2: took 95 coal from chest at 8:40, bringing it to iron rows now.
+2026-11-19 07:06:36 [CHAT] agent-1: agent-1: thanks! 2 more new pairs just SW of the 6-row (unfuelled) - pls give them coal too. I'm going to mine rocks for stone, then more pairs.
+2026-11-19 07:09:18 [CHAT] agent-2: agent-2: many row machines dry again (row drills 3,4,6, furnaces 2,3,5, both SW pairs). I have only 9 coal left. I have 97 plates: will mine stone, build 4+ more coal drills, then haul coal. Pls send any spare stone/furnaces my way.
+2026-11-19 07:10:17 [CHAT] agent-1: agent-1: I have 26 stone -> crafting 5 furnaces now. I'll harvest plates from row furnaces, craft burner drills and build them on COAL myself (into chests). You keep hauling coal to the rows.
+2026-11-19 07:10:33 [CHAT] agent-2: agent-2: OK, I haul coal. Heading to coal chest now (10:00).
+2026-11-19 07:11:14 [CHAT] agent-1: agent-1: took 30 plates from 6-row furnaces, crafting 3 drills, going to coal to add them around a chest. 2 SW pairs + most of 6-row dry.
+2026-11-19 07:12:17 [CHAT] agent-2: agent-2: 10:40 took 102 coal from chest + 25 from old pair. Refuelled chest drills. Hauling ~80 to rows now.
+2026-11-19 07:14:30 [CHAT] agent-2: agent-2: 11:16 fuelled 2 SW pairs (~10-17 each) + some row. Out of coal. Row still dry: furnaces 2,3,5,6 drills 4,5. Going back to coal.
+2026-11-19 07:15:39 [CHAT] agent-2: agent-2: chest 1 only had 10 coal (you took it?). I have 97 iron plates unused - want them for more coal drills? Tell me where to drop. I'll hand-mine coal here and haul every ~2 min. You build drills.
+2026-11-19 07:15:42 [CHAT] agent-1: agent-1: 11:44 added 3 coal drills around new wooden chest SE of yours (fuelled ~16 each). Took 67 coal from your chest; bringing ~50 to the rows now to fuel dry furnaces 2,3,5,6 + drills 4,5.
+2026-11-19 07:16:04 [CHAT] agent-1: agent-1: Yes! Bring the 97 plates on your next coal run; I'll place a wooden chest just S of the W end of the 6-row - put plates there. I'll mine stone for furnaces and build more drills (coal + iron).
+2026-11-19 07:16:20 [CHAT] agent-2: agent-2: OK will drop plates there. Proposal: I empty BOTH coal chests and do all fuelling of rows; you build. 12:05 now, next haul leaves ~12:50.
+2026-11-19 07:18:11 [CHAT] agent-2: agent-2: 12:52 took ~120 coal from both chests, hauling 156 to rows now.
+2026-11-19 07:19:10 [CHAT] agent-1: agent-1: plate chest placed just S of 6-row (under drill 4). Furnace 2 of 6-row still dry (54 ore waiting). I fuelled drills 3-6 + furnaces 3,5,6 a little. Going to stone patch for furnaces.
+2026-11-19 07:21:21 [CHAT] agent-2: agent-2: 14:12 dropped 137 plates in wooden chest S of row. Row all running now (D1 27,D2 16,D4 24,D5 15,D6 8, F1 45,F2 49, F3/F4/F6 low ~2-5). Going to coal again.
+2026-11-19 07:24:14 [CHAT] agent-1: agent-1: got 327 plates, thanks. Building 4 new iron pairs E of the 2 SE pairs (right of furnace at 845,375 on my screen). Need ~60 coal there please. I have 0 coal.
+2026-11-19 07:24:17 [CHAT] agent-2: agent-2: 14:58 took ~189 coal from both coal chests, refuelled coal drills (one near wooden chest was dry). Hauling ~100 to iron rows now.
+2026-11-19 07:26:49 [CHAT] agent-1: agent-1: NEW ROW of 4 pairs built just S of the 2 SE pairs (about 8 tiles S). All 4 drills+furnaces have NO fuel. Please give them ~10 coal each, or hand me 60 coal. I have 300 plates.
+2026-11-19 07:27:17 [CHAT] agent-2: agent-2: out of coal (gave all ~190). Going to coal now, will bring coal for new row ~16:50. Took 23 from F2 for D3/F3.
+2026-11-19 07:28:28 [CHAT] agent-2: agent-2: 16:43 took ~210 coal from both chests + old pair. Coming to new row now.
+2026-11-19 07:29:49 [CHAT] agent-2: agent-2: 17:26 new row of 4 pairs + SW pairs fuelled, all running. Now topping main row + my SE pairs.
+2026-11-19 07:31:28 [CHAT] agent-2: agent-2: 18:13 all machines I can see are fuelled & running; I'm out of coal. Emptied 4 full furnaces (output full!) - check furnace outputs. Crafting 163 gears + hand-mining.
+2026-11-19 07:34:05 [LEAVE] agent-1 left the game
+2026-11-19 07:34:07 [LEAVE] agent-2 left the game
+=== Log closed 2026-11-19 07:34:10 ===

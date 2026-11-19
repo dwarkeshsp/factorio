@@ -1,0 +1,113 @@
+{
+  "stop": "deadline",
+  "error": null,
+  "mode": "team",
+  "teams": {
+    "player": {
+      "models": [
+        "claude-opus-5-5",
+        "claude-opus-5-5"
+      ],
+      "players": [
+        "agent-1",
+        "agent-2"
+      ],
+      "score": 13807.4,
+      "gross_production": 26923.3,
+      "usd": 10.3681,
+      "turns": 338,
+      "furthest_rung": 9,
+      "furthest_label": "First technology researched",
+      "technologies_researched": 1,
+      "rocket_launched": false,
+      "production": {
+        "items": {
+          "wooden-chest": 2,
+          "iron-chest": 1,
+          "burner-mining-drill": 21,
+          "stone-furnace": 34,
+          "coal": 1503,
+          "stone": 44,
+          "iron-ore": 1958,
+          "copper-ore": 4,
+          "iron-plate": 1643,
+          "iron-gear-wheel": 378
+        },
+        "items_used": {
+          "stone-furnace": 21,
+          "wood": 4,
+          "coal": 617,
+          "stone": 170,
+          "iron-ore": 1654,
+          "iron-plate": 827,
+          "iron-gear-wheel": 63
+        },
+        "fluids": {},
+        "built": {
+          "wooden-chest": 2,
+          "iron-chest": 1,
+          "burner-mining-drill": 23,
+          "stone-furnace": 18
+        }
+      },
+      "kills": {},
+      "losses": {}
+    }
+  },
+  "winner": null,
+  "agents": [
+    {
+      "name": "agent-1",
+      "team": "player",
+      "model": "claude-opus-5-5",
+      "stop": null,
+      "turns": 166,
+      "usd": 4.8515,
+      "tokens": {
+        "input": 1403,
+        "output": 65502,
+        "cache_write": 337351,
+        "cache_read": 9245250
+      },
+      "compactions": 3,
+      "screenshots": 207
+    },
+    {
+      "name": "agent-2",
+      "team": "player",
+      "model": "claude-opus-5-5",
+      "stop": null,
+      "turns": 172,
+      "usd": 5.5166,
+      "tokens": {
+        "input": 1770,
+        "output": 75395,
+        "cache_write": 393204,
+        "cache_read": 10177822
+      },
+      "compactions": 4,
+      "screenshots": 275
+    }
+  ],
+  "effort": "medium",
+  "seed": 1001,
+  "peaceful": true,
+  "cease_fire": true,
+  "org": "flat",
+  "handbook": "runs/w1/gen3-team2/handbook.md",
+  "deadline_minutes": 20.0,
+  "pauses": 323,
+  "game_ticks": 72011,
+  "game_time": "0:20:00",
+  "usd": 10.368,
+  "tokens": {
+    "input": 3173,
+    "output": 140897,
+    "cache_write": 730555,
+    "cache_read": 19423072
+  },
+  "integrity_clean": true,
+  "commands_denied": 0,
+  "commands_run": 0,
+  "wall_seconds": 3196
+}
