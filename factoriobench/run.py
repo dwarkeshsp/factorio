@@ -29,8 +29,8 @@ from .server import Server
 # same for every model.
 BEFORE_ACTIONS = 0.15  # the client needs a few ticks to see the unpause; input sent sooner is lost
 BETWEEN_ACTIONS = 0.1  # lets one input register before the next
-AFTER_ACTIONS = 0.3    # lets the last input take effect before the game is paused
-RENDER_WAIT = 0.8      # paused, so free; lets slow software-rendered clients draw the frozen state
+AFTER_ACTIONS = 0.4    # lets the last input take effect and be drawn before the capture and the pause
+RENDER_WAIT = 0.8      # before the opening capture only, which is taken paused
 SNAPSHOT_EVERY = 25    # rounds between full production snapshots in the log
 
 
@@ -50,8 +50,7 @@ class RunConfig:
     render_threads: int | None = None
     gpu: bool = False
     edition: str = "full"
-    move_settle: float = 0.05      # seconds between moving the pointer and clicking
-    capture_running: bool = False  # take the end-of-turn screenshot just before pausing instead of after
+    move_settle: float = 0.15  # seconds between moving the pointer and clicking
     ledger: str = "runs/ledger.jsonl"
     budget_usd: float = 500.0
 
@@ -328,10 +327,9 @@ class Run:
                     done = self.pool.map(lambda seat: seat.execute(thoughts[seat.name][0].calls, self.turn), acting)
                     results = dict(zip([s.name for s in acting], done))
                     time.sleep(AFTER_ACTIONS)
-                    if cfg.capture_running:
-                        # While paused the client does not draw the outline of a building held in the
-                        # hand, so a model placing something could not see where it would go.
-                        running_shots = {seat.name: self.capture(seat) for seat in self.seats}
+                    # Captured before the pause: while paused the client does not draw the outline of a
+                    # building held in the hand, so a model could not see where it would be placed.
+                    running_shots = {seat.name: self.capture(seat) for seat in self.seats}
                 finally:
                     self.game_ticks = self.server.pause() - self.start_tick
             act_s = time.time() - t1

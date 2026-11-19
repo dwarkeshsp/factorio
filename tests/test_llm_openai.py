@@ -43,6 +43,11 @@ def test_functions_fill_the_gaps_in_the_computer_tool():
     assert (hold.name, hold.input) == ("mouse_hold", {"button": "right", "duration": 5, "coordinate": [3, 4]})
     assert function_call("f", "zoom", {"x0": 1, "y0": 2, "x1": 3, "y1": 4}).input == {"region": [1, 2, 3, 4]}
     assert function_call("f", "wait", {"seconds": 7}).input == {"duration": 7}
+    click = function_call("f", "click", {"x": 3, "y": 4, "button": "right", "modifiers": ["ctrl"]})
+    assert (click.name, click.input) == ("right_click", {"coordinate": [3, 4], "text": "ctrl"})
+    assert function_call("f", "click", {"x": 3, "y": 4, "button": "left", "modifiers": []}).input == {"coordinate": [3, 4]}
+    press = function_call("f", "press_keys", {"keys": ["ctrl", "c"]})
+    assert (press.name, press.input) == ("key", {"text": "ctrl+c"})
 
 
 def test_cost_separates_cached_written_and_plain_input():

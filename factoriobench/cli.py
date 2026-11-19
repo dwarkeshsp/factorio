@@ -27,7 +27,7 @@ def cmd_run(args: argparse.Namespace) -> None:
         max_turns=args.max_turns, max_usd=args.max_usd, max_game_hours=args.max_game_hours,
         compact_at_tokens=args.compact_at_tokens, keep_turns=args.keep_turns,
         render_threads=args.render_threads, gpu=args.gpu, ledger=args.ledger, budget_usd=args.budget,
-        move_settle=args.move_settle, capture_running=args.capture_running,
+        move_settle=args.move_settle,
     )
     summary = run(cfg)
     print(json.dumps(summary, indent=2))
@@ -76,9 +76,7 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("--keep-turns", type=int, default=6, help="recent turns kept verbatim through a compaction")
     p.add_argument("--ledger", default="runs/ledger.jsonl", help="spend ledger shared by all runs")
     p.add_argument("--budget", type=float, default=500.0, help="stop when the ledger's total reaches this many dollars")
-    p.add_argument("--move-settle", type=float, default=0.05, help="seconds between moving the pointer and clicking")
-    p.add_argument("--capture-running", action="store_true",
-                   help="take the end-of-turn screenshot just before pausing, so held buildings show their outline")
+    p.add_argument("--move-settle", type=float, default=0.15, help="seconds between moving the pointer and clicking")
     p.add_argument("--render-threads", type=int, default=None, help="software-rendering threads for the game client")
     p.add_argument("--gpu", action="store_true", help="use the machine's GPU instead of software rendering")
     p.set_defaults(func=cmd_run)

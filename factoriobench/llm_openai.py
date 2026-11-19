@@ -31,7 +31,7 @@ PRICES: dict[str, dict[str, float]] = {
 
 TOOL_NOTES = """
 
-Tool notes: the computer tool's own wait action lasts 2 seconds; call the wait function for any other duration. The computer tool cannot hold a key or a mouse button down, or enlarge part of the screen: use the hold_key, mouse_hold and zoom functions for those. Computer actions and function calls in one response run in the order you wrote them. In a scroll action, a scroll_y or scroll_x of 100 is one notch of the mouse wheel."""
+Tool notes: the computer tool's own wait action lasts 2 seconds; call the wait function for any other duration. The computer tool cannot hold a key or a mouse button down, or enlarge part of the screen: use the hold_key, mouse_hold and zoom functions for those. One response can hold either computer-tool actions or function calls, not both. So that a walk or another hold can share a response with clicks and key presses, click and press_keys are also offered as functions; several function calls in one response run in the order you wrote them. In a scroll action, a scroll_y or scroll_x of 100 is one notch of the mouse wheel."""
 
 
 def _function(name: str, description: str, properties: dict, required: list[str]) -> dict:
@@ -60,6 +60,17 @@ TOOLS = [
     _function("wait", "Let the game run for a duration without doing anything.",
               {"seconds": {"type": "number", "description": "Seconds to wait, up to 300."}},
               ["seconds"]),
+    _function("click", "Click a mouse button at (x, y). The same as the computer tool's click, offered as a "
+              "function so it can share a response with hold_key, mouse_hold and wait.",
+              {"x": {"type": "integer"}, "y": {"type": "integer"},
+               "button": {"type": "string", "enum": ["left", "right", "middle"]},
+               "modifiers": {"type": "array", "items": {"type": "string"},
+                             "description": 'Keys held during the click, for example ["ctrl"]. Empty for none.'}},
+              ["x", "y", "button", "modifiers"]),
+    _function("press_keys", "Press and release a key or a chord of keys once. The same as the computer tool's "
+              "keypress, offered as a function so it can share a response with hold_key, mouse_hold and wait.",
+              {"keys": {"type": "array", "items": {"type": "string"}, "description": 'For example ["e"] or ["ctrl", "c"].'}},
+              ["keys"]),
 ]
 
 MOUSE_BUTTONS = {"left": "left_click", "right": "right_click", "wheel": "middle_click", "middle": "middle_click"}
@@ -149,6 +160,14 @@ def function_call(call_id: str, name: str, args: dict) -> Call:
         return Call(ident, "zoom", {"region": [args.get("x0"), args.get("y0"), args.get("x1"), args.get("y1")]}, "function")
     if name == "wait":
         return Call(ident, "wait", {"duration": args.get("seconds")}, "function")
+    if name == "click":
+        action = MOUSE_BUTTONS.get(args.get("button", "left"))
+        if action is None:
+            return Call(ident, "unsupported", {"what": f"mouse button {args.get('button')!r}"}, "function")
+        held = {"text": "+".join(args["modifiers"])} if args.get("modifiers") else {}
+        return Call(ident, action, {"coordinate": [args.get("x"), args.get("y")], **held}, "function")
+    if name == "press_keys":
+        return Call(ident, "key", {"text": "+".join(args.get("keys") or [])}, "function")
     return Call(ident, "unsupported", {"what": f"function {name!r}"}, "function")
 
 

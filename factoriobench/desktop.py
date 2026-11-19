@@ -109,7 +109,7 @@ def encode_jpeg(image: Image.Image) -> bytes:
 
 
 class Desktop:
-    def __init__(self, display: str, size: tuple[int, int], move_settle: float = 0.05):
+    def __init__(self, display: str, size: tuple[int, int], move_settle: float = 0.15):
         self.display = display
         self.size = size
         # Seconds between moving the pointer and clicking. The game learns the pointer's position a few
