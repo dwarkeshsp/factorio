@@ -1,0 +1,262 @@
+{
+  "stop": "deadline",
+  "error": null,
+  "mode": "versus",
+  "teams": {
+    "red": {
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "players": [
+        "red-1"
+      ],
+      "score": 3276.6,
+      "gross_production": 5939.2,
+      "usd": 5.0758,
+      "turns": 173,
+      "furthest_rung": 9,
+      "furthest_label": "First technology researched",
+      "technologies_researched": 1,
+      "rocket_launched": false,
+      "production": {
+        "items": {
+          "pipe": 8,
+          "boiler": 2,
+          "burner-mining-drill": 7,
+          "stone-furnace": 12,
+          "coal": 371,
+          "stone": 42,
+          "iron-ore": 443,
+          "iron-plate": 395,
+          "iron-gear-wheel": 21
+        },
+        "items_used": {
+          "pipe": 8,
+          "stone-furnace": 9,
+          "wood": 1,
+          "coal": 148,
+          "stone": 60,
+          "iron-ore": 399,
+          "iron-plate": 71,
+          "iron-gear-wheel": 21
+        },
+        "fluids": {},
+        "built": {
+          "burner-mining-drill": 8,
+          "stone-furnace": 4
+        }
+      },
+      "kills": {},
+      "losses": {}
+    },
+    "blue": {
+      "models": [
+        "gpt-6.2-astra"
+      ],
+      "players": [
+        "blue-1"
+      ],
+      "score": 26135.0,
+      "gross_production": 57113.8,
+      "usd": 27.3348,
+      "turns": 589,
+      "furthest_rung": 9,
+      "furthest_label": "First technology researched",
+      "technologies_researched": 2,
+      "rocket_launched": false,
+      "production": {
+        "items": {
+          "iron-chest": 5,
+          "pipe": 190,
+          "steam-engine": 38,
+          "burner-mining-drill": 59,
+          "stone-furnace": 86,
+          "coal": 4045,
+          "stone": 290,
+          "iron-ore": 2325,
+          "copper-ore": 307,
+          "iron-plate": 2273,
+          "copper-plate": 302,
+          "iron-gear-wheel": 481
+        },
+        "items_used": {
+          "pipe": 190,
+          "stone-furnace": 59,
+          "coal": 1268,
+          "stone": 430,
+          "iron-ore": 2286,
+          "copper-ore": 307,
+          "iron-plate": 1749,
+          "iron-gear-wheel": 481
+        },
+        "fluids": {},
+        "built": {
+          "iron-chest": 2,
+          "burner-mining-drill": 61,
+          "stone-furnace": 23
+        }
+      },
+      "kills": {},
+      "losses": {}
+    },
+    "green": {
+      "models": [
+        "claude-fable-5-2"
+      ],
+      "players": [
+        "green-1"
+      ],
+      "score": 4294.4,
+      "gross_production": 9054.3,
+      "usd": 7.8666,
+      "turns": 119,
+      "furthest_rung": 9,
+      "furthest_label": "First technology researched",
+      "technologies_researched": 1,
+      "rocket_launched": false,
+      "production": {
+        "items": {
+          "iron-chest": 1,
+          "burner-mining-drill": 6,
+          "stone-furnace": 11,
+          "coal": 376,
+          "stone": 15,
+          "iron-ore": 623,
+          "iron-plate": 564,
+          "iron-gear-wheel": 167
+        },
+        "items_used": {
+          "stone-furnace": 6,
+          "wood": 19,
+          "coal": 178,
+          "stone": 55,
+          "iron-ore": 568,
+          "iron-plate": 360,
+          "iron-gear-wheel": 18
+        },
+        "fluids": {},
+        "built": {
+          "iron-chest": 1,
+          "burner-mining-drill": 8,
+          "stone-furnace": 6
+        }
+      },
+      "kills": {},
+      "losses": {}
+    },
+    "yellow": {
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "players": [
+        "yellow-1"
+      ],
+      "score": 543.0,
+      "gross_production": 543.0,
+      "usd": 0.2099,
+      "turns": 10,
+      "furthest_rung": 0,
+      "furthest_label": "",
+      "technologies_researched": 0,
+      "rocket_launched": false,
+      "production": {
+        "items": {
+          "coal": 181
+        },
+        "items_used": {},
+        "fluids": {},
+        "built": {}
+      },
+      "kills": {},
+      "losses": {}
+    }
+  },
+  "winner": "blue",
+  "agents": [
+    {
+      "name": "red-1",
+      "team": "red",
+      "model": "claude-opus-5-5",
+      "stop": null,
+      "turns": 173,
+      "usd": 5.0758,
+      "tokens": {
+        "input": 1417,
+        "output": 68821,
+        "cache_write": 363615,
+        "cache_read": 9378147
+      },
+      "compactions": 3,
+      "screenshots": 201
+    },
+    {
+      "name": "blue-1",
+      "team": "blue",
+      "model": "gpt-6.2-astra",
+      "stop": null,
+      "turns": 589,
+      "usd": 27.3348,
+      "tokens": {
+        "input": 2295,
+        "output": 32769,
+        "cache_write": 1416782,
+        "cache_read": 29594737
+      },
+      "compactions": 7,
+      "screenshots": 590
+    },
+    {
+      "name": "green-1",
+      "team": "green",
+      "model": "claude-fable-5-2",
+      "stop": null,
+      "turns": 119,
+      "usd": 7.8666,
+      "tokens": {
+        "input": 1309,
+        "output": 75796,
+        "cache_write": 348634,
+        "cache_read": 6689572
+      },
+      "compactions": 3,
+      "screenshots": 148
+    },
+    {
+      "name": "yellow-1",
+      "team": "yellow",
+      "model": "claude-sonnet-5-5",
+      "stop": null,
+      "turns": 10,
+      "usd": 0.2099,
+      "tokens": {
+        "input": 30,
+        "output": 2467,
+        "cache_write": 69723,
+        "cache_read": 108762
+      },
+      "compactions": 0,
+      "screenshots": 11
+    }
+  ],
+  "effort": "medium",
+  "seed": 1001,
+  "peaceful": true,
+  "cease_fire": true,
+  "org": "flat",
+  "handbook": null,
+  "deadline_minutes": 20.0,
+  "pauses": 722,
+  "game_ticks": 72011,
+  "game_time": "0:20:00",
+  "usd": 40.4871,
+  "tokens": {
+    "input": 5051,
+    "output": 179853,
+    "cache_write": 2198754,
+    "cache_read": 45771218
+  },
+  "integrity_clean": true,
+  "commands_denied": 0,
+  "commands_run": 0,
+  "wall_seconds": 6900
+}

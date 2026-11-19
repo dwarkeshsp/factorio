@@ -1,0 +1,91 @@
+{
+  "stop": "deadline",
+  "error": null,
+  "mode": "solo",
+  "teams": {
+    "player": {
+      "models": [
+        "claude-haiku-5-5"
+      ],
+      "players": [
+        "agent-1"
+      ],
+      "score": 931.6,
+      "gross_production": 1928.6,
+      "usd": 0.2427,
+      "turns": 194,
+      "furthest_rung": 9,
+      "furthest_label": "First technology researched",
+      "technologies_researched": 1,
+      "rocket_launched": false,
+      "production": {
+        "items": {
+          "iron-chest": 4,
+          "burner-mining-drill": 3,
+          "stone-furnace": 8,
+          "coal": 113,
+          "stone": 9,
+          "iron-ore": 108,
+          "iron-plate": 103,
+          "iron-gear-wheel": 9
+        },
+        "items_used": {
+          "stone-furnace": 3,
+          "coal": 32,
+          "stone": 40,
+          "iron-ore": 103,
+          "iron-plate": 59,
+          "iron-gear-wheel": 9
+        },
+        "fluids": {},
+        "built": {
+          "iron-chest": 4,
+          "burner-mining-drill": 3,
+          "stone-furnace": 6
+        }
+      },
+      "kills": {},
+      "losses": {}
+    }
+  },
+  "winner": null,
+  "agents": [
+    {
+      "name": "agent-1",
+      "team": "player",
+      "model": "claude-haiku-5-5",
+      "stop": null,
+      "turns": 194,
+      "usd": 0.2427,
+      "tokens": {
+        "input": 1814,
+        "output": 130331,
+        "cache_write": 445183,
+        "cache_read": 10979974
+      },
+      "compactions": 4,
+      "screenshots": 220
+    }
+  ],
+  "effort": "medium",
+  "seed": 1001,
+  "peaceful": true,
+  "cease_fire": true,
+  "org": "flat",
+  "handbook": null,
+  "deadline_minutes": 20.0,
+  "pauses": 194,
+  "game_ticks": 72011,
+  "game_time": "0:20:00",
+  "usd": 0.2427,
+  "tokens": {
+    "input": 1814,
+    "output": 130331,
+    "cache_write": 445183,
+    "cache_read": 10979974
+  },
+  "integrity_clean": true,
+  "commands_denied": 0,
+  "commands_run": 0,
+  "wall_seconds": 2284
+}

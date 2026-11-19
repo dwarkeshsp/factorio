@@ -9,6 +9,3 @@ team4-opus55-r2 --model claude-opus-5-5,claude-opus-5-5,claude-opus-5-5,claude-o
 ffa4-a          --team red=claude-opus-5-5 --team blue=gpt-6.2-astra --team green=claude-fable-5-2 --team yellow=claude-sonnet-5-5 --effort medium --minutes 20 --max-usd 90 --budget 265
 # The two strongest solo models, two against two
 vs2-fable52-astra62 --team red=claude-fable-5-2,claude-fable-5-2 --team blue=gpt-6.2-astra,gpt-6.2-astra --effort medium --minutes 20 --max-usd 90 --budget 265
-# The same team question with a cheaper model
-team2-sonnet55  --model claude-sonnet-5-5,claude-sonnet-5-5 --effort medium --minutes 20 --max-usd 30 --budget 265
-team4-sonnet55  --model claude-sonnet-5-5,claude-sonnet-5-5,claude-sonnet-5-5,claude-sonnet-5-5 --effort medium --minutes 20 --max-usd 50 --budget 265
