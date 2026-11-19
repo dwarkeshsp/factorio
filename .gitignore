@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.egg-info/
+.pytest_cache/
+.env
+.env.*
+!.env.example
+
+# A run directory holds screenshots, the conversation, the server's save and logs.
+# Git keeps only the small files that describe a run and its outcome.
+runs/**
+!runs/**/
+!runs/**/config.json
+!runs/**/summary.json
+!runs/**/milestones.json
+!runs/README.md
