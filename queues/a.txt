@@ -3,5 +3,7 @@ solo-opus55     --model claude-opus-5-5   --effort medium --minutes 20 --max-usd
 solo-astra62    --model gpt-6.2-astra     --effort medium --minutes 20 --max-usd 40 --budget 440
 solo-fable52    --model claude-fable-5-2  --effort medium --minutes 20 --max-usd 40 --budget 440
 solo-sonnet55   --model claude-sonnet-5-5 --effort medium --minutes 20 --max-usd 20 --budget 440
+solo-sol62      --model gpt-6.2-sol       --effort medium --minutes 20 --max-usd 20 --budget 440
+solo-haiku55    --model claude-haiku-5-5  --effort medium --minutes 20 --max-usd 10 --budget 440
 # Four firms, one map: every model on its own team, sharing the same ore
 ffa4-a          --team red=claude-opus-5-5 --team blue=gpt-6.2-astra --team green=claude-fable-5-2 --team yellow=claude-sonnet-5-5 --effort medium --minutes 20 --max-usd 90 --budget 440
