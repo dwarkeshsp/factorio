@@ -17,11 +17,13 @@ def read_run(run_dir: Path) -> list[dict[str, Any]]:
     snapshots: dict[str, dict[int, dict]] = {}
     last_round: dict[str, Any] = {}
     stop = None
+    start_tick = 0
     for line in (run_dir / "log.jsonl").read_text().splitlines():
         record = json.loads(line)
         event = record.get("event")
         if event == "start":
             agents = record.get("agents", [])
+            start_tick = record.get("start_tick", 0)
         elif event == "round":
             last_round = record
             by_force = record.get("new_by_force") or {"player": record.get("new") or []}
@@ -41,7 +43,7 @@ def read_run(run_dir: Path) -> list[dict[str, Any]]:
         "agents": [agent["model"] for agent in agents if agent.get("force", "player") == force],
         "firsts": firsts.get(force, {}), "snapshots": snapshots.get(force, {}),
         "turns": last_round.get("turn", 0), "ticks": last_round.get("game_ticks", 0),
-        "usd": last_round.get("usd", 0.0), "stop": stop,
+        "usd": last_round.get("usd", 0.0), "stop": stop, "start_tick": start_tick,
     } for force in forces]
 
 
@@ -84,4 +86,28 @@ def compare(run_dirs: list[Path]) -> str:
                 snap = run["snapshots"].get(turn)
                 cells.append(" / ".join(str(_count(snap.get("items"), item)) for item in KEY_ITEMS) if snap else "-")
             lines.append(f"| {turn} | " + " | ".join(cells) + " |")
+    minutes = [m for m in (5, 10, 15, 20, 25, 30, 40, 50) if any(at_game_minute(run, m) for run in runs)]
+    if minutes:
+        lines += ["", "Items produced by game time (same items; from the last snapshot at or before that time, "
+                  "taken every 25 turns, so slightly behind):", "",
+                  "| Game minutes | " + " | ".join(run["name"] for run in runs) + " |", "|---:|" + "---|" * len(runs)]
+        for minute in minutes:
+            cells = []
+            for run in runs:
+                snap = at_game_minute(run, minute)
+                cells.append(" / ".join(str(_count(snap.get("items"), item)) for item in KEY_ITEMS) if snap else "-")
+            lines.append(f"| {minute} | " + " | ".join(cells) + " |")
     return "\n".join(lines)
+
+
+def at_game_minute(run: dict[str, Any], minute: int) -> dict | None:
+    """The last snapshot taken at or before a game time, if the run got that far."""
+    limit = minute * 60 * 60
+    if run["ticks"] < limit:
+        return None
+    best = None
+    for turn in sorted(run["snapshots"]):
+        snapshot = run["snapshots"][turn]
+        if snapshot["tick"] - run["start_tick"] <= limit:
+            best = snapshot
+    return best
