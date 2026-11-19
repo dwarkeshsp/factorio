@@ -1,0 +1,112 @@
+{
+  "stop": "max_turns",
+  "error": null,
+  "agents": [
+    {
+      "name": "agent-1",
+      "model": "claude-opus-5-5",
+      "force": "player",
+      "stop": null,
+      "usd": 15.8347,
+      "tokens": {
+        "input": 1362,
+        "output": 160143,
+        "cache_write": 909728,
+        "cache_read": 40388755
+      },
+      "compactions": 6,
+      "screenshots": 566
+    },
+    {
+      "name": "agent-2",
+      "model": "claude-opus-5-5",
+      "force": "player",
+      "stop": null,
+      "usd": 16.1127,
+      "tokens": {
+        "input": 1362,
+        "output": 176057,
+        "cache_write": 926294,
+        "cache_read": 39773298
+      },
+      "compactions": 6,
+      "screenshots": 577
+    }
+  ],
+  "models": [
+    "claude-opus-5-5",
+    "claude-opus-5-5"
+  ],
+  "rivals": [],
+  "effort": null,
+  "seed": 1002,
+  "peaceful": true,
+  "turns": 500,
+  "game_ticks": 186903,
+  "game_time": "0:51:55",
+  "usd": 31.9474,
+  "tokens": {
+    "input": 2724,
+    "output": 336200,
+    "cache_write": 1836022,
+    "cache_read": 80162053
+  },
+  "rocket_launched": false,
+  "furthest_rung": 11,
+  "furthest_label": "Logistic science pack",
+  "technologies_researched": 8,
+  "production": {
+    "items": {
+      "wooden-chest": 2,
+      "iron-chest": 14,
+      "transport-belt": 136,
+      "burner-inserter": 1,
+      "inserter": 34,
+      "small-electric-pole": 52,
+      "pipe": 43,
+      "boiler": 3,
+      "steam-engine": 5,
+      "burner-mining-drill": 34,
+      "electric-mining-drill": 11,
+      "offshore-pump": 2,
+      "stone-furnace": 70,
+      "assembling-machine-1": 11,
+      "lab": 2,
+      "coal": 4339,
+      "stone": 231,
+      "iron-ore": 4214,
+      "copper-ore": 2501,
+      "iron-plate": 3736,
+      "copper-plate": 2283,
+      "iron-gear-wheel": 633,
+      "copper-cable": 532,
+      "electronic-circuit": 160,
+      "automation-science-pack": 208,
+      "logistic-science-pack": 23,
+      "science": 203
+    },
+    "fluids": {
+      "water": 2142.9370672106743,
+      "steam": 18429.60920637846
+    },
+    "built": {
+      "iron-chest": 14,
+      "burner-inserter": 1,
+      "inserter": 6,
+      "small-electric-pole": 35,
+      "boiler": 1,
+      "steam-engine": 1,
+      "burner-mining-drill": 33,
+      "electric-mining-drill": 9,
+      "offshore-pump": 1,
+      "stone-furnace": 31,
+      "assembling-machine-1": 7,
+      "lab": 2
+    }
+  },
+  "rungs_total": 24,
+  "integrity_clean": true,
+  "commands_denied": 0,
+  "commands_run": 0,
+  "wall_seconds": 8313
+}

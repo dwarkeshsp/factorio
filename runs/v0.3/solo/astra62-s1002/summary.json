@@ -1,0 +1,100 @@
+{
+  "stop": "max_turns",
+  "error": null,
+  "agents": [
+    {
+      "name": "agent-1",
+      "model": "gpt-6.2-astra",
+      "force": "player",
+      "stop": null,
+      "usd": 24.8716,
+      "tokens": {
+        "input": 8553,
+        "output": 52402,
+        "cache_write": 621906,
+        "cache_read": 41220141
+      },
+      "compactions": 3,
+      "screenshots": 502
+    }
+  ],
+  "models": [
+    "gpt-6.2-astra"
+  ],
+  "rivals": [],
+  "effort": null,
+  "seed": 1002,
+  "peaceful": true,
+  "turns": 500,
+  "game_ticks": 102668,
+  "game_time": "0:28:31",
+  "usd": 24.8716,
+  "tokens": {
+    "input": 8553,
+    "output": 52402,
+    "cache_write": 621906,
+    "cache_read": 41220141
+  },
+  "rocket_launched": false,
+  "furthest_rung": 12,
+  "furthest_label": "Steel plate",
+  "technologies_researched": 8,
+  "production": {
+    "items": {
+      "wooden-chest": 4,
+      "transport-belt": 458,
+      "underground-belt": 2,
+      "inserter": 61,
+      "long-handed-inserter": 1,
+      "small-electric-pole": 64,
+      "pipe": 36,
+      "boiler": 2,
+      "steam-engine": 3,
+      "burner-mining-drill": 8,
+      "electric-mining-drill": 13,
+      "offshore-pump": 1,
+      "stone-furnace": 31,
+      "assembling-machine-1": 10,
+      "lab": 2,
+      "coal": 1451,
+      "stone": 99,
+      "iron-ore": 2864,
+      "copper-ore": 927,
+      "iron-plate": 2674,
+      "copper-plate": 757,
+      "steel-plate": 6,
+      "iron-gear-wheel": 695,
+      "copper-cable": 650,
+      "electronic-circuit": 156,
+      "automation-science-pack": 190,
+      "logistic-science-pack": 10,
+      "science": 180
+    },
+    "fluids": {
+      "water": 3599.281150519848,
+      "steam": 27993.58972543478
+    },
+    "built": {
+      "wooden-chest": 4,
+      "transport-belt": 362,
+      "underground-belt": 2,
+      "inserter": 47,
+      "long-handed-inserter": 1,
+      "small-electric-pole": 63,
+      "pipe": 5,
+      "boiler": 2,
+      "steam-engine": 3,
+      "burner-mining-drill": 9,
+      "electric-mining-drill": 13,
+      "offshore-pump": 1,
+      "stone-furnace": 26,
+      "assembling-machine-1": 9,
+      "lab": 3
+    }
+  },
+  "rungs_total": 24,
+  "integrity_clean": true,
+  "commands_denied": 0,
+  "commands_run": 0,
+  "wall_seconds": 7389
+}

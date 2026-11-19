@@ -1,0 +1,222 @@
+{
+  "rocket_launched": false,
+  "furthest_rung": 9,
+  "furthest_label": "First technology researched",
+  "rungs_total": 24,
+  "ladder": [
+    {
+      "rung": 1,
+      "key": "item:iron-plate",
+      "label": "Iron plate",
+      "tick": 10305,
+      "game_time": "0:02:51"
+    },
+    {
+      "rung": 2,
+      "key": "item:copper-plate",
+      "label": "Copper plate",
+      "tick": 50332,
+      "game_time": "0:13:58"
+    },
+    {
+      "rung": 3,
+      "key": "item:iron-gear-wheel",
+      "label": "Iron gear wheel",
+      "tick": 14867,
+      "game_time": "0:04:07"
+    },
+    {
+      "rung": 4,
+      "key": "built:burner-mining-drill",
+      "label": "Mining drill placed",
+      "tick": 1917,
+      "game_time": "0:00:31"
+    },
+    {
+      "rung": 5,
+      "key": "item:electronic-circuit",
+      "label": "Electronic circuit",
+      "tick": 68752,
+      "game_time": "0:19:05"
+    },
+    {
+      "rung": 6,
+      "key": "built:steam-engine",
+      "label": "Steam engine placed",
+      "tick": 77421,
+      "game_time": "0:21:30"
+    },
+    {
+      "rung": 7,
+      "key": "built:lab",
+      "label": "Lab placed",
+      "tick": 78426,
+      "game_time": "0:21:47"
+    },
+    {
+      "rung": 8,
+      "key": "item:automation-science-pack",
+      "label": "Automation science pack",
+      "tick": 78426,
+      "game_time": "0:21:47"
+    },
+    {
+      "rung": 9,
+      "key": "tech:any",
+      "label": "First technology researched",
+      "tick": 16953,
+      "game_time": "0:04:42"
+    },
+    {
+      "rung": 10,
+      "key": "built:assembling-machine-1",
+      "label": "Assembling machine placed",
+      "tick": null,
+      "game_time": null
+    },
+    {
+      "rung": 11,
+      "key": "item:logistic-science-pack",
+      "label": "Logistic science pack",
+      "tick": null,
+      "game_time": null
+    },
+    {
+      "rung": 12,
+      "key": "item:steel-plate",
+      "label": "Steel plate",
+      "tick": null,
+      "game_time": null
+    },
+    {
+      "rung": 13,
+      "key": "fluid:petroleum-gas",
+      "label": "Petroleum gas",
+      "tick": null,
+      "game_time": null
+    },
+    {
+      "rung": 14,
+      "key": "item:plastic-bar",
+      "label": "Plastic bar",
+      "tick": null,
+      "game_time": null
+    },
+    {
+      "rung": 15,
+      "key": "item:advanced-circuit",
+      "label": "Advanced circuit",
+      "tick": null,
+      "game_time": null
+    },
+    {
+      "rung": 16,
+      "key": "item:chemical-science-pack",
+      "label": "Chemical science pack",
+      "tick": null,
+      "game_time": null
+    },
+    {
+      "rung": 17,
+      "key": "item:processing-unit",
+      "label": "Processing unit",
+      "tick": null,
+      "game_time": null
+    },
+    {
+      "rung": 18,
+      "key": "item:production-science-pack",
+      "label": "Production science pack",
+      "tick": null,
+      "game_time": null
+    },
+    {
+      "rung": 19,
+      "key": "item:utility-science-pack",
+      "label": "Utility science pack",
+      "tick": null,
+      "game_time": null
+    },
+    {
+      "rung": 20,
+      "key": "item:low-density-structure",
+      "label": "Low density structure",
+      "tick": null,
+      "game_time": null
+    },
+    {
+      "rung": 21,
+      "key": "item:rocket-fuel",
+      "label": "Rocket fuel",
+      "tick": null,
+      "game_time": null
+    },
+    {
+      "rung": 22,
+      "key": "built:rocket-silo",
+      "label": "Rocket silo placed",
+      "tick": null,
+      "game_time": null
+    },
+    {
+      "rung": 23,
+      "key": "item:rocket-part",
+      "label": "Rocket part",
+      "tick": null,
+      "game_time": null
+    },
+    {
+      "rung": 24,
+      "key": "rocket",
+      "label": "Rocket launched",
+      "tick": null,
+      "game_time": null
+    }
+  ],
+  "technologies_researched": 5,
+  "firsts": {
+    "built:burner-mining-drill": 1917,
+    "built:stone-furnace": 2061,
+    "item:iron-ore": 2746,
+    "item:coal": 5747,
+    "item:stone-furnace": 5747,
+    "item:iron-plate": 10305,
+    "item:iron-gear-wheel": 14867,
+    "item:burner-mining-drill": 16336,
+    "tech:any": 16953,
+    "tech:steam-power": 16953,
+    "item:boiler": 23451,
+    "item:pipe": 23451,
+    "item:iron-chest": 24661,
+    "built:iron-chest": 25429,
+    "item:stone": 27439,
+    "item:copper-ore": 50332,
+    "item:copper-plate": 50332,
+    "tech:electronics": 51253,
+    "item:steam-engine": 65690,
+    "item:copper-cable": 68208,
+    "item:electronic-circuit": 68752,
+    "item:lab": 69189,
+    "item:transport-belt": 69189,
+    "tech:automation-science-pack": 69189,
+    "item:offshore-pump": 69377,
+    "item:small-electric-pole": 74457,
+    "built:offshore-pump": 76625,
+    "built:boiler": 76921,
+    "fluid:water": 76921,
+    "built:steam-engine": 77421,
+    "fluid:steam": 77796,
+    "built:lab": 78426,
+    "built:small-electric-pole": 78426,
+    "item:automation-science-pack": 78426,
+    "item:science": 81551,
+    "tech:automation": 86723,
+    "item:assembling-machine-1": 111510,
+    "item:inserter": 116596,
+    "tech:electric-mining-drill": 117926,
+    "built:transport-belt": 119440,
+    "item:electric-mining-drill": 120046,
+    "built:electric-mining-drill": 120476,
+    "built:inserter": 121331
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "stop": "left_game",
+  "error": null,
+  "agents": [
+    {
+      "name": "agent-1",
+      "model": "claude-opus-5-5",
+      "force": "player",
+      "stop": null,
+      "usd": 15.8608,
+      "tokens": {
+        "input": 1296,
+        "output": 186005,
+        "cache_write": 910451,
+        "cache_read": 37916277
+      },
+      "compactions": 6,
+      "screenshots": 564
+    }
+  ],
+  "models": [
+    "claude-opus-5-5"
+  ],
+  "rivals": [],
+  "effort": null,
+  "seed": 1002,
+  "peaceful": true,
+  "turns": 467,
+  "game_ticks": 154281,
+  "game_time": "0:42:51",
+  "usd": 15.8608,
+  "tokens": {
+    "input": 1296,
+    "output": 186005,
+    "cache_write": 910451,
+    "cache_read": 37916277
+  },
+  "rocket_launched": false,
+  "furthest_rung": 9,
+  "furthest_label": "First technology researched",
+  "technologies_researched": 5,
+  "production": {
+    "items": {
+      "iron-chest": 9,
+      "transport-belt": 134,
+      "inserter": 36,
+      "small-electric-pole": 56,
+      "pipe": 21,
+      "boiler": 2,
+      "steam-engine": 2,
+      "burner-mining-drill": 22,
+      "electric-mining-drill": 18,
+      "offshore-pump": 1,
+      "stone-furnace": 47,
+      "assembling-machine-1": 3,
+      "lab": 1,
+      "coal": 1931,
+      "stone": 398,
+      "iron-ore": 2230,
+      "copper-ore": 645,
+      "iron-plate": 1959,
+      "copper-plate": 582,
+      "iron-gear-wheel": 372,
+      "copper-cable": 384,
+      "electronic-circuit": 109,
+      "automation-science-pack": 70,
+      "science": 62
+    },
+    "fluids": {
+      "water": 987.3786278963089,
+      "steam": 6873.838202238083
+    },
+    "built": {
+      "iron-chest": 9,
+      "transport-belt": 138,
+      "inserter": 25,
+      "small-electric-pole": 38,
+      "boiler": 1,
+      "steam-engine": 2,
+      "burner-mining-drill": 23,
+      "electric-mining-drill": 16,
+      "offshore-pump": 1,
+      "stone-furnace": 24,
+      "lab": 1
+    }
+  },
+  "rungs_total": 24,
+  "integrity_clean": true,
+  "commands_denied": 0,
+  "commands_run": 0,
+  "wall_seconds": 5324
+}
