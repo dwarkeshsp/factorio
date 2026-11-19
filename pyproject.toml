@@ -1,6 +1,6 @@
 [project]
 name = "factoriobench"
-version = "0.3.0"
+version = "0.3.1"
 description = "Language models play Factorio through the screen, mouse and keyboard, scored by the game's own statistics"
 readme = "README.md"
 authors = [{ name = "Dwarkesh Patel" }]

@@ -188,7 +188,8 @@ class Desktop:
     def act(self, name: str, inp: dict) -> str | Image.Image:
         """Carry out one action. Returns text, or an image for screenshot and zoom."""
         if name == "screenshot":
-            return self.grab()
+            # Claude sometimes asks for a screenshot of a region; it means zoom.
+            return self.zoom(inp["region"]) if inp.get("region") else self.grab()
         if name == "zoom":
             return self.zoom(inp.get("region"))
         if name == "left_click":
@@ -261,9 +262,12 @@ class Desktop:
         elif name == "type":
             if not isinstance(inp.get("text"), str):
                 raise ActionError("type needs text")
-            text = inp["text"]
-            for start in range(0, len(text), 8):
-                self._x("type", "--delay", "25", "--", text[start:start + 8])
+            # A newline in typed text is the Enter key (models end chat messages with one).
+            for index, line in enumerate(inp["text"].split("\n")):
+                if index:
+                    self._x("key", "Return")
+                for start in range(0, len(line), 8):
+                    self._x("type", "--delay", "25", "--", line[start:start + 8])
         elif name == "key":
             combo = "+".join(parse_keys(inp.get("text", "")))
             try:
