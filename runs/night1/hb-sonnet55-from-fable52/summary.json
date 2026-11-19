@@ -1,0 +1,91 @@
+{
+  "stop": "deadline",
+  "error": null,
+  "mode": "solo",
+  "teams": {
+    "player": {
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "players": [
+        "agent-1"
+      ],
+      "score": 3094.2,
+      "gross_production": 7030.5,
+      "usd": 2.6712,
+      "turns": 169,
+      "furthest_rung": 9,
+      "furthest_label": "First technology researched",
+      "technologies_researched": 1,
+      "rocket_launched": false,
+      "production": {
+        "items": {
+          "iron-chest": 1,
+          "burner-mining-drill": 7,
+          "stone-furnace": 12,
+          "coal": 253,
+          "iron-ore": 476,
+          "iron-plate": 363,
+          "iron-gear-wheel": 157
+        },
+        "items_used": {
+          "stone-furnace": 7,
+          "wood": 1,
+          "coal": 123,
+          "stone": 60,
+          "iron-ore": 366,
+          "iron-plate": 343,
+          "iron-gear-wheel": 21
+        },
+        "fluids": {},
+        "built": {
+          "iron-chest": 2,
+          "burner-mining-drill": 9,
+          "stone-furnace": 7
+        }
+      },
+      "kills": {},
+      "losses": {}
+    }
+  },
+  "winner": null,
+  "agents": [
+    {
+      "name": "agent-1",
+      "team": "player",
+      "model": "claude-sonnet-5-5",
+      "stop": null,
+      "turns": 169,
+      "usd": 2.6712,
+      "tokens": {
+        "input": 1413,
+        "output": 82168,
+        "cache_write": 356417,
+        "cache_read": 9556521
+      },
+      "compactions": 3,
+      "screenshots": 201
+    }
+  ],
+  "effort": "medium",
+  "seed": 1001,
+  "peaceful": true,
+  "cease_fire": true,
+  "org": "flat",
+  "handbook": "runs/night1/solo-fable52/handbook.md",
+  "deadline_minutes": 20.0,
+  "pauses": 169,
+  "game_ticks": 72010,
+  "game_time": "0:20:00",
+  "usd": 2.6712,
+  "tokens": {
+    "input": 1413,
+    "output": 82168,
+    "cache_write": 356417,
+    "cache_read": 9556521
+  },
+  "integrity_clean": true,
+  "commands_denied": 0,
+  "commands_run": 0,
+  "wall_seconds": 2373
+}

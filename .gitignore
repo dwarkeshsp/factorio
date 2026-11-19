@@ -23,3 +23,6 @@ runs/**
 !runs/ledger.jsonl
 # Throwaway runs made while checking the harness
 runs/shakedown/
+
+# The report page is built from the files above; its copies of the videos stay out of git.
+results/**/page/

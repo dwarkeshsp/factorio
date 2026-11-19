@@ -173,12 +173,13 @@ for path in ("night1/vs2-opus55-astra62", "night1/vs2-fable52-astra62", "night1/
 # --- videos ------------------------------------------------------------------------------------
 videos = {}
 for row_path in sorted({row["run"] for row in rows}):
-    video = RUNS / row_path / "overview.mp4"
-    if video.exists():
-        target = OUT / "video" / f"{row_path.replace('/', '-')}.mp4"
-        target.parent.mkdir(exist_ok=True)
-        shutil.copy(video, target)
-        videos[row_path] = str(target.relative_to(ROOT))
+    for kind in ("overview", "screens"):
+        video = RUNS / row_path / f"{kind}.mp4"
+        if video.exists():
+            target = OUT / "video" / f"{row_path.replace('/', '-')}-{kind}.mp4"
+            target.parent.mkdir(exist_ok=True)
+            shutil.copy(video, target)
+            videos[f"{row_path}:{kind}"] = str(target.relative_to(ROOT))
 results["videos"] = videos
 
 results["charts"] = {key: str(Path(value).relative_to(ROOT)) for key, value in results["charts"].items()}

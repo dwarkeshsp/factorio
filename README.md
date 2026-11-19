@@ -19,7 +19,112 @@ the coal field with mining drills; Claude Sonnet 5.5 (yellow) is standing next t
 
 ## What one night showed
 
-RESULTS_PLACEHOLDER
+- **It is possible, and cheap enough to iterate on.** 24 of 28 games ran the full 20 game minutes, 9,760 model turns in all, for $311.83. No GPU, no game modding beyond a scenario file of under 100 lines, and no model touched the game's console.
+- **Models differ a lot at playing alone.** GPT-6.2 Astra scored 25,021, GPT-6.2 Sol 18,785, Claude Fable 5.2 18,617, Claude Opus 5.5 6,736 (mean of 4), Claude Sonnet 5.5 1,370 and Claude Haiku 5.5 932.
+- **Teams out-produce individuals, with sharply falling returns.** Two Claude Opus 5.5 agents averaged 1.8 times one agent's score; four averaged 2.1 times. Per agent, a team of four produced about half what an agent produces alone.
+- **Competition for land changed the outcome.** With four models on one map, Astra scored 26,135, about what it scores alone, while Fable fell from 18,617 alone to 4,294 and Opus from 6,736 to 3,277. Astra covered the coal field with drills early and the others ran short of fuel.
+- **Written notes helped a weak model and not a strong one.** Given the notes Fable wrote after its game, Sonnet went from 1,370 to 3,094. Opus, Fable itself, and four generations of Opus teams passing notes down did not improve beyond run-to-run noise.
+- **The measurements are noisy.** Identical two-agent games scored between 7,679 and 21,163. Most conditions here were played once, so treat single comparisons as leads, not findings.
+
+The same results with every agent's screen on video are on the report page (link in the pull request or from the session that produced this). The videos are also in `results/night1/video/` and beside each run.
+
+### One agent alone
+
+Each model played the same 20-minute game alone on the same map. The gap is mostly in how much each one built. Astra placed 67 mining drills and 32 furnaces in 20 minutes; Opus placed 13 and 6. The two GPT models work in many small steps (over 500 turns each), while Fable got a similar score to Sol in about 150 turns by sending long batches of actions. Cost per game ran from $0.24 (Haiku) to $24.08 (Astra).
+
+![Production score over game time, one agent alone](results/night1/solo-over-time.png)
+
+| Model | Score at 20 min | Games | Turns | Cost per game | Drills placed | Furnaces placed |
+|---|---|---|---|---|---|---|
+| GPT-6.2 Astra | 25,021 | 1 | 533 | $24.08 | 67 | 32 |
+| GPT-6.2 Sol | 18,785 | 1 | 609 | $6.93 | 43 | 30 |
+| Claude Fable 5.2 | 18,617 | 1 | 155 | $11.67 | 46 | 17 |
+| Claude Opus 5.5 | 6,736 | 4 | 191 | $5.64 | 13 | 6 |
+| Claude Sonnet 5.5 | 1,370 | 1 | 181 | $2.57 | 6 | 2 |
+| Claude Haiku 5.5 | 932 | 1 | 194 | $0.24 | 3 | 6 |
+
+### Does a team beat an individual?
+
+The same model, Claude Opus 5.5, played alone, as a team of two and as a team of four, sharing one factory and one score, on two different maps. One agent averaged 6,736, two averaged 12,344 and four averaged 13,842. The second agent roughly doubled output; the third and fourth added little. Teams did organise themselves without being told to: in every team game the agents split the map by resource in the first minute and carried fuel and materials to each other. They sent about 20 chat messages per game.
+
+![Team production score for one, two and four agents](results/night1/team-scaling.png)
+
+![Production score per agent](results/night1/team-scaling-per-agent.png)
+
+> I go NW to iron/copper, set up drills+furnaces. Suggest you mine coal (south) and bring some north.
+> *agent-2, in-game chat, first minute of the highest-scoring two-agent game*
+
+> OK, I take coal (south), will set up coal mining and bring coal north to you.
+> *agent-1, replying*
+
+> Coal is our bottleneck. Want me to bring drills to the coal field? ... Tip: chain coal drills facing each other so they self-fuel.
+> *agent-2, later in the same game*
+
+### Teams against each other
+
+Four models were put on one map, each on its own team with its own buildings and score, sharing the same ore fields. Nothing stopped them interfering with each other except a cease-fire on weapons. Astra finished with 26,135, 6 times the next team. The Claude models scored far below what they score alone on the same map. Their own reasoning says why: Astra's drills occupied the coal field, coal is the fuel for everything else at this stage, and the others spent their time walking around someone else's machines. No team sent a message to another team in any game.
+
+![Four teams on one map](results/night1/ffa4-a.png)
+
+| Team | Models | Score | Turns | Cost |
+|---|---|---|---|---|
+| blue | GPT-6.2 Astra | 26,135 | 589 | $27.33 |
+| green | Claude Fable 5.2 | 4,294 | 119 | $7.87 |
+| red | Claude Opus 5.5 | 3,277 | 173 | $5.08 |
+| yellow | Claude Sonnet 5.5 | 543 | 10 | $0.21 |
+
+> I'm stuck among trees with coal down at the bottom left, guarded by someone's drill grid of ten drills.
+> *Claude Opus 5.5 (red), reasoning summary at 8:04*
+
+> I'm checking the coal patch: Blue's four drills already feed each other in a ring, and Yellow is hand-mining with 96 coal.
+> *Claude Fable 5.2 (green), reasoning summary at 4:50*
+
+> I doubt I can catch the blue score, but I'll still try to maximize mine.
+> *Claude Fable 5.2 (green), at 4:07*
+
+> The character barely moved, so I suspect blue's buildings are blocking the way.
+> *Claude Opus 5.5 (red), reasoning summary at 10:36*
+
+An earlier match, Claude Opus 5.5 against GPT-6.2 Astra, stood at 16,561 to 2,665 for Astra when it ended early at 15:50: an Opus agent clicked Quit in the game's menu, which at that point ended the game for everyone. The harness now puts such a player back in.
+
+
+
+![Opus against Astra, two on two](results/night1/vs2-opus55-astra62.png)
+
+| Team | Models | Score | Turns | Cost |
+|---|---|---|---|---|
+| blue | GPT-6.2 Astra x2 | 16,561 | 702 | $30.86 |
+| red | Claude Opus 5.5 x2 | 2,665 | 300 | $8.11 |
+
+### Notes from one team to the next
+
+At the end of each game every agent was asked for the notes it would leave the next player. Two tests used them. In the first, four generations of two-agent Opus teams each started from the previous team's notes. Scores went 21,163, 12,384, 11,728, 13,807: no upward trend, and the first team, with no notes, happened to be the best. In the second, models played alone starting from the notes Fable wrote after its solo game.
+
+![Four generations of teams passing notes down](results/night1/handbook-chain.png)
+
+| Model given Fable's notes | Alone, no notes | With the notes |
+|---|---|---|
+| Claude Opus 5.5 | 6,736 | 7,833 |
+| Claude Sonnet 5.5 | 1,370 | 3,094 |
+| Claude Fable 5.2 | 18,617 | 16,618 |
+
+> Hand-crafting in the last 3 minutes roughly doubled my score rate ... Keep the hand-craft queue busy THE WHOLE GAME, not just at the end. That was my biggest miss.
+> *From the notes Claude Fable 5.2 left after scoring 18,617*
+
+> Never left-click an entity with an item in hand near menus, never press Escape; quitting ends the run.
+> *Same notes*
+
+### Three ways to organise four agents
+
+Four Opus agents played the same game three ways: with no structure, with the first agent named as manager, and with four roles assigned in advance. Unstructured teams scored 14,960 and 14,360. The managed team scored 12,792. The manager did manage: it posted a plan in the first seconds, sent each agent to a resource, and the others acknowledged and reported back, but the result was no better. One game per structure is not enough to rank them.
+
+![Team of four: no structure, a manager, assigned roles](results/night1/org-structures.png)
+
+| Organisation of a team of four | Scores |
+|---|---|
+| No structure | 14,960, 14,360 |
+| A manager | 12,792 |
+| Assigned roles | not run |
 
 ## How a game works
 
@@ -59,7 +164,12 @@ such notes when its game ends.
 
 ## What to distrust
 
-CAVEATS_PLACEHOLDER
+- **Few games per condition.** Only Opus alone (4 games), Opus pairs (4) and Opus fours (3) were repeated. Every other number on this page is one game.
+- **Twenty minutes is the early game.** Nobody got past burner drills and stone furnaces. At this horizon the score mostly rewards digging and hand-crafting, and Astra's winning play (self-fuelling coal drills, then crafting chests for points) would not be the best play in a longer game.
+- **Spending differs between models.** Astra took about three times as many turns as Fable and cost twice as much per game. Everything ran at medium reasoning effort; nothing was tuned per model.
+- **The machines were overloaded.** Five game clients shared four CPU cores with software rendering, at 5 to 8 frames a second. To save CPU the clients are briefly frozen while models think, which sometimes puts the game's "player is being dropped" warning on other players' screens.
+- **The Quit button.** Agents quit the game by accident through the Escape menu five times (Opus four times, Fable once). Three games ended early before the harness learned to put the player back in; they are listed under Every game and left out of the charts. A fourth game could not start because the game before it left no notes.
+- **One model family per team.** No mixed-lab teams were tried, and the map was the same in all but three games.
 
 ## Running it
 
@@ -120,4 +230,8 @@ each agent's `handbook.md`, and two videos. Screenshots, conversations and saves
 
 ## What I would do next
 
-NEXT_PLACEHOLDER
+- **Repeat everything five times.** At $5 to $25 a game, a real leaderboard with error bars is a few hundred dollars.
+- **Longer games on a GPU machine.** One to three game hours reaches electricity, research and automation, where organisation should matter far more than it does when everyone is digging by hand.
+- **Real conflict.** The harness already has a switch that lets teams attack each other, and the game ships its own team modes. The interesting version is the one where what you produce hurts the other side.
+- **More agents per team.** Four was the limit of one small machine, not of the design.
+- **A rating.** With repeats, the matches give a single head-to-head rating per model, as in the Clocktower benchmark.

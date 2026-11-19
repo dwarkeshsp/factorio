@@ -6,6 +6,7 @@
 import html
 import json
 import shutil
+import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -47,12 +48,17 @@ def chart(key: str, alt: str) -> str:
     return f'<figure class="chart"><img src="{src.name}" alt="{html.escape(alt)}" loading="lazy"></figure>'
 
 
-def video(src: Path, caption: str) -> str:
+def video(src: Path, caption: str, poster_at: float = 30.0) -> str:
+    """A video beside the page, with a frame from part-way through as its poster."""
     if not src.exists():
         return ""
     name = "-".join(src.parts[-3:])
     shutil.copy(src, PAGE / name)
-    return (f'<figure class="video"><video controls muted playsinline preload="metadata" src="{name}"></video>'
+    poster = name.replace(".mp4", ".jpg")
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", str(poster_at), "-i", str(src), "-frames:v", "1",
+                    "-q:v", "4", str(PAGE / poster)], check=False)
+    poster_attr = f' poster="{poster}"' if (PAGE / poster).exists() else ""
+    return (f'<figure class="video"><video controls muted playsinline preload="metadata" src="{name}"{poster_attr}></video>'
             f"<figcaption>{caption}</figcaption></figure>")
 
 
@@ -197,7 +203,7 @@ code {{ font: 400 0.92em var(--mono); }}
   <p class="lede">{prose('lede')}</p>
 </header>
 
-{video(ROOT / 'runs/night1/ffa4-a/screens.mp4', "Four models on one map, each on its own team: what each one saw, in step with the game clock. Twenty game minutes in 80 seconds.")}
+{video(ROOT / 'runs/night1/ffa4-a/screens.mp4', "Four models on one map, each on its own team: what each one saw, in step with the game clock. Twenty game minutes in 40 seconds.")}
 
 <h2>What the night showed</h2>
 <ul>{prose('headlines')}</ul>

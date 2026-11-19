@@ -5,6 +5,7 @@
     "team_scaling": "results/night1/team-scaling.png",
     "team_scaling_per_agent": "results/night1/team-scaling-per-agent.png",
     "team_scaling_seed2": "results/night1/team-scaling-seed2-over-time.png",
+    "org": "results/night1/org-structures.png",
     "handbook_chain": "results/night1/handbook-chain.png",
     "vs2-opus55-astra62": "results/night1/vs2-opus55-astra62.png",
     "ffa4-a": "results/night1/ffa4-a.png"
@@ -139,7 +140,9 @@
         14960.1,
         14359.5
       ],
-      "A manager": [],
+      "A manager": [
+        12792.1
+      ],
       "Assigned roles": []
     },
     "handbook_chain": [
@@ -165,6 +168,16 @@
         "model": "Claude Opus 5.5",
         "alone": 6735.575,
         "with_notes": 7833.4
+      },
+      {
+        "model": "Claude Sonnet 5.5",
+        "alone": 1369.6,
+        "with_notes": 3094.2
+      },
+      {
+        "model": "Claude Fable 5.2",
+        "alone": 18617.3,
+        "with_notes": 16617.7
       }
     ]
   },
@@ -255,6 +268,29 @@
       "built": {},
       "won": false,
       "technologies": 0
+    },
+    {
+      "run": "night1/hb-sonnet55-from-fable52",
+      "mode": "solo",
+      "team": "player",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "seed": 1001,
+      "org": "flat",
+      "handbook": "runs/night1/solo-fable52/handbook.md",
+      "stop": "deadline",
+      "game_time": "0:20:00",
+      "score": 3094.2,
+      "turns": 169,
+      "usd": 2.6712,
+      "built": {
+        "iron-chest": 2,
+        "burner-mining-drill": 9,
+        "stone-furnace": 7
+      },
+      "won": false,
+      "technologies": 1
     },
     {
       "run": "night1/solo-astra62",
@@ -658,6 +694,30 @@
       "technologies": 1
     },
     {
+      "run": "w1/hb-fable52-from-fable52",
+      "mode": "solo",
+      "team": "player",
+      "models": [
+        "claude-fable-5-2"
+      ],
+      "seed": 1001,
+      "org": "flat",
+      "handbook": "runs/night1/solo-fable52/handbook.md",
+      "stop": "deadline",
+      "game_time": "0:20:00",
+      "score": 16617.7,
+      "turns": 155,
+      "usd": 12.4504,
+      "built": {
+        "wooden-chest": 1,
+        "iron-chest": 6,
+        "burner-mining-drill": 36,
+        "stone-furnace": 23
+      },
+      "won": false,
+      "technologies": 1
+    },
+    {
       "run": "w1/hb-opus55-from-fable52",
       "mode": "solo",
       "team": "player",
@@ -849,9 +909,36 @@
       },
       "won": false,
       "technologies": 2
+    },
+    {
+      "run": "w4/org-manager-team4",
+      "mode": "team",
+      "team": "player",
+      "models": [
+        "claude-opus-5-5",
+        "claude-opus-5-5",
+        "claude-opus-5-5",
+        "claude-opus-5-5"
+      ],
+      "seed": 1001,
+      "org": "manager",
+      "handbook": null,
+      "stop": "deadline",
+      "game_time": "0:20:00",
+      "score": 12792.1,
+      "turns": 574,
+      "usd": 17.34,
+      "built": {
+        "wooden-chest": 3,
+        "iron-chest": 3,
+        "burner-mining-drill": 27,
+        "stone-furnace": 22
+      },
+      "won": false,
+      "technologies": 2
     }
   ],
-  "total_usd": 279.37,
+  "total_usd": 311.83,
   "videos": {
     "night1/ffa4-a": "results/night1/video/night1-ffa4-a.mp4",
     "night1/solo-astra62": "results/night1/video/night1-solo-astra62.mp4",
@@ -869,6 +956,7 @@
     "w1/gen2-team2": "results/night1/video/w1-gen2-team2.mp4",
     "w1/gen3-team2": "results/night1/video/w1-gen3-team2.mp4",
     "w1/gen4-team2": "results/night1/video/w1-gen4-team2.mp4",
+    "w1/hb-fable52-from-fable52": "results/night1/video/w1-hb-fable52-from-fable52.mp4",
     "w1/hb-opus55-from-fable52": "results/night1/video/w1-hb-opus55-from-fable52.mp4",
     "w1/rep-team4-opus55-b": "results/night1/video/w1-rep-team4-opus55-b.mp4",
     "w3/rep-solo-opus55-b": "results/night1/video/w3-rep-solo-opus55-b.mp4",
@@ -876,6 +964,7 @@
     "w3/rep-team2-opus55-c": "results/night1/video/w3-rep-team2-opus55-c.mp4",
     "w3/s2-solo-opus55": "results/night1/video/w3-s2-solo-opus55.mp4",
     "w3/s2-team2-opus55": "results/night1/video/w3-s2-team2-opus55.mp4",
-    "w3/s2-team4-opus55": "results/night1/video/w3-s2-team4-opus55.mp4"
+    "w3/s2-team4-opus55": "results/night1/video/w3-s2-team4-opus55.mp4",
+    "w4/org-manager-team4": "results/night1/video/w4-org-manager-team4.mp4"
   }
 }
