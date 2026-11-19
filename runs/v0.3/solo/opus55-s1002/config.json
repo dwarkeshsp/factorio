@@ -1,0 +1,64 @@
+{
+  "out": "runs/v0.3/solo/opus55-s1002",
+  "models": [
+    "claude-opus-5-5"
+  ],
+  "rivals": [],
+  "effort": null,
+  "seed": 1002,
+  "peaceful": true,
+  "max_turns": 500,
+  "max_usd": 40.0,
+  "max_game_hours": 40.0,
+  "compact_at_tokens": 150000,
+  "keep_turns": 6,
+  "render_threads": 1,
+  "gpu": false,
+  "edition": "full",
+  "move_settle": 0.15,
+  "schedule": "continuous",
+  "ledger": "runs/ledger.jsonl",
+  "budget_usd": 500.0,
+  "agents": [
+    {
+      "name": "agent-1",
+      "model": "claude-opus-5-5",
+      "force": "player"
+    }
+  ],
+  "harness_version": "0.3.0",
+  "harness_commit": "274ca40e6d1775e1e3e9ba49d81fcbd9593ca4f7",
+  "prompt_version": "0.5",
+  "factorio_version": "2.1.24",
+  "scenario": "freeplay",
+  "schedule_used": "rounds",
+  "screen": [
+    1280,
+    720
+  ],
+  "client_config": {
+    "other": {
+      "check-updates": "false",
+      "enable-crash-log-uploading": "false"
+    },
+    "graphics": {
+      "full-screen": "false",
+      "v-sync": "false",
+      "show-clouds": "false",
+      "show-fog": "false",
+      "show-animated-water": "false",
+      "show-tree-distortion": "false",
+      "additional-terrain-effects": "false",
+      "light-occlusion": "false",
+      "high-quality-animations": "false",
+      "show-game-simulations-in-background": "false"
+    }
+  },
+  "timing": {
+    "before_actions": 0.15,
+    "between_actions": 0.1,
+    "after_actions": 0.4,
+    "render_wait": 0.8
+  },
+  "start_tick": 1029
+}
