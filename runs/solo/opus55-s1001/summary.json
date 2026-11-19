@@ -1,0 +1,93 @@
+{
+  "stop": "max_turns",
+  "error": null,
+  "agents": [
+    {
+      "name": "agent-1",
+      "model": "claude-opus-5-5",
+      "stop": null,
+      "usd": 16.7915,
+      "tokens": {
+        "input": 1362,
+        "output": 197130,
+        "cache_write": 959142,
+        "cache_read": 40238830
+      },
+      "compactions": 6,
+      "screenshots": 589
+    }
+  ],
+  "models": [
+    "claude-opus-5-5"
+  ],
+  "effort": null,
+  "seed": 1001,
+  "peaceful": true,
+  "turns": 500,
+  "game_ticks": 127816,
+  "game_time": "0:35:30",
+  "usd": 16.7915,
+  "tokens": {
+    "input": 1362,
+    "output": 197130,
+    "cache_write": 959142,
+    "cache_read": 40238830
+  },
+  "rocket_launched": false,
+  "furthest_rung": 10,
+  "furthest_label": "Assembling machine placed",
+  "rungs_total": 24,
+  "technologies_researched": 5,
+  "production": {
+    "items": {
+      "iron-chest": 8,
+      "transport-belt": 44,
+      "burner-inserter": 1,
+      "small-electric-pole": 56,
+      "pipe": 41,
+      "pipe-to-ground": 2,
+      "boiler": 4,
+      "steam-engine": 2,
+      "burner-mining-drill": 17,
+      "electric-mining-drill": 17,
+      "offshore-pump": 1,
+      "stone-furnace": 33,
+      "assembling-machine-1": 2,
+      "lab": 1,
+      "coal": 2037,
+      "stone": 140,
+      "iron-ore": 1679,
+      "copper-ore": 873,
+      "iron-plate": 1437,
+      "copper-plate": 675,
+      "iron-gear-wheel": 328,
+      "copper-cable": 258,
+      "electronic-circuit": 67,
+      "automation-science-pack": 87,
+      "science": 75
+    },
+    "fluids": {
+      "water": 1915.6933022737503,
+      "steam": 14157.603708863258
+    },
+    "built": {
+      "iron-chest": 8,
+      "transport-belt": 1,
+      "burner-inserter": 1,
+      "small-electric-pole": 44,
+      "pipe": 2,
+      "boiler": 4,
+      "steam-engine": 4,
+      "burner-mining-drill": 19,
+      "electric-mining-drill": 17,
+      "offshore-pump": 1,
+      "stone-furnace": 14,
+      "assembling-machine-1": 2,
+      "lab": 1
+    }
+  },
+  "integrity_clean": true,
+  "commands_denied": 0,
+  "commands_run": 0,
+  "wall_seconds": 5218
+}
