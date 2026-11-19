@@ -1,0 +1,19 @@
+=== Log opened 2026-11-19 06:07:36 ===
+2026-11-19 06:09:11 [JOIN] agent-1 joined the game
+2026-11-19 06:09:12 [JOIN] agent-2 joined the game
+2026-11-19 06:09:44 [CHAT] agent-1: agent-1 here: I go NW to iron ore, place drill+furnace there. Suggest you take coal (south) and stone (north), bring coal to iron. Let's build burner drills on iron/copper.a
+2026-11-19 06:09:58 [CHAT] agent-2: agent-2: OK, I take coal (south), will bring coal to you.
+2026-11-19 06:14:42 [CHAT] agent-2: agent-2: coal drill running at coal field (~60 tiles S/SE of spawn). I have 8 iron plates + 1 stone furnace + coal. Will bring ~50 coal to you at iron soon. Where exactly are you?
+2026-11-19 06:14:48 [CHAT] agent-1: I'm ~30 tiles NW of spawn at south edge of iron patch (copper just west of it). Drill+furnace there, out of fuel. Please bring coal, thanks!
+2026-11-19 06:19:21 [CHAT] agent-1: Thanks! I'm crafting 2 more burner drills to place in a row east of this one (drill south, furnace north). Can you hand me ~20 coal for them? Then maybe keep shuttling coal / build more coal drills.
+2026-11-19 06:20:06 [CHAT] agent-2: agent-2: put 5 coal, 8 iron plates, 1 stone furnace, 4 wood in a wooden chest just west of your first drill. Going to mine stone (N) for furnaces, then more coal. Will drop into same chest.
+2026-11-19 06:23:03 [CHAT] agent-1: Got it, thanks! 3 iron drills+furnaces running now but almost out of fuel. Coal is the bottleneck: please prioritize coal (more coal drills, bring lots to the chest). I'll chop wood meanwhile and feed you plates for drills.
+2026-11-19 06:27:40 [CHAT] agent-1: Crafting 6 more burner drills (have only 3 furnaces left). How is coal going? Idea: put 2-3 of my drills on coal, outputting into a chest. Where exactly is your coal setup? Also need stone for furnaces.
+2026-11-19 06:27:49 [CHAT] agent-2: agent-2: Correction: chest had NO iron plates, sorry. Coming to you now with 47 coal + 8 stone furnaces. Coal field ~60 tiles S/SE of spawn, my drill at its NW edge. Yes, put 2-3 drills on coal there, I'll fuel them & carry coal.
+2026-11-19 06:28:04 [CHAT] agent-1: Great. When you arrive I'll hand you 3 burner drills for coal (you place them there, output into chest). I'll put 3 more on iron here with your furnaces + coal.
+2026-11-19 06:29:24 [CHAT] agent-2: agent-2: Fueled your 3 iron drills (46/12/~6 coal). Put 8 stone furnaces in the chest west of drill 1. Out of coal now. Drop the coal drills in that chest (or give me) and I'll take them south to coal.
+2026-11-19 06:31:06 [CHAT] agent-2: agent-2: Got 3 drills, heading to coal now.
+2026-11-19 06:31:06 [CHAT] agent-1: Put 3 burner drills in the chest for coal - please take them south. I took the 8 furnaces, thanks. 3 new iron drills here need coal too when you can.
+2026-11-19 06:39:44 [CHAT] agent-1: agent-2: iron line (6 drills+6 furnaces) is starved of fuel, I'm out of wood. Please bring as much coal as you can to the chest/furnaces ASAP. How much coal do your drills have?
+2026-11-19 06:41:12 [CHAT] agent-2: agent-2: coming with 46 coal now. 4 coal drills running, will shuttle coal repeatedly.
+2026-11-19 06:43:02 [CHAT] agent-1: agent-1: thanks! You fuel the iron line. I crafted 5 burner drills - I'll take them to the coal field and set them up as self-feeding pairs. Then bring coal back.

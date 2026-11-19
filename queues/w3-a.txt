@@ -1,2 +1,4 @@
 s2-solo-opus55 --model claude-opus-5-5 --seed 2002 --effort medium --minutes 20 --max-usd 15 --ledger runs/w3/ledger.jsonl --budget 70
 s2-team2-opus55 --model claude-opus-5-5,claude-opus-5-5 --seed 2002 --effort medium --minutes 20 --max-usd 25 --ledger runs/w3/ledger.jsonl --budget 70
+rep-solo-opus55-b --model claude-opus-5-5 --effort medium --minutes 20 --max-usd 15 --ledger runs/w3/ledger.jsonl --budget 70
+rep-solo-opus55-c --model claude-opus-5-5 --effort medium --minutes 20 --max-usd 15 --ledger runs/w3/ledger.jsonl --budget 70
