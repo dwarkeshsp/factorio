@@ -1,0 +1,96 @@
+{
+  "stop": "deadline",
+  "error": null,
+  "mode": "solo",
+  "teams": {
+    "player": {
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "players": [
+        "agent-1"
+      ],
+      "score": 6773.2,
+      "gross_production": 12953.3,
+      "usd": 4.971,
+      "turns": 173,
+      "furthest_rung": 9,
+      "furthest_label": "First technology researched",
+      "technologies_researched": 1,
+      "rocket_launched": false,
+      "production": {
+        "items": {
+          "wooden-chest": 1,
+          "iron-chest": 4,
+          "pipe": 16,
+          "boiler": 4,
+          "burner-mining-drill": 11,
+          "stone-furnace": 18,
+          "coal": 956,
+          "stone": 30,
+          "iron-ore": 804,
+          "iron-plate": 733,
+          "iron-gear-wheel": 142
+        },
+        "items_used": {
+          "pipe": 16,
+          "stone-furnace": 15,
+          "wood": 5,
+          "coal": 302,
+          "stone": 90,
+          "iron-ore": 736,
+          "iron-plate": 365,
+          "iron-gear-wheel": 33
+        },
+        "fluids": {},
+        "built": {
+          "wooden-chest": 1,
+          "iron-chest": 2,
+          "boiler": 1,
+          "burner-mining-drill": 13,
+          "stone-furnace": 6
+        }
+      },
+      "kills": {},
+      "losses": {}
+    }
+  },
+  "winner": null,
+  "agents": [
+    {
+      "name": "agent-1",
+      "team": "player",
+      "model": "claude-opus-5-5",
+      "stop": null,
+      "turns": 173,
+      "usd": 4.971,
+      "tokens": {
+        "input": 1413,
+        "output": 70422,
+        "cache_write": 336243,
+        "cache_read": 9378391
+      },
+      "compactions": 3,
+      "screenshots": 193
+    }
+  ],
+  "effort": "medium",
+  "seed": 1001,
+  "peaceful": true,
+  "cease_fire": true,
+  "deadline_minutes": 20.0,
+  "pauses": 173,
+  "game_ticks": 72011,
+  "game_time": "0:20:00",
+  "usd": 4.971,
+  "tokens": {
+    "input": 1413,
+    "output": 70422,
+    "cache_write": 336243,
+    "cache_read": 9378391
+  },
+  "integrity_clean": true,
+  "commands_denied": 0,
+  "commands_run": 0,
+  "wall_seconds": 2169
+}

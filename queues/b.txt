@@ -2,7 +2,11 @@
 team2-opus55    --model claude-opus-5-5,claude-opus-5-5 --effort medium --minutes 20 --max-usd 50
 team4-opus55    --model claude-opus-5-5,claude-opus-5-5,claude-opus-5-5,claude-opus-5-5 --effort medium --minutes 20 --max-usd 90
 # Two teams on one map: the flagship match, two against two across labs
-vs2-opus55-astra62  --team red=claude-opus-5-5,claude-opus-5-5 --team blue=gpt-6.2-astra,gpt-6.2-astra --effort medium --minutes 20 --max-usd 90 --budget 440
+vs2-opus55-astra62  --team red=claude-opus-5-5,claude-opus-5-5 --team blue=gpt-6.2-astra,gpt-6.2-astra --effort medium --minutes 20 --max-usd 90 --budget 210
+# Second attempt: the first ended after 32 seconds when one agent clicked Quit in the game menu
+team4-opus55-r2 --model claude-opus-5-5,claude-opus-5-5,claude-opus-5-5,claude-opus-5-5 --effort medium --minutes 20 --max-usd 90 --budget 210
+# Four firms, one map: every model on its own team, sharing the same ore
+ffa4-a          --team red=claude-opus-5-5 --team blue=gpt-6.2-astra --team green=claude-fable-5-2 --team yellow=claude-sonnet-5-5 --effort medium --minutes 20 --max-usd 90 --budget 210
 # The same team question with a cheaper model
-team2-sonnet55  --model claude-sonnet-5-5,claude-sonnet-5-5 --effort medium --minutes 20 --max-usd 30 --budget 440
-team4-sonnet55  --model claude-sonnet-5-5,claude-sonnet-5-5,claude-sonnet-5-5,claude-sonnet-5-5 --effort medium --minutes 20 --max-usd 50 --budget 440
+team2-sonnet55  --model claude-sonnet-5-5,claude-sonnet-5-5 --effort medium --minutes 20 --max-usd 30 --budget 210
+team4-sonnet55  --model claude-sonnet-5-5,claude-sonnet-5-5,claude-sonnet-5-5,claude-sonnet-5-5 --effort medium --minutes 20 --max-usd 50 --budget 210
