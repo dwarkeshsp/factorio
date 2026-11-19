@@ -5,7 +5,7 @@ import argparse
 import json
 from pathlib import Path
 
-from . import install, report
+from . import analyze, install, report
 from .llm import PRICES
 from .llm_openai import PRICES as OPENAI_PRICES
 from .run import RunConfig, run
@@ -36,6 +36,10 @@ def cmd_run(args: argparse.Namespace) -> None:
 def cmd_report(args: argparse.Namespace) -> None:
     for run_dir in args.runs:
         print(report.render(Path(run_dir)))
+
+
+def cmd_compare(args: argparse.Namespace) -> None:
+    print(analyze.compare([Path(run_dir) for run_dir in args.runs]))
 
 
 def cmd_timelapse(args: argparse.Namespace) -> None:
@@ -74,6 +78,10 @@ def main(argv: list[str] | None = None) -> None:
     p = sub.add_parser("report", help="print the score of one or more runs")
     p.add_argument("runs", nargs="+")
     p.set_defaults(func=cmd_report)
+
+    p = sub.add_parser("compare", help="a table of several runs side by side (they may still be running)")
+    p.add_argument("runs", nargs="+")
+    p.set_defaults(func=cmd_compare)
 
     p = sub.add_parser("timelapse", help="make an mp4 from a run's end-of-turn screenshots")
     p.add_argument("run")
