@@ -11,6 +11,8 @@ on its own force with its own buildings, research and score.
 from __future__ import annotations
 
 import json
+import os
+import signal
 import subprocess
 import threading
 import time
@@ -54,6 +56,7 @@ class RunConfig:
     seed: int = 1001
     peaceful: bool = True
     cease_fire: bool = True
+    always_day: bool = True      # a screen at night is close to black; the game's own PvP mode offers the same switch
     minutes: float = 20.0        # the deadline, in game minutes
     max_turns: int = 2000        # per agent
     max_usd: float = 25.0        # for the whole run
@@ -65,6 +68,7 @@ class RunConfig:
     ledger: str = "runs/ledger.jsonl"
     budget_usd: float = 500.0
     overview: bool = True
+    throttle: bool = True        # rest the game clients while the models think
 
 
 def harness_commit() -> str | None:
@@ -74,6 +78,52 @@ def harness_commit() -> str | None:
         return out.stdout.strip() or None
     except OSError:
         return None
+
+
+class Throttle:
+    """Rests the game clients while the models think.
+
+    A paused game still redraws its frozen screen as fast as it can, which on a CPU-only
+    machine keeps every core busy for nothing. While the models think, each client is
+    stopped and continued in short bursts: long enough to save most of the CPU, short
+    enough that the server never sees it as a lost connection.
+    """
+    STOPPED, RUNNING = 0.25, 0.06
+
+    def __init__(self, pids: list[int]):
+        self.pids = pids
+        self._on = threading.Event()
+        self._idle = threading.Event()
+        self._idle.set()
+        threading.Thread(target=self._loop, daemon=True, name="throttle").start()
+
+    def _signal(self, sig: int) -> None:
+        for pid in self.pids:
+            try:
+                os.kill(pid, sig)
+            except ProcessLookupError:
+                pass
+
+    def _loop(self) -> None:
+        while True:
+            self._on.wait()
+            self._idle.clear()
+            while self._on.is_set():
+                self._signal(signal.SIGSTOP)
+                self._on.wait()  # no-op while on; keeps the timing below simple
+                time.sleep(self.STOPPED)
+                self._signal(signal.SIGCONT)
+                time.sleep(self.RUNNING)
+            self._idle.set()
+
+    def on(self) -> None:
+        self._on.set()
+
+    def off(self) -> None:
+        """Returns once every client is running again."""
+        self._on.clear()
+        self._idle.wait()
+        self._signal(signal.SIGCONT)
 
 
 class Seat:
@@ -172,7 +222,8 @@ class Run:
         self._log = (self.dir / "log.jsonl").open("a")
         self._log_lock = threading.Lock()
         self.clock = Clock()
-        self.server = Server(self.dir / "server", seed=cfg.seed, peaceful=cfg.peaceful, edition=cfg.edition)
+        self.server = Server(self.dir / "server", seed=cfg.seed, peaceful=cfg.peaceful, edition=cfg.edition,
+                             always_day=cfg.always_day)
         self.versus = len(cfg.teams) > 1
         self.seats: list[Seat] = []
         self.roster: dict[str, list[str]] = {}  # team -> player names
@@ -189,6 +240,7 @@ class Run:
         self.game_ticks = 0
         self.deadline_ticks = int(cfg.minutes * 60 * TICKS_PER_SECOND)
         self.next_overview = 0.0
+        self.throttle: Throttle | None = None
         self.started = time.time()
         self.pool = ThreadPoolExecutor(max_workers=max(2, len(self.seats)))
 
@@ -242,6 +294,8 @@ class Run:
         self.start_tick = start_tick
         for seat in self.seats:
             seat.desktop = Desktop(seat.display.name, SCREEN, clock=self.clock)
+        if self.cfg.throttle:
+            self.throttle = Throttle([seat.client.proc.pid for seat in self.seats if seat.client.proc])
         config = {
             **asdict(cfg),
             "mode": "versus" if self.versus else ("team" if len(self.seats) > 1 else "solo"),
@@ -315,9 +369,28 @@ class Run:
             retries += 1
         return reply, time.time() - t0
 
+    def think_safely(self, seat: Seat) -> tuple[Reply, float]:
+        """A model or network failure retires that one agent instead of ending everyone's game."""
+        try:
+            return self.think(seat)
+        except Exception as err:
+            self.emit(event="agent_error", agent=seat.name, turn=seat.turn, error=traceback.format_exc())
+            print(f"      {seat.name} failed: {type(err).__name__}: {str(err)[:300]}", flush=True)
+            return Reply(text=f"{type(err).__name__}: {err}", thinking="", calls=[], stop="error", usd=0.0,
+                         counts={"input": 0, "output": 0, "cache_write": 0, "cache_read": 0}), 0.0
+
     def think_all(self, seats: list[Seat]) -> None:
         """Get a reply from each seat (in parallel) and start its batch, or retire the seat."""
-        for seat, (reply, think_s) in zip(seats, self.pool.map(self.think, seats)):
+        if not seats:
+            return
+        if self.throttle:
+            self.throttle.on()
+        try:
+            replies = list(self.pool.map(self.think_safely, seats))
+        finally:
+            if self.throttle:
+                self.throttle.off()
+        for seat, (reply, think_s) in zip(seats, replies):
             seat.turn += 1
             if reply.stop != "actions":
                 seat.active = False

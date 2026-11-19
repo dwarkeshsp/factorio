@@ -54,3 +54,62 @@ def timelapse(run_dir: Path, agent: str = "agent-1", fps: int = 6) -> Path:
     if result.returncode != 0:
         raise SystemExit(f"ffmpeg failed: {result.stderr.strip()}")
     return out
+
+
+def overview_timelapse(run_dir: Path, fps: int = 12) -> Path:
+    """An mp4 of the whole base from above, one frame every 20 game seconds, with a clock and score caption."""
+    from PIL import Image, ImageDraw, ImageFont
+
+    frames = sorted(run_dir.glob("agents/*/client/script-output/overview/*.jpg"))
+    if not frames:
+        raise SystemExit(f"{run_dir} has no overview frames")
+    scores: list[tuple[int, dict]] = []
+    for line in (run_dir / "log.jsonl").read_text().splitlines():
+        try:
+            row = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if row.get("event") == "pause":
+            scores.append((row["game_ticks"], row.get("scores") or {}))
+    config = json.loads((run_dir / "config.json").read_text())
+    models: dict[str, list[str]] = {}
+    for agent in config["agents"]:
+        models.setdefault(agent["team"], []).append(agent["model"])
+    try:
+        font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 22)
+    except OSError:
+        font = ImageFont.load_default()
+    work = run_dir / "overview-frames"
+    work.mkdir(exist_ok=True)
+    for old in work.glob("*.jpg"):
+        old.unlink()
+    for index, frame in enumerate(frames):
+        ticks = int(frame.stem) - 0  # overview frames are named by game ticks since the start of play
+        at = {}
+        for tick, values in scores:
+            if tick <= ticks:
+                at = values
+        image = Image.open(frame).convert("RGB")
+        draw = ImageDraw.Draw(image)
+        seconds = max(0, ticks) // 60
+        parts = [f"{seconds // 60}:{seconds % 60:02d}"]
+        for team, value in at.items():
+            who = team if len(at) > 1 else ""
+            parts.append(f"{who + ' ' if who else ''}{' + '.join(m.replace('claude-', '') for m in models.get(team, []))}: {value:,.0f}")
+        text = "    ".join(parts)
+        box = draw.textbbox((0, 0), text, font=font)
+        draw.rectangle((0, 0, box[2] + 28, box[3] + 22), fill=(15, 15, 15))
+        draw.text((14, 9), text, font=font, fill=(245, 245, 240))
+        image.save(work / f"{index:06d}.jpg", quality=88)
+    out = run_dir / "overview.mp4"
+    result = subprocess.run(
+        ["ffmpeg", "-y", "-loglevel", "error", "-framerate", str(fps), "-i", str(work / "%06d.jpg"),
+         "-c:v", "libx264", "-crf", "26", "-pix_fmt", "yuv420p", str(out)],
+        capture_output=True, text=True, check=False,
+    )
+    if result.returncode != 0:
+        raise SystemExit(f"ffmpeg failed: {result.stderr.strip()}")
+    for old in work.glob("*.jpg"):
+        old.unlink()
+    work.rmdir()
+    return out

@@ -1,0 +1,5 @@
+# Solo baselines: one agent, 20 game minutes, seed 1001
+solo-opus55     --model claude-opus-5-5   --effort medium --minutes 20 --max-usd 30
+solo-astra62    --model gpt-6.2-astra     --effort medium --minutes 20 --max-usd 40
+solo-fable52    --model claude-fable-5-2  --effort medium --minutes 20 --max-usd 40
+solo-sonnet55   --model claude-sonnet-5-5 --effort medium --minutes 20 --max-usd 20

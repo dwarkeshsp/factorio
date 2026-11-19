@@ -47,13 +47,14 @@ bench.add_remote_interface = function()
   remote.add_interface("bench",
   {
     -- config = {teams = {name = {player names}}, spawns = {name = {x, y}}, colors = {name = {r, g, b}},
-    --           cease_fire = bool, peaceful = bool, chart = tiles}
+    --           cease_fire = bool, peaceful = bool, always_day = bool, chart = tiles}
     configure = function(config)
       local s = state()
       local surface = game.surfaces[1]
       remote.call("freeplay", "set_skip_intro", true)
       remote.call("freeplay", "set_disable_crashsite", true)
       if config.peaceful ~= nil then surface.peaceful_mode = config.peaceful end
+      if config.always_day ~= nil then surface.always_day = config.always_day end
       local names = {}
       for name, members in pairs(config.teams) do
         names[#names + 1] = name

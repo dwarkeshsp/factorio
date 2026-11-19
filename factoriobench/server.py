@@ -92,10 +92,11 @@ class LuaError(RuntimeError):
 
 
 class Server:
-    def __init__(self, directory: Path, seed: int, peaceful: bool = True, edition: str = "full"):
+    def __init__(self, directory: Path, seed: int, peaceful: bool = True, edition: str = "full", always_day: bool = True):
         self.dir = Path(directory).resolve()
         self.seed = seed
         self.peaceful = peaceful
+        self.always_day = always_day
         self.edition = edition
         self.port = 0
         self.rcon_port = 0
@@ -200,7 +201,7 @@ class Server:
                   colors: dict[str, tuple[float, float, float]] | None = None, cease_fire: bool = True) -> None:
         """Create each team's force. Call before any player joins."""
         config = {"teams": teams, "spawns": spawns or {}, "colors": colors or {},
-                  "cease_fire": cease_fire, "peaceful": self.peaceful}
+                  "cease_fire": cease_fire, "peaceful": self.peaceful, "always_day": self.always_day}
         self.eval(f"return remote.call('bench', 'configure', helpers.json_to_table([==[{json.dumps(config)}]==]))")
 
     def prices(self) -> dict[str, float]:
