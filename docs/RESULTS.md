@@ -16,7 +16,7 @@ conditions is not established.
    roughly a third to a half of the game time, alone and in a head-to-head match on a shared map.
 3. **Two agents are ahead of one at equal game time, once each agent acts on its own clock, by somewhere between
    nothing and double.** In four pairings (two models, two maps) the pair reached the lab and science sooner
-   every time, by 1 to 13 game minutes. Its iron output was 1.7 to 2.1 times the solo's in three pairings and no
+   every time, by 1 to 15 game minutes. Its iron output was about double the solo's in three pairings and no
    higher in the fourth; its science output was 1.1 to 2.5 times. Per dollar a pair gets about a third as much
    as one agent. It builds the same kind of factory sooner, not a better one.
 4. **How the game clock is shared between agents decides the answer.** With agents taking turns in rounds, the
@@ -172,8 +172,8 @@ throughout. Astra took the lead in the chat from its first message and kept it:
 > more furnaces, then electric drills on coal patch + belt coal north to the smelting area. OK?
 > agent-2: Yes, great. Electric drill is 25 red, can you prioritize that? I'll buffer plates for reds.
 
-Astra used its 500 turns by about minute 26 and Opus played the last 19 minutes alone, so the run's final
-totals mix the two. This run has not been reviewed turn by turn.
+Astra used its 500 turns by minute 25 and Opus played the last 20 minutes alone, so the run's final totals
+mix the two. This run has not been reviewed turn by turn.
 
 ### Rounds against the continuous schedule
 
