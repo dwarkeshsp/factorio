@@ -7,6 +7,17 @@ capability up? Background and plan: [`docs/HANDOFF.md`](docs/HANDOFF.md).
 
 > Work in progress. Unofficial; not affiliated with Wube Software. You need your own copy of Factorio.
 
+## Where it stands
+
+First results are in [`docs/RESULTS.md`](docs/RESULTS.md). In short, from one run per condition:
+
+- In 500 turns ($17 to $25) one model alone builds steam power, labs and assemblers and starts on green science.
+  Nobody is near a rocket.
+- GPT-6.2 Astra reaches each early milestone in roughly a third to a half of the game time Claude Opus 5.5
+  needs, alone and in a head-to-head match on a shared map.
+- Two agents on a team get about twice as much done per game minute as one, and about a third as much per
+  dollar.
+
 ## How a run works
 
 - A Factorio server holds the map (fixed seed, freeplay, base game 2.1). Each agent plays through an ordinary
@@ -17,8 +28,9 @@ capability up? Background and plan: [`docs/HANDOFF.md`](docs/HANDOFF.md).
   research and the rocket launch counter. It records the game time of every first.
 - Because agents are not admins, the game itself refuses Lua console commands and the map editor, and logs each
   attempt. A run's summary says whether it was clean.
-- With several agents the game advances in rounds: it stays paused until every agent has replied, then all their
-  actions run at once. Agents talk through the in-game chat.
+- With several agents, each acts on its own schedule: the game pauses whenever any of them is thinking, and a
+  batch in progress freezes and carries on afterwards. Teammates talk through the in-game chat.
+- Two sides can share one map, each with its own factory, research and score.
 
 The reasons behind each of these, and what was checked on the real game, are in [`docs/DESIGN.md`](docs/DESIGN.md).
 
@@ -52,7 +64,8 @@ python -m factoriobench compare runs/demo/*      # runs side by side; works whil
 Models: `claude-opus-5-5`, `claude-fable-5-2`, `claude-sonnet-5-5`, `claude-haiku-5-5` (needs `ANTHROPIC_API_KEY`) and
 `gpt-6.2-astra` (needs `OPENAI_API_KEY`).
 
-No GPU is needed: the client renders in software. Each client uses about two cores and 2 GB of memory.
+No GPU is needed: the client renders in software. Each client uses one or two cores and about 2.5 GB of memory;
+four fit on a 4-core, 15 GB machine.
 
 A run directory holds `config.json`, `summary.json`, `milestones.json` (kept in git), and `log.jsonl` (every turn:
 reasoning summary, actions, cost, game time), each agent's screenshots and conversation, and the server's save and
@@ -69,7 +82,9 @@ and `--budget` caps the total across runs.
 | `factoriobench/llm.py`, `llm_openai.py` | Claude and GPT conversations, prices, context compaction |
 | `factoriobench/analyze.py`, `report.py` | Run comparison tables, single-run reports, timelapses |
 | `factoriobench/scoring.py` | The score snapshot and the milestone ladder |
-| `factoriobench/run.py` | The round loop for one or more agents |
+| `factoriobench/run.py` | The loop for one or more agents, in rounds or on the continuous schedule |
+| `factoriobench/clock.py` | Game time for the code that presses keys: it stops while the game is paused |
 | `factoriobench/prompts.py` | Everything a model is told (versioned) |
 | `tests/` | Unit tests |
-| `runs/` | Each run's config, summary and milestones |
+| `runs/` | Each run's config, summary and milestones, filed by harness version |
+| `docs/` | Results, design notes, and the brief this project started from |
