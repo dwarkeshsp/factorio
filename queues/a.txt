@@ -5,3 +5,6 @@ solo-fable52    --model claude-fable-5-2  --effort medium --minutes 20 --max-usd
 solo-sonnet55   --model claude-sonnet-5-5 --effort medium --minutes 20 --max-usd 20 --budget 265
 solo-sol62      --model gpt-6.2-sol       --effort medium --minutes 20 --max-usd 20 --budget 265
 solo-haiku55    --model claude-haiku-5-5  --effort medium --minutes 20 --max-usd 10 --budget 265
+# Notes from a stronger player: the same solo game, starting from the handbook Fable 5.2 left
+hb-sonnet55-from-fable52 --model claude-sonnet-5-5 --handbook runs/night1/solo-fable52/handbook.md --effort medium --minutes 20 --max-usd 20 --budget 265
+hb-haiku55-from-fable52  --model claude-haiku-5-5  --handbook runs/night1/solo-fable52/handbook.md --effort medium --minutes 20 --max-usd 10 --budget 265

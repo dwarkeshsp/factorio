@@ -1,0 +1,89 @@
+{
+  "stop": "deadline",
+  "error": null,
+  "mode": "solo",
+  "teams": {
+    "player": {
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "players": [
+        "agent-1"
+      ],
+      "score": 1369.6,
+      "gross_production": 3433.3,
+      "usd": 2.5659,
+      "turns": 181,
+      "furthest_rung": 9,
+      "furthest_label": "First technology researched",
+      "technologies_researched": 1,
+      "rocket_launched": false,
+      "production": {
+        "items": {
+          "wooden-chest": 5,
+          "burner-mining-drill": 5,
+          "stone-furnace": 6,
+          "iron-ore": 209,
+          "iron-plate": 194,
+          "iron-gear-wheel": 93
+        },
+        "items_used": {
+          "stone-furnace": 5,
+          "wood": 61,
+          "stone": 30,
+          "iron-ore": 195,
+          "iron-plate": 201,
+          "iron-gear-wheel": 15
+        },
+        "fluids": {},
+        "built": {
+          "wooden-chest": 5,
+          "burner-mining-drill": 6,
+          "stone-furnace": 2
+        }
+      },
+      "kills": {},
+      "losses": {}
+    }
+  },
+  "winner": null,
+  "agents": [
+    {
+      "name": "agent-1",
+      "team": "player",
+      "model": "claude-sonnet-5-5",
+      "stop": null,
+      "turns": 181,
+      "usd": 2.5659,
+      "tokens": {
+        "input": 1443,
+        "output": 69596,
+        "cache_write": 350230,
+        "cache_read": 9914919
+      },
+      "compactions": 3,
+      "screenshots": 192
+    }
+  ],
+  "effort": "medium",
+  "seed": 1001,
+  "peaceful": true,
+  "cease_fire": true,
+  "org": "flat",
+  "handbook": null,
+  "deadline_minutes": 20.0,
+  "pauses": 181,
+  "game_ticks": 72012,
+  "game_time": "0:20:00",
+  "usd": 2.5659,
+  "tokens": {
+    "input": 1443,
+    "output": 69596,
+    "cache_write": 350230,
+    "cache_read": 9914919
+  },
+  "integrity_clean": true,
+  "commands_denied": 0,
+  "commands_run": 0,
+  "wall_seconds": 2375
+}

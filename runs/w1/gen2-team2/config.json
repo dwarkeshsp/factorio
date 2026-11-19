@@ -1,0 +1,78 @@
+{
+  "out": "runs/w1/gen2-team2",
+  "teams": {
+    "player": [
+      "claude-opus-5-5",
+      "claude-opus-5-5"
+    ]
+  },
+  "effort": "medium",
+  "seed": 1001,
+  "peaceful": true,
+  "cease_fire": true,
+  "always_day": true,
+  "minutes": 20.0,
+  "max_turns": 2000,
+  "max_usd": 25.0,
+  "compact_at_tokens": 100000,
+  "keep_turns": 6,
+  "render_threads": null,
+  "gpu": false,
+  "edition": "full",
+  "ledger": "runs/w1/ledger.jsonl",
+  "budget_usd": 95.0,
+  "overview": true,
+  "org": "flat",
+  "handbook": "runs/w1/gen1-team2/handbook.md",
+  "write_handbook": true,
+  "throttle": true,
+  "mode": "team",
+  "agents": [
+    {
+      "name": "agent-1",
+      "team": "player",
+      "model": "claude-opus-5-5"
+    },
+    {
+      "name": "agent-2",
+      "team": "player",
+      "model": "claude-opus-5-5"
+    }
+  ],
+  "spawns": {},
+  "harness_version": "0.1.0",
+  "harness_commit": "c7d54fcb94b09179f28814f6c5922e9701b327c1",
+  "prompt_version": "0.3",
+  "factorio_version": "2.1.24",
+  "scenario": "freeplay with teams (factoriobench/scenario/control.lua)",
+  "screen": [
+    1280,
+    720
+  ],
+  "client_config": {
+    "other": {
+      "check-updates": "false",
+      "enable-crash-log-uploading": "false"
+    },
+    "graphics": {
+      "full-screen": "false",
+      "v-sync": "false",
+      "show-clouds": "false",
+      "show-fog": "false",
+      "show-animated-water": "false",
+      "show-tree-distortion": "false",
+      "additional-terrain-effects": "false",
+      "light-occlusion": "false",
+      "high-quality-animations": "false",
+      "show-game-simulations-in-background": "false"
+    }
+  },
+  "timing": {
+    "before_actions": 0.15,
+    "between_actions": 0.1,
+    "after_actions": 0.3,
+    "min_run": 1.0,
+    "render_wait": 0.7
+  },
+  "start_tick": 310
+}

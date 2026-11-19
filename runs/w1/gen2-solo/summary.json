@@ -1,0 +1,66 @@
+{
+  "stop": "error",
+  "error": "Traceback (most recent call last):\n  File \"/home/user/factorio/factoriobench/run.py\", line 688, in run\n    stop = self.play()\n  File \"/home/user/factorio/factoriobench/run.py\", line 479, in play\n    handbook = Path(cfg.handbook).read_text() if cfg.handbook else None\n               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^\n  File \"/usr/local/lib/python3.13/pathlib/_local.py\", line 546, in read_text\n    return PathBase.read_text(self, encoding, errors, newline)\n           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.13/pathlib/_abc.py\", line 632, in read_text\n    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:\n         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.13/pathlib/_local.py\", line 537, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: 'runs/w1/gen1-solo/handbook.md'\n",
+  "mode": "solo",
+  "teams": {
+    "player": {
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "players": [
+        "agent-1"
+      ],
+      "score": 0.0,
+      "gross_production": 0.0,
+      "usd": 0.0,
+      "turns": 0,
+      "furthest_rung": 0,
+      "furthest_label": "",
+      "technologies_researched": 0,
+      "rocket_launched": false,
+      "production": {
+        "items": {},
+        "items_used": {},
+        "fluids": {},
+        "built": {}
+      },
+      "kills": {},
+      "losses": {}
+    }
+  },
+  "winner": null,
+  "agents": [
+    {
+      "name": "agent-1",
+      "team": "player",
+      "model": "claude-opus-5-5",
+      "stop": null,
+      "turns": 0,
+      "usd": 0.0,
+      "tokens": {},
+      "compactions": 0,
+      "screenshots": 0
+    }
+  ],
+  "effort": "medium",
+  "seed": 1001,
+  "peaceful": true,
+  "cease_fire": true,
+  "org": "flat",
+  "handbook": "runs/w1/gen1-solo/handbook.md",
+  "deadline_minutes": 20.0,
+  "pauses": 0,
+  "game_ticks": 0,
+  "game_time": "0:00:00",
+  "usd": 0,
+  "tokens": {
+    "input": 0,
+    "output": 0,
+    "cache_write": 0,
+    "cache_read": 0
+  },
+  "integrity_clean": true,
+  "commands_denied": 0,
+  "commands_run": 0,
+  "wall_seconds": 67
+}
