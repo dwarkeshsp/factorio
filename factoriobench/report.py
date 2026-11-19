@@ -41,8 +41,8 @@ def timelapse(run_dir: Path, agent: str = "agent-1", fps: int = 6) -> Path:
     """An mp4 of one agent's end-of-turn screenshots, one frame per turn."""
     out = run_dir / f"timelapse-{agent}.mp4"
     result = subprocess.run(
-        ["ffmpeg", "-y", "-loglevel", "error", "-framerate", str(fps), "-pattern_type", "glob",
-         "-i", str(run_dir / "agents" / agent / "shots" / "[0-9][0-9][0-9][0-9][0-9].jpg"),
+        ["nice", "-n", "19", "ffmpeg", "-y", "-loglevel", "error", "-threads", "1", "-framerate", str(fps), "-pattern_type", "glob",
+         "-i", str(run_dir / "agents" / agent / "shots" / "?????.jpg"),
          "-c:v", "libx264", "-pix_fmt", "yuv420p", str(out)],
         capture_output=True, text=True, check=False,
     )
