@@ -119,3 +119,16 @@ In the original environment the Anthropic key was stored as `MY_ANTHROPIC_API_KE
 1. Reproduce the smoke test in the new repository and confirm the numbers above.
 2. Get the full game running with a console connection for scoring and a fixed seed, on peaceful mode.
 3. Run a capped solo attempt (say 500 turns) to see how far up the technology tree one model gets and where it stalls. That result decides whether stage 2 is a leaderboard or a research problem.
+
+## Addendum: how run B ended
+
+This brief was written while run B was still going. The previous agent's closing message reported its end:
+
+- Run B: 90 turns, $1.87, 475 seconds of game time. The model completed the tutorial level (the game showed its
+  "Victory!" screen) and stopped on its own.
+- Both runs together: 115 turns and $2.25 for the whole level, all on Claude Opus 5.5. It mined iron, stone, coal
+  and wood, crafted a furnace, a burner mining drill and a chest, and fuelled and placed them.
+
+What happened after this brief is in [`RESULTS.md`](RESULTS.md) and [`DESIGN.md`](DESIGN.md). The prototype
+`agent.py` it refers to is in this repository's history (`prototype/agent.py` in the first commits) and was
+replaced by the `factoriobench` package.
