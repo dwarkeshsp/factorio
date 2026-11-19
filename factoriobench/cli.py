@@ -21,10 +21,10 @@ def cmd_setup(args: argparse.Namespace) -> None:
 
 def cmd_run(args: argparse.Namespace) -> None:
     cfg = RunConfig(
-        out=args.out, model=args.model, effort=args.effort, seed=args.seed, peaceful=not args.hostile,
+        out=args.out, models=args.model.split(","), effort=args.effort, seed=args.seed, peaceful=not args.hostile,
         max_turns=args.max_turns, max_usd=args.max_usd, max_game_hours=args.max_game_hours,
         compact_at_tokens=args.compact_at_tokens, keep_turns=args.keep_turns,
-        render_threads=args.render_threads, gpu=args.gpu,
+        render_threads=args.render_threads, gpu=args.gpu, ledger=args.ledger, budget_usd=args.budget,
     )
     summary = run(cfg)
     print(json.dumps(summary, indent=2))
@@ -38,7 +38,7 @@ def cmd_report(args: argparse.Namespace) -> None:
 
 
 def cmd_timelapse(args: argparse.Namespace) -> None:
-    print(report.timelapse(Path(args.run), fps=args.fps))
+    print(report.timelapse(Path(args.run), agent=args.agent, fps=args.fps))
 
 
 def main(argv: list[str] | None = None) -> None:
@@ -54,7 +54,8 @@ def main(argv: list[str] | None = None) -> None:
 
     p = sub.add_parser("run", help="one model plays one freeplay map")
     p.add_argument("--out", required=True, help="run directory, for example runs/opus55-seed1001")
-    p.add_argument("--model", default="claude-opus-5-5", choices=sorted(PRICES))
+    p.add_argument("--model", default="claude-opus-5-5",
+                   help="model name, or a comma-separated list for a team (one agent each). Known: " + ", ".join(sorted(PRICES)))
     p.add_argument("--effort", default=None, help="low, medium, high, xhigh or max; default is the model's own default")
     p.add_argument("--seed", type=int, default=1001, help="map generation seed")
     p.add_argument("--hostile", action="store_true", help="enemies attack (default is peaceful mode)")
@@ -63,6 +64,8 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("--max-game-hours", type=float, default=40.0)
     p.add_argument("--compact-at-tokens", type=int, default=150_000, help="summarise older history past this context size")
     p.add_argument("--keep-turns", type=int, default=6, help="recent turns kept verbatim through a compaction")
+    p.add_argument("--ledger", default="runs/ledger.jsonl", help="spend ledger shared by all runs")
+    p.add_argument("--budget", type=float, default=500.0, help="stop when the ledger's total reaches this many dollars")
     p.add_argument("--render-threads", type=int, default=None, help="software-rendering threads for the game client")
     p.add_argument("--gpu", action="store_true", help="use the machine's GPU instead of software rendering")
     p.set_defaults(func=cmd_run)
@@ -73,6 +76,7 @@ def main(argv: list[str] | None = None) -> None:
 
     p = sub.add_parser("timelapse", help="make an mp4 from a run's end-of-turn screenshots")
     p.add_argument("run")
+    p.add_argument("--agent", default="agent-1")
     p.add_argument("--fps", type=int, default=6)
     p.set_defaults(func=cmd_timelapse)
 

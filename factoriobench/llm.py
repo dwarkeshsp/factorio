@@ -7,6 +7,7 @@ written by the same model, with the most recent turns kept verbatim.
 """
 from __future__ import annotations
 
+import base64
 import json
 import os
 from dataclasses import dataclass, field
@@ -14,6 +15,8 @@ from pathlib import Path
 from typing import Any, Callable
 
 import anthropic
+
+from .desktop import MOUSE_HOLD_TOOL
 
 # USD per million tokens: input, output, 5-minute cache write, cache read.
 # Source: platform.claude.com/docs/en/about-claude/pricing, read 18 Nov 2026.
@@ -62,10 +65,20 @@ def cost_usd(model: str, counts: dict[str, int]) -> float:
 
 @dataclass
 class Call:
+    """One action the model asked for, in the harness's vocabulary (the computer toolset's member names)."""
     id: str
     name: str
     input: dict
-    toolset: str | None
+    toolset: str | None = None
+
+
+@dataclass
+class Outcome:
+    """What happened to one Call. `image` is JPEG bytes for screenshot and zoom."""
+    call: Call
+    text: str = "OK"
+    image: bytes | None = None
+    error: bool = False
 
 
 @dataclass
@@ -73,19 +86,15 @@ class Reply:
     text: str
     thinking: str
     calls: list[Call]
-    stop_reason: str
+    stop: str  # "actions", "stopped", "refusal" or "cut_off"
     usd: float
     counts: dict[str, int]
     notes: list[str] = field(default_factory=list)
 
 
-def tool_result(call: Call, content: list[dict] | str, is_error: bool = False) -> dict:
-    result: dict[str, Any] = {"type": "tool_result", "tool_use_id": call.id, "content": content}
-    if call.toolset:
-        result["toolset_name"] = call.toolset  # required on results for toolset members
-    if is_error:
-        result["is_error"] = True
-    return result
+def image_block(jpeg: bytes) -> dict:
+    return {"type": "image", "source": {"type": "base64", "media_type": "image/jpeg",
+                                        "data": base64.standard_b64encode(jpeg).decode()}}
 
 
 def count_images(history: list[dict]) -> int:
@@ -117,7 +126,7 @@ def strip_images(message: dict) -> dict:
 
 
 class ClaudePlayer:
-    def __init__(self, model: str, system: str, extra_tools: list[dict], effort: str | None = None,
+    def __init__(self, model: str, system: str, effort: str | None = None,
                  compact_at_tokens: int = 150_000, compact_at_images: int = 300, keep_turns: int = 6,
                  summary_instructions: str | None = None, transcript: Path | None = None,
                  log: Callable[..., None] | None = None):
@@ -127,7 +136,7 @@ class ClaudePlayer:
         self.effort = effort
         # Built once: any change to system or tools invalidates the cache and every thinking block.
         self.system = [{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}]
-        self.tools = [{"type": "computer_toolset_20260801"}, *extra_tools]
+        self.tools = [{"type": "computer_toolset_20260801"}, MOUSE_HOLD_TOOL]
         self.compact_at_tokens = compact_at_tokens
         self.compact_at_images = compact_at_images
         self.keep_turns = keep_turns
@@ -174,9 +183,29 @@ class ClaudePlayer:
         return kwargs
 
     # --- conversation ------------------------------------------------------
-    def say(self, content: list[dict]) -> None:
-        """Append a user message: the opening objective, or a turn's tool results."""
-        self._append({"role": "user", "content": content})
+    def begin(self, text: str, jpeg: bytes) -> None:
+        self._append({"role": "user", "content": [{"type": "text", "text": text}, image_block(jpeg)]})
+
+    def nudge(self, text: str) -> None:
+        self._append({"role": "user", "content": [{"type": "text", "text": text}]})
+
+    def observe(self, outcomes: list[Outcome], note: str, jpeg: bytes) -> None:
+        """Answer every call of the last reply; the end-of-turn screenshot rides on the last result."""
+        results = []
+        for outcome in outcomes:
+            content: list[dict] = []
+            if outcome.image is not None:
+                content.append(image_block(outcome.image))
+            elif outcome.text:
+                content.append({"type": "text", "text": outcome.text})
+            result: dict[str, Any] = {"type": "tool_result", "tool_use_id": outcome.call.id, "content": content}
+            if outcome.call.toolset:
+                result["toolset_name"] = outcome.call.toolset  # required on results for toolset members
+            if outcome.error:
+                result["is_error"] = True
+            results.append(result)
+        results[-1]["content"].extend([{"type": "text", "text": note}, image_block(jpeg)])
+        self._append({"role": "user", "content": results})
 
     def step(self) -> Reply:
         notes: list[str] = []
@@ -200,13 +229,20 @@ class ClaudePlayer:
         self.context_tokens = counts["input"] + counts["cache_read"] + counts["cache_write"] + counts["output"]
         blocks = [block.to_dict() for block in response.content]
         self._append({"role": "assistant", "content": blocks})
+        calls = [Call(b["id"], b["name"], b.get("input") or {}, b.get("toolset_name"))
+                 for b in blocks if b.get("type") == "tool_use"]
+        if response.stop_reason == "refusal":
+            stop = "refusal"
+        elif calls:
+            stop = "actions"
+        elif response.stop_reason == "end_turn":
+            stop = "stopped"
+        else:
+            stop = "cut_off"
         return Reply(
             text=" ".join(b["text"] for b in blocks if b.get("type") == "text").strip(),
             thinking=" ".join(b.get("thinking", "") for b in blocks if b.get("type") == "thinking").strip(),
-            calls=[Call(b["id"], b["name"], b.get("input") or {}, b.get("toolset_name"))
-                   for b in blocks if b.get("type") == "tool_use"],
-            stop_reason=response.stop_reason or "",
-            usd=usd, counts=counts, notes=notes,
+            calls=calls, stop=stop, usd=usd, counts=counts, notes=notes,
         )
 
     # --- context management --------------------------------------------------
@@ -229,7 +265,12 @@ class ClaudePlayer:
         compaction: dict[str, Any] = {"type": "summarize"}
         if self.summary_instructions:
             compaction["instructions"] = self.summary_instructions
-        response = self.client.beta.messages.create(messages=older, compaction=compaction, **self._shared())
+        try:
+            # The summarised messages end where an earlier request ended, so its cache entry can be read.
+            response = self.client.beta.messages.create(
+                messages=older, compaction=compaction, cache_control={"type": "ephemeral"}, **self._shared())
+        except anthropic.BadRequestError:
+            response = self.client.beta.messages.create(messages=older, compaction=compaction, **self._shared())
         usd = 0.0
         counts = {"input": 0, "output": 0, "cache_write": 0, "cache_read": 0}
         # A compaction call reports zero usage at the top level and its real cost per iteration.
@@ -250,3 +291,9 @@ class ClaudePlayer:
                                          "kept_messages": len(recent), "content": blocks}) + "\n")
         return {"ok": True, "usd": usd, "counts": counts, "replaced_messages": len(older),
                 "kept_messages": len(recent), "summary": summary}
+
+
+def make_player(model: str, system: str, **kwargs: Any):
+    if model.startswith("claude-"):
+        return ClaudePlayer(model, system, **kwargs)
+    raise KeyError(f"no player for model {model!r}")

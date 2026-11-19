@@ -15,15 +15,15 @@ How this session works:
 
 Say briefly what you are doing and why with each response. The run ends when the objective is complete, when a limit set by the operator is reached, or when you reply without any action, so keep acting until the objective is complete."""
 
-FREEPLAY_OBJECTIVE = (
-    "Launch a rocket into space, in as little game time as you can. You start a new freeplay game alone, "
-    "with nothing built; enemies are present but peaceful (they do not attack unless attacked)."
-)
+TEAM = """
 
-FREEPLAY_OBJECTIVE_HOSTILE = (
-    "Launch a rocket into space, in as little game time as you can. You start a new freeplay game alone, "
-    "with nothing built; enemies will attack as your pollution reaches them."
-)
+You are {name}, one of {count} players on the same team in this game: {names}. You all share one objective, one map and one factory. Each of the others is an AI like you, at its own computer, seeing only its own screen. You can talk to them through the in-game chat: press the grave key (`) to open the chat line, type a message and press Enter. Everyone sees it at the bottom left of their screen for a short while, and opening the chat line shows earlier messages. The game stays paused until every player has replied, then everyone's actions run at the same time."""
+
+OBJECTIVE = "Launch a rocket into space, in as little game time as you can."
+START_SOLO = "You start a new freeplay game alone, with nothing built"
+START_TEAM = "Your team starts a new freeplay game together, with nothing built"
+ENEMIES_PEACEFUL = "enemies are present but peaceful (they do not attack unless attacked)."
+ENEMIES_HOSTILE = "enemies will attack as your pollution reaches them."
 
 SUMMARY_INSTRUCTIONS = """You are writing the notes that will replace the earlier part of this Factorio session in your own memory. After this, you will no longer see the messages or screenshots summarised here; you will see only these notes and the most recent few turns. Write everything you would need to keep playing well without them.
 
@@ -38,5 +38,14 @@ Cover, concisely and concretely:
 Write plain text only. Do not call any tools."""
 
 
-def system_prompt(width: int, height: int) -> str:
-    return SYSTEM.format(width=width, height=height)
+def system_prompt(width: int, height: int, name: str = "agent-1", team: list[str] | None = None) -> str:
+    text = SYSTEM.format(width=width, height=height)
+    if team and len(team) > 1:
+        text += TEAM.format(name=name, count=len(team), names=", ".join(team))
+    return text
+
+
+def opening(peaceful: bool, team: list[str] | None = None) -> str:
+    start = START_TEAM if team and len(team) > 1 else START_SOLO
+    enemies = ENEMIES_PEACEFUL if peaceful else ENEMIES_HOSTILE
+    return f"Objective: {OBJECTIVE} {start}; {enemies}\n\nThe game has just started. Current screen:"

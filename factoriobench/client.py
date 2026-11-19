@@ -51,7 +51,7 @@ class Display:
                 "-screen", "0", f"{self.size[0]}x{self.size[1]}x24",
                 "+extension", "GLX", "-nolisten", "tcp",
             ],
-            pass_fds=(write_fd,), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True,
+            pass_fds=(write_fd,), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True, preexec_fn=paths.die_with_parent,
         )
         os.close(write_fd)
         deadline = time.time() + timeout
@@ -110,7 +110,7 @@ class Client:
                 "--window-size", f"{width}x{height}",
                 "--disable-audio",
             ],
-            env=env, stdout=stdout, stderr=subprocess.STDOUT, start_new_session=True,
+            env=env, stdout=stdout, stderr=subprocess.STDOUT, start_new_session=True, preexec_fn=paths.die_with_parent,
         )
 
     def alive(self) -> bool:

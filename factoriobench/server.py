@@ -136,7 +136,7 @@ class Server:
                 "--server-settings", str(self.dir / "server-settings.json"),
                 "--console-log", str(self.console_log),
             ],
-            stdout=stdout, stderr=subprocess.STDOUT, start_new_session=True,
+            stdout=stdout, stderr=subprocess.STDOUT, start_new_session=True, preexec_fn=paths.die_with_parent,
         )
         deadline = time.time() + timeout
         while True:

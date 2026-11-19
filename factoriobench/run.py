@@ -1,12 +1,17 @@
-"""One run: one model plays one freeplay map through the screen until a stop condition."""
+"""One run: one or more models play one freeplay map through their screens until a stop condition.
+
+A solo run is a team of one. With several agents the game advances in rounds: it stays paused
+until every agent has replied, then all of their action batches run at the same time, and the
+round lasts as long as the longest batch.
+"""
 from __future__ import annotations
 
-import base64
 import json
 import subprocess
 import time
 import traceback
-from dataclasses import asdict, dataclass
+from concurrent.futures import ThreadPoolExecutor
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -14,39 +19,38 @@ from PIL import Image
 
 from . import __version__, prompts
 from .client import CLIENT_CONFIG, SCREEN, Client, Display
-from .desktop import MOUSE_HOLD_TOOL, ActionError, Desktop, encode_jpeg
-from .llm import HALT_TEXT, Call, ClaudePlayer, tool_result
+from .desktop import ActionError, Desktop, encode_jpeg
+from .ledger import Ledger
+from .llm import HALT_TEXT, Call, Outcome, Reply, make_player
 from .scoring import SNAPSHOT_LUA, TICKS_PER_SECOND, Scorer, game_clock, ladder_check_lua
 from .server import Server
 
-# Seconds of running game around the model's actions. They are charged as game time, the
+# Seconds of running game around the models' actions. They are charged as game time, the
 # same for every model.
+BEFORE_ACTIONS = 0.15  # the client needs a few ticks to see the unpause; input sent sooner is lost
 BETWEEN_ACTIONS = 0.1  # lets one input register before the next
 AFTER_ACTIONS = 0.3    # lets the last input take effect before the game is paused
-RENDER_WAIT = 0.25     # paused; lets the client draw the frozen state before the capture
+RENDER_WAIT = 0.25     # paused; lets the clients draw the frozen state before the capture
+SNAPSHOT_EVERY = 25    # rounds between full production snapshots in the log
 
 
 @dataclass
 class RunConfig:
     out: str
-    model: str = "claude-opus-5-5"
+    models: list[str] = field(default_factory=lambda: ["claude-opus-5-5"])
     effort: str | None = None
     seed: int = 1001
     peaceful: bool = True
     max_turns: int = 100
     max_usd: float = 5.0
     max_game_hours: float = 40.0
-    player: str = "agent-1"
     compact_at_tokens: int = 150_000
     keep_turns: int = 6
     render_threads: int | None = None
     gpu: bool = False
     edition: str = "full"
-
-
-def image_block(jpeg: bytes) -> dict:
-    return {"type": "image", "source": {"type": "base64", "media_type": "image/jpeg",
-                                        "data": base64.standard_b64encode(jpeg).decode()}}
+    ledger: str = "runs/ledger.jsonl"
+    budget_usd: float = 500.0
 
 
 def harness_commit() -> str | None:
@@ -58,26 +62,84 @@ def harness_commit() -> str | None:
         return None
 
 
+class Seat:
+    """One agent: its display, its game client, its hands and eyes, and its model."""
+
+    def __init__(self, run_dir: Path, name: str, model: str, cfg: RunConfig):
+        self.name = name
+        self.model = model
+        self.dir = run_dir / "agents" / name
+        self.shots = self.dir / "shots"
+        self.shots.mkdir(parents=True, exist_ok=True)
+        self.display = Display(SCREEN)
+        self.client = Client(self.dir / "client", self.display, name, edition=cfg.edition,
+                             render_threads=cfg.render_threads, gpu=cfg.gpu)
+        self.desktop: Desktop | None = None
+        self.player: Any = None
+        self.active = True
+        self.stop: str | None = None
+        self.shot_n = 0
+
+    def save_shot(self, image: Image.Image, turn: int, suffix: str = "") -> tuple[str, bytes]:
+        jpeg = encode_jpeg(image)
+        name = f"{turn:05d}_{suffix}.jpg" if suffix else f"{turn:05d}.jpg"
+        (self.shots / name).write_bytes(jpeg)
+        self.shot_n += 1
+        return name, jpeg
+
+    def execute(self, calls: list[Call], turn: int) -> tuple[list[Outcome], list[dict]]:
+        """Carry out a batch in order, stopping at the first failure. The game must be running."""
+        assert self.desktop is not None
+        outcomes: list[Outcome] = []
+        record: list[dict] = []
+        failed = False
+        for index, call in enumerate(calls):
+            entry: dict[str, Any] = {"name": call.name, "input": call.input}
+            if failed:
+                outcomes.append(Outcome(call, HALT_TEXT, error=True))
+                entry["skipped"] = True
+            elif call.name == "screenshot" and index == len(calls) - 1:
+                outcomes.append(Outcome(call, ""))  # answered by the end-of-turn capture
+            else:
+                try:
+                    out = self.desktop.act(call.name, call.input)
+                    if isinstance(out, Image.Image):
+                        name, jpeg = self.save_shot(out, turn, f"a{index + 1}_{call.name}")
+                        outcomes.append(Outcome(call, "", image=jpeg))
+                        entry["shot"] = name
+                    else:
+                        outcomes.append(Outcome(call, out))
+                    time.sleep(BETWEEN_ACTIONS)
+                except ActionError as err:
+                    outcomes.append(Outcome(call, f"Error: {err}", error=True))
+                    entry["error"] = str(err)
+                    failed = True
+            record.append(entry)
+        return outcomes, record
+
+    def close(self) -> None:
+        if self.desktop:
+            self.desktop.close()
+        self.client.stop()
+        self.display.stop()
+
+
 class Run:
     def __init__(self, cfg: RunConfig):
         self.cfg = cfg
         self.dir = Path(cfg.out).resolve()
         if (self.dir / "summary.json").exists():
             raise SystemExit(f"{self.dir} already holds a finished run; choose another --out")
-        self.shots = self.dir / "shots"
-        self.shots.mkdir(parents=True, exist_ok=True)
+        self.dir.mkdir(parents=True, exist_ok=True)
         self._log = (self.dir / "log.jsonl").open("a")
         self.server = Server(self.dir / "server", seed=cfg.seed, peaceful=cfg.peaceful, edition=cfg.edition)
-        self.display = Display(SCREEN)
-        self.client = Client(self.dir / "client", self.display, cfg.player, edition=cfg.edition,
-                             render_threads=cfg.render_threads, gpu=cfg.gpu)
-        self.desktop: Desktop | None = None
+        self.seats = [Seat(self.dir, f"agent-{i}", model, cfg) for i, model in enumerate(cfg.models, start=1)]
         self.scorer = Scorer()
-        self.player: ClaudePlayer | None = None
+        self.ledger = Ledger(Path(cfg.ledger), self.dir.name)
         self.turn = 0
-        self.shot_n = 0
         self.game_ticks = 0
         self.started = time.time()
+        self.pool = ThreadPoolExecutor(max_workers=max(2, len(self.seats)))
 
     # --- logging -----------------------------------------------------------
     def emit(self, **record: Any) -> None:
@@ -85,15 +147,9 @@ class Run:
         self._log.write(json.dumps(record) + "\n")
         self._log.flush()
 
-    def save_shot(self, image: Image.Image, suffix: str = "") -> tuple[str, dict]:
-        jpeg = encode_jpeg(image)
-        if suffix:
-            name = f"{self.turn:05d}_{suffix}.jpg"
-        else:
-            name = f"{self.turn:05d}.jpg"
-        (self.shots / name).write_bytes(jpeg)
-        self.shot_n += 1
-        return name, image_block(jpeg)
+    @property
+    def spent(self) -> float:
+        return sum(seat.player.spent_usd for seat in self.seats if seat.player)
 
     # --- setup -------------------------------------------------------------
     def launch(self) -> None:
@@ -103,24 +159,29 @@ class Run:
         if missing:
             raise RuntimeError(f"milestone ladder names unknown to this game version: {missing}")
         game_version = self.server.eval("return script.active_mods.base")
-        self.display.start()
-        self.client.connect(self.server.port)
-        deadline = time.time() + 300
+        for seat in self.seats:
+            seat.display.start()
+            seat.client.connect(self.server.port)
+        names = {seat.name for seat in self.seats}
+        deadline = time.time() + 300 + 120 * len(self.seats)
         while True:
-            if not self.client.alive():
-                raise RuntimeError(f"the game client exited during startup; see {self.client.dir / 'stdout.log'}")
-            me = [p for p in self.server.players() if p["name"] == cfg.player]
-            if me and me[0]["connected"] and me[0]["is_character"]:
+            for seat in self.seats:
+                if not seat.client.alive():
+                    raise RuntimeError(f"{seat.name}'s game client exited during startup; see {seat.client.dir / 'stdout.log'}")
+            ready = {p["name"] for p in self.server.players() if p["connected"] and p["is_character"]}
+            if names <= ready:
                 break
             if time.time() > deadline:
-                raise RuntimeError("the game client did not join the server in time")
+                raise RuntimeError(f"game clients did not all join in time; joined: {sorted(ready)}")
             time.sleep(1.0)
         time.sleep(2.0)  # the first frames after joining are still loading sprites
         start_tick = self.server.pause()
         self.scorer = Scorer(start_tick=start_tick)
-        self.desktop = Desktop(self.display.name, SCREEN)
+        for seat in self.seats:
+            seat.desktop = Desktop(seat.display.name, SCREEN)
         config = {
             **asdict(cfg),
+            "agents": [{"name": seat.name, "model": seat.model} for seat in self.seats],
             "harness_version": __version__,
             "harness_commit": harness_commit(),
             "prompt_version": prompts.PROMPT_VERSION,
@@ -128,140 +189,142 @@ class Run:
             "scenario": "freeplay",
             "screen": list(SCREEN),
             "client_config": CLIENT_CONFIG,
-            "timing": {"between_actions": BETWEEN_ACTIONS, "after_actions": AFTER_ACTIONS, "render_wait": RENDER_WAIT},
+            "timing": {"before_actions": BEFORE_ACTIONS, "between_actions": BETWEEN_ACTIONS, "after_actions": AFTER_ACTIONS, "render_wait": RENDER_WAIT},
             "start_tick": start_tick,
         }
         (self.dir / "config.json").write_text(json.dumps(config, indent=2))
         self.emit(event="start", **config)
 
-    # --- one turn ------------------------------------------------------------
-    def execute(self, calls: list[Call]) -> tuple[list[dict], list[dict]]:
-        """Run a batch of actions with the game unpaused; return tool results and a log of them."""
-        assert self.desktop is not None
-        results: list[dict] = []
-        record: list[dict] = []
-        failed = False
-        trailing_screenshot = bool(calls) and calls[-1].name == "screenshot"
-        self.server.resume()
-        try:
-            for index, call in enumerate(calls):
-                entry: dict[str, Any] = {"name": call.name, "input": call.input}
-                if failed:
-                    results.append(tool_result(call, HALT_TEXT, is_error=True))
-                    entry["skipped"] = True
-                elif trailing_screenshot and index == len(calls) - 1:
-                    results.append(tool_result(call, []))  # filled with the end-of-turn capture
-                else:
-                    try:
-                        out = self.desktop.act(call.name, call.input)
-                        if isinstance(out, Image.Image):
-                            name, block = self.save_shot(out, f"a{index + 1}_{call.name}")
-                            results.append(tool_result(call, [block]))
-                            entry["shot"] = name
-                        else:
-                            results.append(tool_result(call, [{"type": "text", "text": out}]))
-                        time.sleep(BETWEEN_ACTIONS)
-                    except ActionError as err:
-                        results.append(tool_result(call, [{"type": "text", "text": f"Error: {err}"}], is_error=True))
-                        entry["error"] = str(err)
-                        failed = True
-                record.append(entry)
-            time.sleep(AFTER_ACTIONS)
-        finally:
-            self.game_ticks = self.server.pause() - self.scorer.start_tick
-        return results, record
+    # --- one round -----------------------------------------------------------
+    def capture(self, seat: Seat) -> tuple[str, bytes]:
+        assert seat.desktop is not None
+        return seat.save_shot(seat.desktop.grab(), self.turn)
 
-    def observe(self) -> tuple[str, dict, list[str], dict]:
-        """With the game paused: capture the screen and read the score."""
-        assert self.desktop is not None
+    def observe(self) -> tuple[dict[str, tuple[str, bytes]], list[str], dict]:
+        """With the game paused: capture every screen and read the score."""
         time.sleep(RENDER_WAIT)
-        name, block = self.save_shot(self.desktop.grab())
+        shots = {seat.name: self.capture(seat) for seat in self.seats}
         snapshot = self.server.eval(SNAPSHOT_LUA)
         new = self.scorer.update(snapshot)
-        return name, block, new, snapshot
+        return shots, new, snapshot
 
     def stop_reason(self, snapshot: dict) -> str | None:
         cfg = self.cfg
-        assert self.player is not None
         if self.scorer.launched:
             return "rocket_launched"
-        if cfg.player not in (snapshot.get("connected") or []) or not self.client.alive():
-            return "left_game"
+        connected = snapshot.get("connected") or []
+        for seat in self.seats:
+            if seat.name not in connected or not seat.client.alive():
+                return "left_game"
+        if not any(seat.active for seat in self.seats):
+            return self.seats[0].stop if len(self.seats) == 1 else "all_agents_stopped"
         if (self.dir / "STOP").exists():
             return "stopped_by_operator"
-        if self.player.spent_usd >= cfg.max_usd:
+        if self.spent >= cfg.max_usd:
             return "budget"
+        if self.ledger.total_with(self.spent) >= cfg.budget_usd:
+            return "overall_budget"
         if self.game_ticks >= cfg.max_game_hours * 3600 * TICKS_PER_SECOND:
             return "game_time_limit"
         if self.turn >= cfg.max_turns:
             return "max_turns"
         return None
 
-    # --- the loop ------------------------------------------------------------
+    def think(self, seat: Seat) -> tuple[Reply, float]:
+        """One model reply, retrying a reply that was cut off before any action."""
+        t0 = time.time()
+        reply = seat.player.step()
+        retries = 0
+        while reply.stop == "cut_off" and retries < 2:
+            self.emit(event="cut_off", turn=self.turn, agent=seat.name, text=reply.text)
+            seat.player.nudge("Your last response was cut off before any action. Continue.")
+            reply = seat.player.step()
+            retries += 1
+        return reply, time.time() - t0
+
     def play(self) -> str:
         cfg = self.cfg
-        objective = prompts.FREEPLAY_OBJECTIVE if cfg.peaceful else prompts.FREEPLAY_OBJECTIVE_HOSTILE
-        self.player = ClaudePlayer(
-            cfg.model, prompts.system_prompt(*SCREEN), [MOUSE_HOLD_TOOL], effort=cfg.effort,
-            compact_at_tokens=cfg.compact_at_tokens, keep_turns=cfg.keep_turns,
-            summary_instructions=prompts.SUMMARY_INSTRUCTIONS, transcript=self.dir / "conversation.jsonl",
-        )
-        name, block, _, _ = self.observe()
-        self.player.say([{"type": "text", "text": f"Objective: {objective}\n\nThe game has just started. Current screen:"}, block])
-        self.emit(event="observe", turn=0, shot=name)
+        team = [seat.name for seat in self.seats]
+        shots, _, _ = self.observe()
+        for seat in self.seats:
+            seat.player = make_player(
+                seat.model, prompts.system_prompt(*SCREEN, name=seat.name, team=team), effort=cfg.effort,
+                compact_at_tokens=cfg.compact_at_tokens, keep_turns=cfg.keep_turns,
+                summary_instructions=prompts.SUMMARY_INSTRUCTIONS,
+                transcript=self.dir / "agents" / seat.name / "conversation.jsonl",
+            )
+            name, jpeg = shots[seat.name]
+            seat.player.begin(prompts.opening(peaceful=cfg.peaceful, team=team), jpeg)
+            self.emit(event="observe", turn=0, agent=seat.name, shot=name)
 
         while True:
             self.turn += 1
-            t0 = time.time()
-            reply = self.player.step()
-            think_s = time.time() - t0
-            if reply.stop_reason == "refusal":
-                self.emit(event="turn", turn=self.turn, stop_reason="refusal", text=reply.text, usd=round(self.player.spent_usd, 4))
-                return "refusal"
-            if not reply.calls:
-                self.emit(event="turn", turn=self.turn, stop_reason=reply.stop_reason, text=reply.text,
-                          thinking=reply.thinking, usd=round(self.player.spent_usd, 4))
-                if reply.stop_reason == "end_turn":
-                    return "model_stopped"
-                # Cut off mid-thought (for example by the output limit): let it carry on.
-                self.player.say([{"type": "text", "text": "Your last response was cut off before any action. Continue."}])
-                if self.turn >= cfg.max_turns:
-                    return "max_turns"
-                continue
+            playing = [seat for seat in self.seats if seat.active]
+            thoughts = dict(zip([s.name for s in playing], self.pool.map(self.think, playing)))
+            acting: list[Seat] = []
+            for seat in playing:
+                reply, think_s = thoughts[seat.name]
+                if reply.stop != "actions":
+                    seat.active = False
+                    seat.stop = {"stopped": "model_stopped", "refusal": "refusal"}.get(reply.stop, reply.stop)
+                    self.emit(event="turn", turn=self.turn, agent=seat.name, stop=seat.stop, text=reply.text,
+                              thinking=reply.thinking, think_s=round(think_s, 1), usd=round(seat.player.spent_usd, 4),
+                              turn_usd=round(reply.usd, 4), tokens=reply.counts)
+                    print(f"[{self.turn}] {seat.name} stopped ({seat.stop}): {reply.text[:300]}", flush=True)
+                else:
+                    acting.append(seat)
 
+            results: dict[str, tuple[list[Outcome], list[dict]]] = {}
             t1 = time.time()
-            results, actions = self.execute(reply.calls)
+            tick_before = self.game_ticks
+            if acting:
+                self.server.resume()
+                try:
+                    time.sleep(BEFORE_ACTIONS)
+                    done = self.pool.map(lambda seat: seat.execute(thoughts[seat.name][0].calls, self.turn), acting)
+                    results = dict(zip([s.name for s in acting], done))
+                    time.sleep(AFTER_ACTIONS)
+                finally:
+                    self.game_ticks = self.server.pause() - self.scorer.start_tick
             act_s = time.time() - t1
-            name, block, new, snapshot = self.observe()
-            last = results[-1]
-            if isinstance(last["content"], str):
-                last["content"] = [{"type": "text", "text": last["content"]}]
-            last["content"].extend([{"type": "text", "text": f"[game time {game_clock(self.game_ticks)}]"}, block])
-            self.player.say(results)
+            shots, new, snapshot = self.observe()
+            note = f"[game time {game_clock(self.game_ticks)}]"
+            ups = round((self.game_ticks - tick_before) / act_s, 1) if act_s > 0 else None
 
-            self.emit(
-                event="turn", turn=self.turn, think_s=round(think_s, 1), act_s=round(act_s, 2),
-                game_ticks=self.game_ticks, stop_reason=reply.stop_reason, text=reply.text, thinking=reply.thinking,
-                actions=actions, shot=name, new=new, usd=round(self.player.spent_usd, 4), turn_usd=round(reply.usd, 4),
-                tokens=reply.counts, context_tokens=self.player.context_tokens, notes=reply.notes,
-            )
-            summary = ", ".join(f"{a['name']}{json.dumps(a['input'])}" for a in actions)
-            print(f"[{self.turn}] {game_clock(self.game_ticks)} ${self.player.spent_usd:.2f} "
-                  f"ctx={self.player.context_tokens // 1000}k | {reply.text[:140]} | {summary[:240]}", flush=True)
+            for seat in acting:
+                reply, think_s = thoughts[seat.name]
+                outcomes, actions = results[seat.name]
+                name, jpeg = shots[seat.name]
+                seat.player.observe(outcomes, note, jpeg)
+                self.emit(
+                    event="turn", turn=self.turn, agent=seat.name, think_s=round(think_s, 1), text=reply.text,
+                    thinking=reply.thinking, actions=actions, shot=name, usd=round(seat.player.spent_usd, 4),
+                    turn_usd=round(reply.usd, 4), tokens=reply.counts, context_tokens=seat.player.context_tokens,
+                    notes=reply.notes,
+                )
+                summary = ", ".join(f"{a['name']}{json.dumps(a['input'])}" for a in actions)
+                print(f"[{self.turn}] {seat.name} {game_clock(self.game_ticks)} ${seat.player.spent_usd:.2f} "
+                      f"ctx={seat.player.context_tokens // 1000}k | {reply.text[:140]} | {summary[:240]}", flush=True)
+            self.emit(event="round", turn=self.turn, game_ticks=self.game_ticks, act_s=round(act_s, 2), ups=ups,
+                      new=new, usd=round(self.spent, 4))
             for key in new:
-                print(f"      first: {key}", flush=True)
-            if self.turn % 25 == 0:
+                print(f"      first: {key} at {game_clock(self.game_ticks)}", flush=True)
+            if self.turn % SNAPSHOT_EVERY == 0:
                 self.emit(event="snapshot", turn=self.turn, snapshot=snapshot)
+                self.ledger.record(self.spent)
 
             stop = self.stop_reason(snapshot)
             if stop:
                 return stop
-            if self.player.should_compact():
-                outcome = self.player.compact()
-                if outcome is not None:
-                    self.emit(event="compaction", turn=self.turn, **outcome)
-                    print(f"      compaction: {'ok' if outcome.get('ok') else 'failed'} ${outcome.get('usd', 0):.3f}", flush=True)
+            for seat in self.seats:
+                if seat.active and seat.player.should_compact():
+                    outcome = seat.player.compact()
+                    if outcome is not None:
+                        self.emit(event="compaction", turn=self.turn, agent=seat.name, **outcome)
+                        print(f"      {seat.name} compaction: {'ok' if outcome.get('ok') else 'failed'} "
+                              f"${outcome.get('usd', 0):.3f}", flush=True)
 
+    # --- wrap-up -------------------------------------------------------------
     def finish(self, stop: str, error: str | None = None) -> dict:
         integrity: dict[str, Any] = {}
         final_snapshot: dict[str, Any] = {}
@@ -272,42 +335,59 @@ class Run:
         except Exception as err:  # the server may already be gone; the summary is still worth writing
             integrity = {"clean": None, "error": str(err)}
         score = self.scorer.report()
-        player = self.player
+        totals = {"input": 0, "output": 0, "cache_write": 0, "cache_read": 0}
+        agents = []
+        for seat in self.seats:
+            player = seat.player
+            if player:
+                for key, value in player.totals.items():
+                    totals[key] += value
+            agents.append({
+                "name": seat.name, "model": seat.model, "stop": seat.stop,
+                "usd": round(player.spent_usd, 4) if player else 0.0,
+                "tokens": player.totals if player else {},
+                "compactions": player.compactions if player else 0,
+                "screenshots": seat.shot_n,
+            })
         summary = {
             "stop": stop,
             "error": error,
-            "model": self.cfg.model,
+            "agents": agents,
+            "models": self.cfg.models,
             "effort": self.cfg.effort,
             "seed": self.cfg.seed,
             "peaceful": self.cfg.peaceful,
             "turns": self.turn,
             "game_ticks": self.game_ticks,
             "game_time": game_clock(self.game_ticks),
-            "usd": round(player.spent_usd, 4) if player else 0.0,
-            "tokens": player.totals if player else {},
-            "compactions": player.compactions if player else 0,
+            "usd": round(self.spent, 4),
+            "tokens": totals,
             "rocket_launched": score["rocket_launched"],
             "furthest_rung": score["furthest_rung"],
             "furthest_label": score["furthest_label"],
             "rungs_total": score["rungs_total"],
             "technologies_researched": score["technologies_researched"],
+            "production": {
+                "items": final_snapshot.get("items") or {},
+                "fluids": final_snapshot.get("fluids") or {},
+                "built": final_snapshot.get("built") or {},
+            },
             "integrity_clean": integrity.get("clean"),
             "commands_denied": len(integrity.get("commands_denied", [])),
             "commands_run": len(integrity.get("commands_run", [])),
-            "screenshots": self.shot_n,
             "wall_seconds": round(time.time() - self.started),
         }
+        self.ledger.record(self.spent)
         (self.dir / "milestones.json").write_text(json.dumps(score, indent=2))
         (self.dir / "summary.json").write_text(json.dumps(summary, indent=2))
-        self.emit(event="end", **summary, integrity=integrity, final_snapshot=final_snapshot)
+        self.emit(event="end", **summary, integrity=integrity)
         return summary
 
     def close(self) -> None:
-        if self.desktop:
-            self.desktop.close()
-        self.client.stop()
+        self.pool.shutdown(wait=False, cancel_futures=True)
+        for seat in self.seats:
+            seat.close()
         self.server.stop()
-        self.display.stop()
         self._log.close()
 
     def run(self) -> dict:

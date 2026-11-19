@@ -1,7 +1,9 @@
 """Where the game installs live. Nothing here is inside the repository."""
 from __future__ import annotations
 
+import ctypes
 import os
+import signal
 from pathlib import Path
 
 EDITIONS = ("full", "demo", "headless")
@@ -37,3 +39,8 @@ def write_instance_config(instance_dir: Path, edition: str, sections: dict[str, 
     path = instance_dir / "config.ini"
     path.write_text("\n".join(lines))
     return path
+
+
+def die_with_parent() -> None:
+    """For Popen(preexec_fn=...): the child is killed if the harness dies, so a crash leaves no game running."""
+    ctypes.CDLL("libc.so.6", use_errno=True).prctl(1, signal.SIGKILL)  # PR_SET_PDEATHSIG
