@@ -69,6 +69,21 @@ results["runs"] = rows
 results["total_usd"] = round(sum(json.loads(p.read_text())["usd"] for p in RUNS.glob("*/*/summary.json")
                                  if p.parts[-3] != "shakedown"), 2)
 
+# --- players who left the game through its menu -------------------------------------------
+quits: dict[str, int] = {}
+for summary in sorted(RUNS.glob("*/*/summary.json")):
+    if summary.parts[-3] == "shakedown":
+        continue
+    data = json.loads(summary.read_text())
+    models = {agent["name"]: agent["model"] for agent in data["agents"]}
+    for line in (summary.parent / "log.jsonl").read_text().splitlines():
+        if '"event": "rejoin"' in line:
+            model = models[json.loads(line)["agent"]]
+            quits[model] = quits.get(model, 0) + 1
+    if data["stop"] == "left_game":  # before the harness could put a player back in; the leaver was an Opus agent each time
+        quits["claude-opus-5-5"] = quits.get("claude-opus-5-5", 0) + 1
+results["quits"] = quits
+
 # --- 1. one agent, by model ----------------------------------------------------------------
 solo_runs = {
     "gpt-6.2-astra": ["night1/solo-astra62"],

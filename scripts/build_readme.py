@@ -42,7 +42,7 @@ def match(path: str) -> str:
     if not teams:
         return ""
     return table(["Team", "Models", "Score", "Turns", "Cost"], [
-        [row["team"], NAMES[row["models"][0]] + (f" x{len(row['models'])}" if len(row["models"]) > 1 else ""),
+        [row["team"], NAMES[row["models"][0]] + (f" \u00d7{len(row['models'])}" if len(row["models"]) > 1 else ""),
          f"{row['score']:,.0f}", str(row["turns"]), f"${row['usd']:.2f}"] for row in teams])
 
 
@@ -58,8 +58,8 @@ org = table(["Organisation of a team of four", "Scores"], [
 
 results = "\n".join([
     md(P["headlines"]), "",
-    "Videos are in `results/night1/video/`: for each game, the bases from above (`...-overview.mp4`) and, for the games with "
-    "several agents, every agent's screen side by side (`...-screens.mp4`).", "",
+    "Videos sit beside each game under `runs/`: the bases from above (`overview.mp4`) and, for most games with "
+    "several agents, every agent's screen side by side (`screens.mp4`).", "",
     "### One agent alone", "", md(P["solo"]), "", chart("solo_over_time", "Production score over game time, one agent alone"), solo_table,
     "### Does a team beat an individual?", "", md(P["teams"]), "",
     chart("team_scaling", "Team production score for one, two and four agents"),

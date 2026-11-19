@@ -1,0 +1,73 @@
+{
+  "stop": "deadline",
+  "error": null,
+  "mode": "solo",
+  "teams": {
+    "player": {
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "players": [
+        "agent-1"
+      ],
+      "score": 1998.0,
+      "gross_production": 1998.0,
+      "usd": 0.1981,
+      "turns": 14,
+      "furthest_rung": 0,
+      "furthest_label": "",
+      "technologies_researched": 0,
+      "rocket_launched": false,
+      "production": {
+        "items": {
+          "copper-ore": 555
+        },
+        "items_used": {},
+        "fluids": {},
+        "built": {}
+      },
+      "kills": {},
+      "losses": {}
+    }
+  },
+  "winner": null,
+  "agents": [
+    {
+      "name": "agent-1",
+      "team": "player",
+      "model": "claude-sonnet-5-5",
+      "stop": null,
+      "turns": 14,
+      "usd": 0.1981,
+      "tokens": {
+        "input": 38,
+        "output": 4116,
+        "cache_write": 53198,
+        "cache_read": 238522
+      },
+      "compactions": 0,
+      "screenshots": 16
+    }
+  ],
+  "effort": "medium",
+  "seed": 1001,
+  "peaceful": true,
+  "cease_fire": true,
+  "org": "flat",
+  "handbook": null,
+  "deadline_minutes": 20.0,
+  "pauses": 14,
+  "game_ticks": 72012,
+  "game_time": "0:20:00",
+  "usd": 0.1981,
+  "tokens": {
+    "input": 38,
+    "output": 4116,
+    "cache_write": 53198,
+    "cache_read": 238522
+  },
+  "integrity_clean": true,
+  "commands_denied": 0,
+  "commands_run": 0,
+  "wall_seconds": 1331
+}

@@ -8,6 +8,7 @@
     "org": "results/night1/org-structures.png",
     "handbook_chain": "results/night1/handbook-chain.png",
     "vs2-opus55-astra62": "results/night1/vs2-opus55-astra62.png",
+    "vs2-fable52-astra62": "results/night1/vs2-fable52-astra62.png",
     "ffa4-a": "results/night1/ffa4-a.png"
   },
   "groups": {
@@ -58,11 +59,12 @@
       },
       "claude-sonnet-5-5": {
         "scores": [
-          1369.6
+          1369.6,
+          1998.0
         ],
-        "mean": 1369.6,
-        "usd": 2.5659,
-        "turns": 181.0,
+        "mean": 1683.8,
+        "usd": 1.3820000000000001,
+        "turns": 97.5,
         "built": {
           "wooden-chest": 5,
           "burner-mining-drill": 6,
@@ -143,7 +145,9 @@
       "A manager": [
         12792.1
       ],
-      "Assigned roles": []
+      "Assigned roles": [
+        12392.0
+      ]
     },
     "handbook_chain": [
       [
@@ -180,13 +184,15 @@
       },
       {
         "model": "Claude Sonnet 5.5",
-        "alone": 1369.6,
+        "alone": 1683.8,
         "alone_games": [
-          1369.6
+          1369.6,
+          1998.0
         ],
-        "with_notes": 3094.2,
+        "with_notes": 2933.05,
         "with_notes_games": [
-          3094.2
+          3094.2,
+          2771.9
         ]
       },
       {
@@ -346,6 +352,47 @@
       },
       "won": false,
       "technologies": 1
+    },
+    {
+      "run": "night1/hb-sonnet55-from-fable52-b",
+      "mode": "solo",
+      "team": "player",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "seed": 1001,
+      "org": "flat",
+      "handbook": "runs/night1/solo-fable52/handbook.md",
+      "stop": "deadline",
+      "game_time": "0:20:00",
+      "score": 2771.9,
+      "turns": 119,
+      "usd": 1.7986,
+      "built": {
+        "burner-mining-drill": 5,
+        "stone-furnace": 4
+      },
+      "won": false,
+      "technologies": 1
+    },
+    {
+      "run": "night1/rep-solo-sonnet55-b",
+      "mode": "solo",
+      "team": "player",
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "seed": 1001,
+      "org": "flat",
+      "handbook": null,
+      "stop": "deadline",
+      "game_time": "0:20:00",
+      "score": 1998.0,
+      "turns": 14,
+      "usd": 0.1981,
+      "built": {},
+      "won": false,
+      "technologies": 0
     },
     {
       "run": "night1/solo-astra62",
@@ -559,6 +606,55 @@
       },
       "won": false,
       "technologies": 2
+    },
+    {
+      "run": "night1/vs2-fable52-astra62",
+      "mode": "versus",
+      "team": "red",
+      "models": [
+        "claude-fable-5-2",
+        "claude-fable-5-2"
+      ],
+      "seed": 1001,
+      "org": "flat",
+      "handbook": null,
+      "stop": "deadline",
+      "game_time": "0:20:00",
+      "score": 7544.1,
+      "turns": 267,
+      "usd": 16.4685,
+      "built": {
+        "wooden-chest": 2,
+        "iron-chest": 2,
+        "burner-mining-drill": 14,
+        "stone-furnace": 8
+      },
+      "won": false,
+      "technologies": 1
+    },
+    {
+      "run": "night1/vs2-fable52-astra62",
+      "mode": "versus",
+      "team": "blue",
+      "models": [
+        "gpt-6.2-astra",
+        "gpt-6.2-astra"
+      ],
+      "seed": 1001,
+      "org": "flat",
+      "handbook": null,
+      "stop": "deadline",
+      "game_time": "0:20:00",
+      "score": 34635.2,
+      "turns": 1060,
+      "usd": 48.3156,
+      "built": {
+        "iron-chest": 7,
+        "burner-mining-drill": 82,
+        "stone-furnace": 41
+      },
+      "won": true,
+      "technologies": 3
     },
     {
       "run": "night1/vs2-opus55-astra62",
@@ -991,14 +1087,49 @@
       },
       "won": false,
       "technologies": 2
+    },
+    {
+      "run": "w4/org-roles-team4",
+      "mode": "team",
+      "team": "player",
+      "models": [
+        "claude-opus-5-5",
+        "claude-opus-5-5",
+        "claude-opus-5-5",
+        "claude-opus-5-5"
+      ],
+      "seed": 1001,
+      "org": "roles",
+      "handbook": null,
+      "stop": "deadline",
+      "game_time": "0:20:00",
+      "score": 12392.0,
+      "turns": 668,
+      "usd": 18.4603,
+      "built": {
+        "wooden-chest": 3,
+        "iron-chest": 2,
+        "boiler": 2,
+        "burner-mining-drill": 25,
+        "stone-furnace": 23
+      },
+      "won": false,
+      "technologies": 2
     }
   ],
-  "total_usd": 312.01,
+  "total_usd": 397.25,
+  "quits": {
+    "claude-opus-5-5": 4,
+    "claude-fable-5-2": 1,
+    "gpt-6.2-astra": 2
+  },
   "videos": {
     "night1/ffa4-a:overview": "results/night1/video/night1-ffa4-a-overview.mp4",
     "night1/ffa4-a:screens": "results/night1/video/night1-ffa4-a-screens.mp4",
     "night1/hb-haiku55-from-fable52:overview": "results/night1/video/night1-hb-haiku55-from-fable52-overview.mp4",
     "night1/hb-sonnet55-from-fable52:overview": "results/night1/video/night1-hb-sonnet55-from-fable52-overview.mp4",
+    "night1/hb-sonnet55-from-fable52-b:overview": "results/night1/video/night1-hb-sonnet55-from-fable52-b-overview.mp4",
+    "night1/rep-solo-sonnet55-b:overview": "results/night1/video/night1-rep-solo-sonnet55-b-overview.mp4",
     "night1/solo-astra62:overview": "results/night1/video/night1-solo-astra62-overview.mp4",
     "night1/solo-fable52:overview": "results/night1/video/night1-solo-fable52-overview.mp4",
     "night1/solo-haiku55:overview": "results/night1/video/night1-solo-haiku55-overview.mp4",
@@ -1009,6 +1140,8 @@
     "night1/team4-opus55:overview": "results/night1/video/night1-team4-opus55-overview.mp4",
     "night1/team4-opus55-r2:overview": "results/night1/video/night1-team4-opus55-r2-overview.mp4",
     "night1/team4-opus55-r2:screens": "results/night1/video/night1-team4-opus55-r2-screens.mp4",
+    "night1/vs2-fable52-astra62:overview": "results/night1/video/night1-vs2-fable52-astra62-overview.mp4",
+    "night1/vs2-fable52-astra62:screens": "results/night1/video/night1-vs2-fable52-astra62-screens.mp4",
     "night1/vs2-opus55-astra62:overview": "results/night1/video/night1-vs2-opus55-astra62-overview.mp4",
     "night1/vs2-opus55-astra62:screens": "results/night1/video/night1-vs2-opus55-astra62-screens.mp4",
     "w1/gen1-solo:overview": "results/night1/video/w1-gen1-solo-overview.mp4",
@@ -1026,6 +1159,8 @@
     "w3/s2-team2-opus55:overview": "results/night1/video/w3-s2-team2-opus55-overview.mp4",
     "w3/s2-team4-opus55:overview": "results/night1/video/w3-s2-team4-opus55-overview.mp4",
     "w4/org-manager-team4:overview": "results/night1/video/w4-org-manager-team4-overview.mp4",
-    "w4/org-manager-team4:screens": "results/night1/video/w4-org-manager-team4-screens.mp4"
+    "w4/org-manager-team4:screens": "results/night1/video/w4-org-manager-team4-screens.mp4",
+    "w4/org-roles-team4:overview": "results/night1/video/w4-org-roles-team4-overview.mp4",
+    "w4/org-roles-team4:screens": "results/night1/video/w4-org-roles-team4-screens.mp4"
   }
 }

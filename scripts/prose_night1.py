@@ -49,6 +49,13 @@ runs_all = sorted({row["run"] for row in R["runs"]})
 runs_done = sorted({row["run"] for row in R["runs"] if row["stop"] == "deadline"})
 turns = sum(row["turns"] for row in R["runs"])
 
+NAMES = {"claude-opus-5-5": "Opus", "claude-fable-5-2": "Fable", "gpt-6.2-astra": "Astra", "gpt-6.2-sol": "Sol",
+         "claude-sonnet-5-5": "Sonnet", "claude-haiku-5-5": "Haiku"}
+WORDS = {1: "once", 2: "twice", 3: "three times", 4: "four times", 5: "five times", 6: "six times", 7: "seven times", 8: "eight times", 9: "nine times"}
+quits = sorted(R.get("quits", {}).items(), key=lambda kv: -kv[1])
+QUITS = (f"Agents quit the game by accident through the Escape menu {WORDS.get(sum(v for _, v in quits), str(sum(v for _, v in quits)) + ' times')} ("
+         + ", ".join(f"{NAMES[m]} {WORDS.get(v, str(v) + ' times')}" for m, v in quits) + ").")
+
 P: dict[str, str] = {}
 
 P["lede"] = (
@@ -68,10 +75,12 @@ if fa:
 P["headlines"] = li(
     "<strong>It is possible, and cheap enough to iterate on.</strong> "
     f"{len(runs_done)} of {len(runs_all)} games ran the full 20 game minutes, {n(turns)} model turns in all, for {usd(R['total_usd'])}. "
+    "Building and testing the harness cost about $7 more. "
     "No GPU, no game modding beyond a scenario file of under 100 lines, and no model touched the game's console.",
     "<strong>Models differ a lot at playing alone.</strong> "
     f"GPT-6.2 Astra scored {n(astra['mean'])}, GPT-6.2 Sol {n(sol['mean'])}, Claude Fable 5.2 {n(fable['mean'])}, "
-    f"Claude Opus 5.5 {n(opus['mean'])} (mean of {len(opus['scores'])}), Claude Sonnet 5.5 {n(sonnet['mean'])} and Claude Haiku 5.5 {n(haiku['mean'])}.",
+    f"Claude Opus 5.5 {n(opus['mean'])} (mean of {len(opus['scores'])}), Claude Sonnet 5.5 {n(sonnet['mean'])} (mean of {len(sonnet['scores'])}) "
+    f"and Claude Haiku 5.5 {n(haiku['mean'])}.",
     "<strong>Teams out-produce individuals, with sharply falling returns.</strong> "
     f"Two Claude Opus 5.5 agents averaged {speed['2']:.1f} times one agent's score; four averaged {speed['4']:.1f} times. "
     "Per agent, a team of four produced about half what an agent produces alone.",
@@ -101,7 +110,7 @@ P["teams"] = (
     f"on two different maps. One agent averaged {n(mean['1'])}, two averaged {n(mean['2'])} and four averaged {n(mean['4'])}. "
     "The second agent roughly doubled output; the third and fourth added little. "
     "Teams did organise themselves without being told to: in every team game the agents split the map by resource in the first minute "
-    "and carried fuel and materials to each other. They sent about 20 chat messages per game."
+    "and carried fuel and materials to each other. They sent 17 to 36 chat messages per game."
 )
 P["team_quotes"] = (
     quote("agent-2, in-game chat, first minute of the highest-scoring two-agent game",
@@ -160,10 +169,13 @@ org_text = (
     f"Unstructured teams scored {' and '.join(n(v) for v in flat)}."
 )
 if manager:
-    org_text += (f" The managed team scored {n(manager[0])}. The manager did manage: it posted a plan in the first seconds, sent each agent to a resource, "
+    org_text += (f" The managed team scored {n(manager[0])}. The manager did manage: it posted a plan at the start, sent each agent to a resource, "
                  "and the others acknowledged and reported back, but the result was no better.")
 if roles:
     org_text += f" The team with assigned roles scored {n(roles[0])}."
+if manager and roles and flat and max(manager + roles) < min(flat):
+    org_text += (" Both imposed structures came in a little below the unstructured teams, which had sorted themselves into much the same "
+                 "roles in the first minute anyway.")
 org_text += " One game per structure is not enough to rank them."
 P["org"] = org_text
 
@@ -176,7 +188,7 @@ P["distrust"] = li(
     "Everything ran at medium reasoning effort; nothing was tuned per model.",
     "<strong>The machines were overloaded.</strong> Five game clients shared four CPU cores with software rendering, at 5 to 8 frames a second. "
     "To save CPU the clients are briefly frozen while models think, which sometimes puts the game's \"player is being dropped\" warning on other players' screens.",
-    "<strong>The Quit button.</strong> Agents quit the game by accident through the Escape menu five times (Opus four times, Fable once). "
+    "<strong>The Quit button.</strong> " + QUITS + " "
     "Three games ended early before the harness learned to put the player back in; they are listed under Every game and left out of the charts. "
     "A fourth game could not start because the game before it left no notes.",
     "<strong>One model family per team.</strong> No mixed-lab teams were tried, and the map was the same in all but three games.",

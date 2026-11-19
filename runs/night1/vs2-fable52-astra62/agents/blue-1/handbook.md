@@ -1,0 +1,9 @@
+Blue won 34,635–7,544. Build burner production early: every minute a drill runs is worth more than a last-minute scramble.
+
+From spawn, iron is northwest, copper immediately west of iron, coal southeast, stone east-northeast. Put the starter iron drill directly against a furnace, yellow output arrow pointing into it. Fuel BOTH. Spend early iron on more drills. At coal, put two drills facing into each other, seed one with fuel, then duplicate pairs. Ctrl-left-click a coal drill with empty hands to harvest its fuel; leave its partner running.
+
+Split immediately: player 1 owns coal supply and iron; player 2 owns stone and copper. Put stone drills facing into chests; turn stone into furnaces for both players. Build parallel rows of touching drill/furnace pairs. We finished with roughly 25 iron pairs, 12 copper pairs and seven stone drills. Pick distinct rows. Use grave, type, Enter for team chat: “I fuel iron; you fuel copper” prevents duplicate trips. Call out coal shortages early.
+
+Prioritize machines that will run for minutes. Plates count inside furnaces; collect to unblock full outputs or craft, not merely to move stock. Keep handcrafting while walking/building: drills early, surplus stone into furnaces, late iron into chests (8 plates per 0.5 seconds). Late power setup and slow lab batches were worse uses of time.
+
+Quickbar: 1 drill, 2 furnace, 3 coal; R rotates, Q empties hand. Drag to build rows. With coal selected, Ctrl-right-click deposits half a stack. Move pointer onto target BEFORE clicking; verify fuel count or “Working.” Empty-hand Ctrl-left-drag across furnaces collects plates; reverse and check skipped buildings. Never sweep ore drills: that strips their fuel. E opens crafting; Shift-left-click crafts all. In the final minute refuel stopped machines and craft stockpiles rather than making distant supply trips.

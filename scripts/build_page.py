@@ -45,7 +45,7 @@ def chart(key: str, alt: str) -> str:
         return ""
     src = ROOT / rel
     shutil.copy(src, PAGE / src.name)
-    return f'<figure class="chart"><img src="{src.name}" alt="{html.escape(alt)}" loading="lazy"></figure>'
+    return f'<figure class="chart"><img src="{src.name}" alt="{html.escape(alt)}"></figure>'
 
 
 def video(src: Path, caption: str, poster_at: float = 30.0) -> str:
@@ -95,7 +95,7 @@ def match_table(teams: dict, alone: dict[str, float] | None = None) -> str:
     out += "<th class='num'>Turns</th><th class='num'>Cost</th><th class='num'>Drills</th></tr></thead><tbody>"
     for name, row in sorted(teams.items(), key=lambda kv: -kv[1]["score"]):
         models = row["models"]
-        label = NAMES[models[0]] + (f" x{len(models)}" if len(models) > 1 else "")
+        label = NAMES[models[0]] + (f" \u00d7{len(models)}" if len(models) > 1 else "")
         out += f"<tr><td><span class='swatch {name}'></span>{name}</td><td>{label}</td><td class='num'>{n(row['score'])}</td>"
         if alone:
             out += f"<td class='num'>{n(alone[models[0]])}</td>"
@@ -125,7 +125,7 @@ org_rows = "".join(
 all_rows = ""
 for row in sorted(R["runs"], key=lambda r: (r["run"].split("/")[1], r["team"])):
     models = row["models"]
-    label = NAMES[models[0]] + (f" x{len(models)}" if len(models) > 1 else "")
+    label = NAMES[models[0]] + (f" \u00d7{len(models)}" if len(models) > 1 else "")
     extras = []
     if row["org"] != "flat":
         extras.append(row["org"])

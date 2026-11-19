@@ -1,0 +1,91 @@
+{
+  "stop": "deadline",
+  "error": null,
+  "mode": "solo",
+  "teams": {
+    "player": {
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "players": [
+        "agent-1"
+      ],
+      "score": 2771.9,
+      "gross_production": 5415.4,
+      "usd": 1.7986,
+      "turns": 119,
+      "furthest_rung": 9,
+      "furthest_label": "First technology researched",
+      "technologies_researched": 1,
+      "rocket_launched": false,
+      "production": {
+        "items": {
+          "iron-chest": 23,
+          "burner-mining-drill": 4,
+          "stone-furnace": 7,
+          "coal": 168,
+          "stone": 38,
+          "iron-ore": 464,
+          "iron-plate": 305,
+          "iron-gear-wheel": 12
+        },
+        "items_used": {
+          "stone-furnace": 4,
+          "wood": 49,
+          "coal": 56,
+          "stone": 35,
+          "iron-ore": 306,
+          "iron-plate": 220,
+          "iron-gear-wheel": 12
+        },
+        "fluids": {},
+        "built": {
+          "burner-mining-drill": 5,
+          "stone-furnace": 4
+        }
+      },
+      "kills": {},
+      "losses": {}
+    }
+  },
+  "winner": null,
+  "agents": [
+    {
+      "name": "agent-1",
+      "team": "player",
+      "model": "claude-sonnet-5-5",
+      "stop": null,
+      "turns": 119,
+      "usd": 1.7986,
+      "tokens": {
+        "input": 958,
+        "output": 51025,
+        "cache_write": 254570,
+        "cache_read": 6500040
+      },
+      "compactions": 2,
+      "screenshots": 142
+    }
+  ],
+  "effort": "medium",
+  "seed": 1001,
+  "peaceful": true,
+  "cease_fire": true,
+  "org": "flat",
+  "handbook": "runs/night1/solo-fable52/handbook.md",
+  "deadline_minutes": 20.0,
+  "pauses": 119,
+  "game_ticks": 72012,
+  "game_time": "0:20:00",
+  "usd": 1.7986,
+  "tokens": {
+    "input": 958,
+    "output": 51025,
+    "cache_write": 254570,
+    "cache_read": 6500040
+  },
+  "integrity_clean": true,
+  "commands_denied": 0,
+  "commands_run": 0,
+  "wall_seconds": 1999
+}
