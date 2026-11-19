@@ -9,14 +9,14 @@ capability up? Background and plan: [`docs/HANDOFF.md`](docs/HANDOFF.md).
 
 ## Where it stands
 
-First results are in [`docs/RESULTS.md`](docs/RESULTS.md). In short, from one run per condition:
+First results are in [`docs/RESULTS.md`](docs/RESULTS.md). In short, from one or two runs per condition:
 
 - In 500 turns ($17 to $25) one model alone builds steam power, labs and assemblers and starts on green science.
   Nobody is near a rocket.
 - GPT-6.2 Astra reaches each early milestone in roughly a third to a half of the game time Claude Opus 5.5
   needs, alone and in a head-to-head match on a shared map.
-- Two agents on a team get about twice as much done per game minute as one, and about a third as much per
-  dollar.
+- Two agents on a team are ahead of one at equal game time (the lab and science several minutes sooner, 1.6 to
+  2.5 times the science packs) and get about a third as much per dollar.
 
 ## How a run works
 
