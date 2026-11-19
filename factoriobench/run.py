@@ -252,9 +252,10 @@ class Run:
                 compact_at_tokens=cfg.compact_at_tokens, keep_turns=cfg.keep_turns,
                 transcript=self.dir / "agents" / seat.name / "conversation.jsonl",
             )
-            name, jpeg = shots[seat.name]
-            seat.player.begin(prompts.opening(peaceful=cfg.peaceful, team=team), jpeg)
-            self.emit(event="observe", turn=0, agent=seat.name, shot=name)
+            # No opening screenshot: the model asks for one, as it would at any other time. A provider
+            # that keeps user messages verbatim through compaction would otherwise carry it forever.
+            seat.player.begin(prompts.opening(peaceful=cfg.peaceful, team=team))
+            self.emit(event="observe", turn=0, agent=seat.name, shot=shots[seat.name][0])
 
         while True:
             self.turn += 1

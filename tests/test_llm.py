@@ -35,7 +35,7 @@ def test_usage_counts_reads_objects_and_dicts():
 
 
 def test_observe_answers_every_call_and_puts_the_screenshot_on_the_last(player):
-    player.begin("Objective", JPEG)
+    player.begin("Objective")
     calls = [Call("a", "left_click", {}, "computer"), Call("b", "mouse_hold", {}, None), Call("c", "key", {}, "computer")]
     player.observe(
         [Outcome(calls[0]), Outcome(calls[1], "Error: no button", error=True), Outcome(calls[2], "skipped", error=True)],
@@ -46,11 +46,13 @@ def test_observe_answers_every_call_and_puts_the_screenshot_on_the_last(player):
     assert results[0]["toolset_name"] == "computer" and "toolset_name" not in results[1]
     assert "is_error" not in results[0] and results[1]["is_error"] and results[2]["is_error"]
     assert [b["type"] for b in results[2]["content"]] == ["text", "image"]
-    assert count_images(player.history) == 2
+    assert count_images(player.history) == 1
 
 
 def test_transcript_omits_image_bytes(player, tmp_path):
-    player.begin("Objective", JPEG)
+    player.begin("Objective")
+    player.history.append({"role": "assistant", "content": []})
+    player.observe([Outcome(Call("0", "key", {}, "computer"))], JPEG)
     text = (tmp_path / "conversation.jsonl").read_text()
     assert "omitted_base64_chars" in text and "/9j" not in text
     assert strip_images({"role": "user", "content": "plain"}) == {"role": "user", "content": "plain"}
@@ -63,7 +65,7 @@ def fake_compaction(usd_tokens=1000):
 
 
 def test_compaction_keeps_the_last_turns_and_cuts_between_user_and_assistant(player):
-    player.begin("Objective", JPEG)
+    player.begin("Objective")
     for i in range(5):
         player.history.append({"role": "assistant", "content": [{"type": "tool_use", "id": str(i), "name": "key", "input": {}}]})
         player.observe([Outcome(Call(str(i), "key", {}, "computer"))], JPEG)
@@ -84,7 +86,7 @@ def test_compaction_keeps_the_last_turns_and_cuts_between_user_and_assistant(pla
 
 
 def test_compaction_is_skipped_when_there_is_too_little_to_summarise(player):
-    player.begin("Objective", JPEG)
+    player.begin("Objective")
     player.history.append({"role": "assistant", "content": []})
     player.observe([Outcome(Call("0", "key", {}, "computer"))], JPEG)
     assert player.compact() is None

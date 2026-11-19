@@ -183,8 +183,8 @@ class ClaudePlayer:
         return kwargs
 
     # --- conversation ------------------------------------------------------
-    def begin(self, text: str, jpeg: bytes) -> None:
-        self._append({"role": "user", "content": [{"type": "text", "text": text}, image_block(jpeg)]})
+    def begin(self, text: str) -> None:
+        self._append({"role": "user", "content": [{"type": "text", "text": text}]})
 
     def nudge(self, text: str) -> None:
         self._append({"role": "user", "content": [{"type": "text", "text": text}]})

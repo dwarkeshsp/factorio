@@ -35,4 +35,4 @@ def system_prompt(width: int, height: int, name: str = "agent-1", team: list[str
 def opening(peaceful: bool, team: list[str] | None = None) -> str:
     start = START_TEAM if team and len(team) > 1 else START_SOLO
     enemies = ENEMIES_PEACEFUL if peaceful else ENEMIES_HOSTILE
-    return f"Objective: {OBJECTIVE} {start}; {enemies}\n\nThe game has just started. Current screen:"
+    return f"Objective: {OBJECTIVE} {start}; {enemies}\n\nThe game has just started."
