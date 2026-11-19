@@ -50,6 +50,8 @@ class RunConfig:
     render_threads: int | None = None
     gpu: bool = False
     edition: str = "full"
+    move_settle: float = 0.05      # seconds between moving the pointer and clicking
+    capture_running: bool = False  # take the end-of-turn screenshot just before pausing instead of after
     ledger: str = "runs/ledger.jsonl"
     budget_usd: float = 500.0
 
@@ -190,7 +192,7 @@ class Run:
         self.start_tick = start_tick
         self.scorers = {force: Scorer(start_tick=start_tick) for force in self.forces}
         for seat in self.seats:
-            seat.desktop = Desktop(seat.display.name, SCREEN)
+            seat.desktop = Desktop(seat.display.name, SCREEN, move_settle=cfg.move_settle)
         config = {
             **asdict(cfg),
             "agents": [{"name": seat.name, "model": seat.model, "force": seat.force} for seat in self.seats],
@@ -238,10 +240,12 @@ class Run:
         assert seat.desktop is not None
         return seat.save_shot(seat.desktop.grab(), self.turn)
 
-    def observe(self) -> tuple[dict[str, tuple[str, bytes]], dict[str, list[str]], dict[str, dict]]:
-        """With the game paused: capture every screen and read each side's score."""
-        time.sleep(RENDER_WAIT)
-        shots = {seat.name: self.capture(seat) for seat in self.seats}
+    def observe(self, shots: dict[str, tuple[str, bytes]] | None = None,
+                ) -> tuple[dict[str, tuple[str, bytes]], dict[str, list[str]], dict[str, dict]]:
+        """With the game paused: capture every screen (unless already captured) and read each side's score."""
+        if shots is None:
+            time.sleep(RENDER_WAIT)
+            shots = {seat.name: self.capture(seat) for seat in self.seats}
         snapshots = {force: self.server.eval(snapshot_lua(force)) for force in self.forces}
         new = {force: self.scorers[force].update(snapshots[force]) for force in self.forces}
         return shots, new, snapshots
@@ -314,6 +318,7 @@ class Run:
                     acting.append(seat)
 
             results: dict[str, tuple[list[Outcome], list[dict]]] = {}
+            running_shots: dict[str, tuple[str, bytes]] | None = None
             t1 = time.time()
             tick_before = self.game_ticks
             if acting:
@@ -323,10 +328,14 @@ class Run:
                     done = self.pool.map(lambda seat: seat.execute(thoughts[seat.name][0].calls, self.turn), acting)
                     results = dict(zip([s.name for s in acting], done))
                     time.sleep(AFTER_ACTIONS)
+                    if cfg.capture_running:
+                        # While paused the client does not draw the outline of a building held in the
+                        # hand, so a model placing something could not see where it would go.
+                        running_shots = {seat.name: self.capture(seat) for seat in self.seats}
                 finally:
                     self.game_ticks = self.server.pause() - self.start_tick
             act_s = time.time() - t1
-            shots, new_by_force, snapshots = self.observe()
+            shots, new_by_force, snapshots = self.observe(running_shots)
             new = new_by_force[self.forces[0]]
             ups = round((self.game_ticks - tick_before) / act_s, 1) if act_s > 0 else None
 

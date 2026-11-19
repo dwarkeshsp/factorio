@@ -109,9 +109,12 @@ def encode_jpeg(image: Image.Image) -> bytes:
 
 
 class Desktop:
-    def __init__(self, display: str, size: tuple[int, int]):
+    def __init__(self, display: str, size: tuple[int, int], move_settle: float = 0.05):
         self.display = display
         self.size = size
+        # Seconds between moving the pointer and clicking. The game learns the pointer's position a few
+        # ticks late, so a click sent too soon lands on whatever was under the pointer before.
+        self.move_settle = move_settle
         self._env = {**os.environ, "DISPLAY": display}
         self._grabber = mss.MSS(display=display)
 
@@ -156,7 +159,7 @@ class Desktop:
         if coordinate is not None:
             x, y = self._point(coordinate)
             self._x("mousemove", str(x), str(y))
-            time.sleep(0.05)
+            time.sleep(self.move_settle)
 
     def _held(self, modifiers: str | None, action) -> None:
         keys = parse_keys(modifiers) if modifiers else []
