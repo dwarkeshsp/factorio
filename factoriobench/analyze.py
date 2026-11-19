@@ -10,33 +10,39 @@ from .scoring import LADDER, game_clock
 KEY_ITEMS = ["iron-plate", "copper-plate", "iron-gear-wheel", "electronic-circuit", "automation-science-pack"]
 
 
-def read_run(run_dir: Path) -> dict[str, Any]:
-    """Everything the comparison needs from one run's log, finished or not."""
-    firsts: dict[str, dict[str, Any]] = {}
-    snapshots: dict[int, dict] = {}
-    agents: list[str] = []
+def read_run(run_dir: Path) -> list[dict[str, Any]]:
+    """Everything the comparison needs from one run's log, finished or not: one entry per side."""
+    agents: list[dict[str, str]] = []
+    firsts: dict[str, dict[str, dict[str, Any]]] = {}
+    snapshots: dict[str, dict[int, dict]] = {}
     last_round: dict[str, Any] = {}
     stop = None
-    production: dict[str, Any] = {}
     for line in (run_dir / "log.jsonl").read_text().splitlines():
         record = json.loads(line)
         event = record.get("event")
         if event == "start":
-            agents = [agent["model"] for agent in record.get("agents", [])]
+            agents = record.get("agents", [])
         elif event == "round":
             last_round = record
-            for key in record.get("new") or []:
-                firsts.setdefault(key, {"turn": record["turn"], "ticks": record["game_ticks"], "usd": record["usd"]})
+            by_force = record.get("new_by_force") or {"player": record.get("new") or []}
+            for force, keys in by_force.items():
+                for key in keys:
+                    firsts.setdefault(force, {}).setdefault(
+                        key, {"turn": record["turn"], "ticks": record["game_ticks"], "usd": record["usd"]})
         elif event == "snapshot":
-            snapshots[record["turn"]] = {**record["snapshot"], "_usd": None}
+            for force, snapshot in (record.get("snapshots") or {"player": record["snapshot"]}).items():
+                snapshots.setdefault(force, {})[record["turn"]] = snapshot
         elif event == "end":
             stop = record.get("stop")
-            production = record.get("production") or {}
-    return {
-        "name": "/".join(run_dir.parts[-2:]), "agents": agents, "firsts": firsts, "snapshots": snapshots,
+    forces = sorted({agent.get("force", "player") for agent in agents}) or ["player"]
+    name = "/".join(run_dir.parts[-2:])
+    return [{
+        "name": name if len(forces) == 1 else f"{name} [{force}]",
+        "agents": [agent["model"] for agent in agents if agent.get("force", "player") == force],
+        "firsts": firsts.get(force, {}), "snapshots": snapshots.get(force, {}),
         "turns": last_round.get("turn", 0), "ticks": last_round.get("game_ticks", 0),
-        "usd": last_round.get("usd", 0.0), "stop": stop, "production": production,
-    }
+        "usd": last_round.get("usd", 0.0), "stop": stop,
+    } for force in forces]
 
 
 def furthest(run: dict[str, Any]) -> tuple[int, str]:
@@ -52,7 +58,7 @@ def _count(table: Any, name: str) -> int:
 
 
 def compare(run_dirs: list[Path]) -> str:
-    runs = [read_run(path) for path in run_dirs]
+    runs = [side for path in run_dirs for side in read_run(path)]
     lines = ["| Run | Agents | Turns | Game time | Cost | Furthest rung | Stop |", "|---|---|---:|---:|---:|---|---|"]
     for run in runs:
         rung, label = furthest(run)
