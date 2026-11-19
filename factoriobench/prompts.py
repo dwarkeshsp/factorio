@@ -1,6 +1,6 @@
 """What the model is told. Changing any of this changes the benchmark, so it is versioned."""
 
-PROMPT_VERSION = "0.4"
+PROMPT_VERSION = "0.5"
 
 SYSTEM = """You are playing the video game Factorio (version 2.1, base game, no mods) on a Linux desktop. You see the screen and control the mouse and keyboard, exactly as a human player would. Nobody else is at the computer, and nobody will answer questions.
 
@@ -17,7 +17,16 @@ Say briefly what you are doing and why with each response. The run ends when the
 
 TEAM = """
 
-You are {name}, one of {count} players on the same team in this game: {names}. You all share one objective, one map and one factory. Each of the others is an AI like you, at its own computer, seeing only its own screen. You can talk to them through the in-game chat: press the grave key (`) to open the chat line, type a message and press Enter. Everyone sees it at the bottom left of their screen for a short while, and opening the chat line shows earlier messages. The game stays paused until every player has replied, then everyone's actions run at the same time."""
+You are {name}, one of {count} players on the same team in this game: {names}. You all share one objective, one map and one factory. Each of the others is an AI like you, at its own computer, seeing only its own screen. You can talk to them through the in-game chat: press the grave key (`) to open the chat line, type a message and press Enter. Everyone sees it at the bottom left of their screen for a short while, and opening the chat line shows earlier messages. {pacing}"""
+
+PACING = {
+    "rounds": "The game stays paused until every player has replied, then everyone's actions run at the same time.",
+    "continuous": (
+        "Everyone plays at once: the game is paused whenever any player is thinking and runs while actions are "
+        "being carried out, each player's on its own schedule. The world can change between your screenshots "
+        "because the others are acting too."
+    ),
+}
 
 RIVALS = """
 
@@ -25,7 +34,7 @@ Another team is playing on the same map at the same time, starting from the same
 
 ALONE_AGAINST = """
 
-You are {name}. Another player is playing on the same map at the same time, starting from the same place: {names}. They have their own factory, their own research and their own score, and neither of you can use the other's buildings. Ore, trees and land are shared: whatever one of you mines is gone for the other. Whoever launches a rocket first wins; if neither has when the run ends, whoever got furthest wins. The game stays paused until both of you have replied, then both players' actions run at the same time."""
+You are {name}. Another player is playing on the same map at the same time, starting from the same place: {names}. They have their own factory, their own research and their own score, and neither of you can use the other's buildings. Ore, trees and land are shared: whatever one of you mines is gone for the other. Whoever launches a rocket first wins; if neither has when the run ends, whoever got furthest wins. {pacing}"""
 
 NO_ACTION = (
     "Your last reply contained no action, so nothing happened in the game. The run is still going: keep playing. "
@@ -41,14 +50,14 @@ ENEMIES_PEACEFUL = "enemies are present but peaceful (they do not attack unless 
 ENEMIES_HOSTILE = "enemies will attack as your pollution reaches them."
 
 def system_prompt(width: int, height: int, name: str = "agent-1", team: list[str] | None = None,
-                  rivals: list[str] | None = None) -> str:
+                  rivals: list[str] | None = None, schedule: str = "rounds") -> str:
     text = SYSTEM.format(width=width, height=height)
     if team and len(team) > 1:
-        text += TEAM.format(name=name, count=len(team), names=", ".join(team))
+        text += TEAM.format(name=name, count=len(team), names=", ".join(team), pacing=PACING[schedule])
         if rivals:
             text += RIVALS.format(names=", ".join(rivals))
     elif rivals:
-        text += ALONE_AGAINST.format(name=name, names=", ".join(rivals))
+        text += ALONE_AGAINST.format(name=name, names=", ".join(rivals), pacing=PACING[schedule])
     return text
 
 

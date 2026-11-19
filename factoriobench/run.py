@@ -7,7 +7,9 @@ round lasts as long as the longest batch.
 from __future__ import annotations
 
 import json
+import queue
 import subprocess
+import threading
 import time
 import traceback
 from concurrent.futures import ThreadPoolExecutor
@@ -19,6 +21,7 @@ from PIL import Image
 
 from . import __version__, prompts
 from .client import CLIENT_CONFIG, SCREEN, Client, Display
+from .clock import GameClock
 from .desktop import ActionError, Desktop, encode_jpeg
 from .ledger import Ledger
 from .llm import HALT_TEXT, Call, Outcome, Reply, make_player
@@ -52,6 +55,9 @@ class RunConfig:
     gpu: bool = False
     edition: str = "full"
     move_settle: float = 0.15  # seconds between moving the pointer and clicking
+    # With several agents: "rounds" waits for every agent and runs all their batches together;
+    # "continuous" lets each agent act on its own schedule, pausing only while someone thinks.
+    schedule: str = "continuous"
     ledger: str = "runs/ledger.jsonl"
     budget_usd: float = 500.0
 
@@ -83,6 +89,7 @@ class Seat:
         self.active = True
         self.stop: str | None = None
         self.shot_n = 0
+        self.turn = 0  # this agent's own replies so far (the continuous schedule counts per agent)
 
     def save_shot(self, image: Image.Image, turn: int, suffix: str = "") -> tuple[str, bytes]:
         jpeg = encode_jpeg(image)
@@ -113,7 +120,7 @@ class Seat:
                         entry["shot"] = name
                     else:
                         outcomes.append(Outcome(call, out))
-                    time.sleep(BETWEEN_ACTIONS)
+                    self.desktop.clock.sleep(BETWEEN_ACTIONS)
                 except ActionError as err:
                     outcomes.append(Outcome(call, f"Error: {err}", error=True))
                     entry["error"] = str(err)
@@ -201,6 +208,7 @@ class Run:
             "prompt_version": prompts.PROMPT_VERSION,
             "factorio_version": game_version,
             "scenario": "freeplay",
+            "schedule_used": self.schedule(),
             "screen": list(SCREEN),
             "client_config": CLIENT_CONFIG,
             "timing": {"before_actions": BEFORE_ACTIONS, "between_actions": BETWEEN_ACTIONS, "after_actions": AFTER_ACTIONS, "render_wait": RENDER_WAIT},
@@ -250,7 +258,7 @@ class Run:
         new = {force: self.scorers[force].update(snapshots[force]) for force in self.forces}
         return shots, new, snapshots
 
-    def stop_reason(self, snapshots: dict[str, dict]) -> str | None:
+    def stop_reason(self, snapshots: dict[str, dict], check_turns: bool = True) -> str | None:
         cfg = self.cfg
         if any(scorer.launched for scorer in self.scorers.values()):
             return "rocket_launched"
@@ -268,7 +276,7 @@ class Run:
             return "overall_budget"
         if self.game_ticks >= cfg.max_game_hours * 3600 * TICKS_PER_SECOND:
             return "game_time_limit"
-        if self.turn >= cfg.max_turns:
+        if check_turns and self.turn >= cfg.max_turns:
             return "max_turns"
         return None
 
@@ -288,14 +296,18 @@ class Run:
             reply = seat.player.step()
         return reply, time.time() - t0
 
-    def play(self) -> str:
+    def schedule(self) -> str:
+        return self.cfg.schedule if len(self.seats) > 1 else "rounds"
+
+    def start_players(self) -> None:
         cfg = self.cfg
         shots, _, _ = self.observe()
         for seat in self.seats:
             team = [other.name for other in self.seats if other.force == seat.force]
             rivals = [other.name for other in self.seats if other.force != seat.force]
             seat.player = make_player(
-                seat.model, prompts.system_prompt(*SCREEN, name=seat.name, team=team, rivals=rivals), effort=cfg.effort,
+                seat.model, prompts.system_prompt(*SCREEN, name=seat.name, team=team, rivals=rivals,
+                                                  schedule=self.schedule()), effort=cfg.effort,
                 compact_at_tokens=cfg.compact_at_tokens, keep_turns=cfg.keep_turns,
                 transcript=self.dir / "agents" / seat.name / "conversation.jsonl",
             )
@@ -304,6 +316,11 @@ class Run:
             seat.player.begin(prompts.opening(peaceful=cfg.peaceful, team=team, rivals=rivals))
             self.emit(event="observe", turn=0, agent=seat.name, shot=shots[seat.name][0])
 
+    def play(self) -> str:
+        cfg = self.cfg
+        self.start_players()
+        if self.schedule() == "continuous":
+            return self.play_continuous()
         while True:
             self.turn += 1
             playing = [seat for seat in self.seats if seat.active]
@@ -375,6 +392,113 @@ class Run:
                     outcome = seat.player.compact()
                     if outcome is not None:
                         self.emit(event="compaction", turn=self.turn, agent=seat.name, **outcome)
+                        print(f"      {seat.name} compaction: {'ok' if outcome.get('ok') else 'failed'} "
+                              f"${outcome.get('usd', 0):.3f}", flush=True)
+
+    # --- the continuous schedule ---------------------------------------------
+    def _carry_out(self, seat: Seat, reply: Reply, clock: GameClock, done: "queue.Queue") -> None:
+        """One agent's batch, in its own thread, on game time. Captures its screen while the game still runs."""
+        clock.enter()
+        try:
+            outcomes, actions = seat.execute(reply.calls, seat.turn)
+            clock.sleep(AFTER_ACTIONS)
+            shot = seat.save_shot(seat.desktop.grab(), seat.turn)
+            done.put((seat, outcomes, actions, shot, None))
+        except Exception as err:  # reported to the scheduler, which ends the run
+            done.put((seat, None, None, None, err))
+        finally:
+            clock.exit()
+
+    def play_continuous(self) -> str:
+        """Each agent acts on its own schedule; the game is paused only while someone is thinking.
+
+        In rounds an agent whose batch is short stands idle until the longest batch of the round ends,
+        so a team's game time is spent partly on waiting. Here nobody waits for anybody.
+        """
+        cfg = self.cfg
+        clock = GameClock(self.server.pause, self.server.resume, settle=BEFORE_ACTIONS)
+        for seat in self.seats:
+            seat.desktop.clock = clock
+        done: queue.Queue = queue.Queue()
+        waiting: list[Seat] = list(self.seats)   # agents that need a reply before the game can go on
+        thoughts: dict[str, tuple[Reply, float]] = {}
+        executing: set[str] = set()
+        last_snapshot_turn = 0
+        while True:
+            # 1. Everyone who has finished a batch thinks, in parallel, with the game paused.
+            thinkers = [seat for seat in waiting if seat.active and seat.turn < cfg.max_turns]
+            for seat, (reply, think_s) in zip(thinkers, self.pool.map(self.think, thinkers)):
+                seat.turn += 1
+                if reply.stop != "actions":
+                    seat.active = False
+                    seat.stop = {"stopped": "model_stopped", "refusal": "refusal"}.get(reply.stop, reply.stop)
+                    self.emit(event="turn", turn=seat.turn, agent=seat.name, stop=seat.stop, text=reply.text,
+                              thinking=reply.thinking, think_s=round(think_s, 1), usd=round(seat.player.spent_usd, 4),
+                              turn_usd=round(reply.usd, 4), tokens=reply.counts)
+                    print(f"[{seat.turn}] {seat.name} stopped ({seat.stop}): {reply.text[:300]}", flush=True)
+                    continue
+                thoughts[seat.name] = (reply, think_s)
+                executing.add(seat.name)
+                threading.Thread(target=self._carry_out, args=(seat, reply, clock, done), daemon=True).start()
+            waiting = []
+            if not executing:
+                if any(seat.active for seat in self.seats):
+                    return "max_turns"
+                return self.seats[0].stop if len(self.seats) == 1 else "all_agents_stopped"
+
+            # 2. The game runs until the first batch ends.
+            span_start, ticks_before = time.time(), self.game_ticks
+            clock.resume()
+            finished = [done.get()]
+            self.game_ticks = clock.pause() - self.start_tick
+            while not done.empty():
+                finished.append(done.get_nowait())
+            span = time.time() - span_start
+
+            # 3. Score, and hand each finished agent what it saw.
+            shots = {seat.name: shot for seat, _, _, shot, _ in finished if shot}
+            _, new_by_force, snapshots = self.observe({**{s.name: ("", b"") for s in self.seats}, **shots})
+            for seat, outcomes, actions, shot, err in finished:
+                executing.discard(seat.name)
+                if err is not None:
+                    raise err
+                reply, think_s = thoughts.pop(seat.name)
+                name, jpeg = shot
+                seat.player.observe(outcomes, jpeg)
+                waiting.append(seat)
+                self.emit(
+                    event="turn", turn=seat.turn, agent=seat.name, think_s=round(think_s, 1), text=reply.text,
+                    thinking=reply.thinking, actions=actions, shot=name, game_ticks=self.game_ticks,
+                    usd=round(seat.player.spent_usd, 4), turn_usd=round(reply.usd, 4), tokens=reply.counts,
+                    context_tokens=seat.player.context_tokens, notes=reply.notes,
+                )
+                summary = ", ".join(f"{a['name']}{json.dumps(a['input'])}" for a in actions)
+                print(f"[{seat.turn}] {seat.name} {game_clock(self.game_ticks)} ${seat.player.spent_usd:.2f} "
+                      f"ctx={seat.player.context_tokens // 1000}k | {reply.text[:140]} | {summary[:240]}", flush=True)
+            self.turn = max(seat.turn for seat in self.seats)
+            self.emit(event="round", turn=self.turn, game_ticks=self.game_ticks, act_s=round(span, 2),
+                      ups=round((self.game_ticks - ticks_before) / span, 1) if span > 0 else None,
+                      new=new_by_force[self.forces[0]], usd=round(self.spent, 4),
+                      turns={seat.name: seat.turn for seat in self.seats},
+                      **({"new_by_force": new_by_force} if cfg.rivals else {}))
+            for force, keys in new_by_force.items():
+                for key in keys:
+                    side = f" [{force}]" if cfg.rivals else ""
+                    print(f"      first{side}: {key} at {game_clock(self.game_ticks)}", flush=True)
+            if self.turn >= last_snapshot_turn + SNAPSHOT_EVERY:
+                last_snapshot_turn = self.turn - self.turn % SNAPSHOT_EVERY
+                self.emit(event="snapshot", turn=last_snapshot_turn, snapshot=snapshots[self.forces[0]],
+                          **({"snapshots": snapshots} if cfg.rivals else {}))
+                self.ledger.record(self.spent)
+
+            stop = self.stop_reason(snapshots, check_turns=False)
+            if stop:
+                return stop
+            for seat in waiting:
+                if seat.active and seat.player.should_compact():
+                    outcome = seat.player.compact()
+                    if outcome is not None:
+                        self.emit(event="compaction", turn=seat.turn, agent=seat.name, **outcome)
                         print(f"      {seat.name} compaction: {'ok' if outcome.get('ok') else 'failed'} "
                               f"${outcome.get('usd', 0):.3f}", flush=True)
 

@@ -10,11 +10,12 @@ from __future__ import annotations
 import io
 import os
 import subprocess
-import time
 from typing import Any
 
 import mss
 from PIL import Image
+
+from .clock import WallClock
 
 MAX_HOLD_SECONDS = 300.0  # the toolset's documented limit for hold_key and wait
 MAX_ZOOM = 4.0
@@ -109,9 +110,10 @@ def encode_jpeg(image: Image.Image) -> bytes:
 
 
 class Desktop:
-    def __init__(self, display: str, size: tuple[int, int], move_settle: float = 0.15):
+    def __init__(self, display: str, size: tuple[int, int], move_settle: float = 0.15, clock=None):
         self.display = display
         self.size = size
+        self.clock = clock or WallClock()
         # Seconds between moving the pointer and clicking. The game learns the pointer's position a few
         # ticks late, so a click sent too soon lands on whatever was under the pointer before.
         self.move_settle = move_settle
@@ -141,6 +143,7 @@ class Desktop:
 
     # --- input -------------------------------------------------------------
     def _x(self, *args: str) -> str:
+        self.clock.checkpoint()  # never send input to a paused game
         result = subprocess.run(["xdotool", *args], env=self._env, capture_output=True, text=True, check=False)
         if result.returncode != 0:
             raise ActionError(f"input failed: {result.stderr.strip() or 'xdotool error'}")
@@ -159,7 +162,7 @@ class Desktop:
         if coordinate is not None:
             x, y = self._point(coordinate)
             self._x("mousemove", str(x), str(y))
-            time.sleep(self.move_settle)
+            self.clock.sleep(self.move_settle)
 
     def _held(self, modifiers: str | None, action) -> None:
         keys = parse_keys(modifiers) if modifiers else []
@@ -174,6 +177,13 @@ class Desktop:
     def _click(self, inp: dict, button: int, count: int = 1) -> None:
         self._move(inp.get("coordinate"))
         self._held(inp.get("text"), lambda: self._x("click", "--repeat", str(count), "--delay", "90", str(button)))
+
+    def _scroll(self, direction: int, amount: int) -> None:
+        # In short bursts, so a pause never has to wait long for one input call to finish.
+        while amount > 0:
+            burst = min(amount, 5)
+            self._x("click", "--repeat", str(burst), "--delay", "50", str(direction))
+            amount -= burst
 
     def act(self, name: str, inp: dict) -> str | Image.Image:
         """Carry out one action. Returns text, or an image for screenshot and zoom."""
@@ -204,14 +214,14 @@ class Desktop:
 
             def drag() -> None:
                 self._x("mousemove", str(path[0][0]), str(path[0][1]))
-                time.sleep(0.1)
+                self.clock.sleep(0.1)
                 self._x("mousedown", "1")
                 try:
                     for (x0, y0), (x1, y1) in zip(path, path[1:]):
                         steps = max(1, min(12, max(abs(x1 - x0), abs(y1 - y0)) // 8))
                         for i in range(1, steps + 1):
                             self._x("mousemove", str(x0 + (x1 - x0) * i // steps), str(y0 + (y1 - y0) * i // steps))
-                            time.sleep(0.03)
+                            self.clock.sleep(0.03)
                 finally:
                     self._x("mouseup", "1")
 
@@ -230,7 +240,7 @@ class Desktop:
             def hold() -> None:
                 self._x("mousedown", str(button))
                 try:
-                    time.sleep(duration)
+                    self.clock.sleep(duration)
                 finally:
                     self._x("mouseup", str(button))
 
@@ -247,11 +257,13 @@ class Desktop:
             except (TypeError, ValueError):
                 raise ActionError("scroll_amount must be a number") from None
             self._move(inp.get("coordinate"))
-            self._held(inp.get("text"), lambda: self._x("click", "--repeat", str(amount), "--delay", "50", str(direction)))
+            self._held(inp.get("text"), lambda: self._scroll(direction, amount))
         elif name == "type":
             if not isinstance(inp.get("text"), str):
                 raise ActionError("type needs text")
-            self._x("type", "--delay", "25", "--", inp["text"])
+            text = inp["text"]
+            for start in range(0, len(text), 8):
+                self._x("type", "--delay", "25", "--", text[start:start + 8])
         elif name == "key":
             combo = "+".join(parse_keys(inp.get("text", "")))
             try:
@@ -260,19 +272,19 @@ class Desktop:
                 raise ActionError("repeat must be a number") from None
             for _ in range(repeat):
                 self._x("key", combo)
-                time.sleep(0.05)
+                self.clock.sleep(0.05)
         elif name == "hold_key":
             keys = parse_keys(inp.get("text", ""))
             duration = seconds(inp.get("duration"), "hold_key")
             for key in keys:
                 self._x("keydown", key)
             try:
-                time.sleep(duration)
+                self.clock.sleep(duration)
             finally:
                 for key in reversed(keys):
                     self._x("keyup", key)
         elif name == "wait":
-            time.sleep(seconds(inp.get("duration"), "wait"))
+            self.clock.sleep(seconds(inp.get("duration"), "wait"))
         elif name == "unsupported":
             raise ActionError(f"{inp.get('what', 'that action')} is not supported here")
         else:
